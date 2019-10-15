@@ -3,6 +3,7 @@
 args <- commandArgs(trailingOnly = TRUE)
 
 library("packrat")
+source("packrat/init.R")
 library("here")
 library("BASiCS")
 library("Scalability")
@@ -12,7 +13,7 @@ dir <- args[[2]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 with_spikes <- as.logical(length(altExpNames(data)))
 time <- system.time(
-  chain <- BASiCS_stan(
+  chain <- Scalability:::BASiCS_stan(
     data,
     WithSpikes = with_spikes,
     Regression = TRUE,
@@ -23,7 +24,7 @@ time <- system.time(
     adapt_engaged = FALSE
   )
 )
-chain <- stan2basics(
+chain <- Scalability:::stan2basics(
   chain, 
   gene_names = rownames(counts(data)),
   cell_names = colnames(data)
