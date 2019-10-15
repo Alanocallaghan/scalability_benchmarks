@@ -6,7 +6,8 @@
 
 . /etc/profile.d/modules.sh
 MODULEPATH=$MODULEPATH:/exports/igmm/software/etc/el7/modules
-module load igmm/apps/singularity/2.6.0
+module load igmm/compilers/gcc/5.5.0
+module load igmm/apps/R/3.6.0
 
 dataset=$(sed -n "$SGE_TASK_ID p" data/datasets.txt)
 
