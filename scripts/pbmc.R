@@ -1,4 +1,4 @@
-library("DropletUtils")
+library("edgeR")
 library("scran")
 library("scater")
 
@@ -13,8 +13,16 @@ system("curl https://static-content.springer.com/esm/art%3A10.1186%2Fs12967-018-
 
 markers <- readxl::read_xlsx("data/pbmc_markers.xlsx", skip = 2)
 
-sce <- read10xCounts(
-  samples = "downloads/5k_pbmc_protein_v3_filtered_feature_bc_matrix"
+x10 <- read10X(
+  "downloads/5k_pbmc_protein_v3_filtered_feature_bc_matrix/matrix.mtx.gz",
+  "downloads/5k_pbmc_protein_v3_filtered_feature_bc_matrix/features.tsv.gz",
+  "downloads/5k_pbmc_protein_v3_filtered_feature_bc_matrix/barcodes.tsv.gz"
+)
+
+sce <- SingleCellExperiment(
+  assays = list(counts = x10$counts),
+  colData = x10$samples,
+  rowData = x10$genes
 )
 
 ind_gene <- rowMeans(counts(sce) != 0) > 0.2
