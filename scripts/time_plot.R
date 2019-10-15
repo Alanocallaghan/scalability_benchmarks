@@ -1,0 +1,122 @@
+library("ggplot2")
+library("here")
+library("dplyr")
+
+advi_df <- df %>% 
+  dplyr::filter(by == "advi") %>%
+  dplyr::group_by(data) %>% 
+  dplyr::summarize(
+    time = mean(time),
+    nGenes = nGenes[[1]],
+    nCells = nCells[[1]],
+  )
+
+advi_df$data <- sub(
+  "([[:alpha:]])", "\\U\\1",
+  advi_df$data,
+  perl = TRUE
+)
+advi_df$data <- sub(
+  "Pbmc",
+  "10x PBMC",
+  advi_df$data
+)
+
+
+time_df <- df %>% 
+  dplyr::filter(by != "advi") %>%
+  dplyr::group_by(data, chains) %>% 
+  dplyr::summarize(
+    time = mean(time),
+    nGenes = nGenes[[1]],
+    nCells = nCells[[1]],
+  )
+
+time_df$data <- sub(
+  "([[:alpha:]])", "\\U\\1",
+  time_df$data,
+  perl = TRUE
+)
+time_df$data <- sub(
+  "Pbmc",
+  "10x PBMC",
+  time_df$data
+)
+
+
+ggplot(
+  time_df, 
+  aes(
+    x = chains,
+    y = time / 3600,
+    color = paste(
+      data, "\n", 
+      nGenes, "genes;", nCells, "cells",
+      "\n"
+    )
+  )
+) +
+  geom_line(aes(linetype = "Divide and\nconquer")) +
+  geom_hline(
+    aes(
+      yintercept = time / 3600,
+      color = paste(
+        data, "\n", 
+        nGenes, "genes;",
+        nCells, "cells",
+        "\n"
+      ),
+      lty = "ADVI",
+    ),
+    data = advi_df
+  ) +
+  scale_x_continuous(name = "Partitions", trans = "log2") +
+  scale_y_continuous(name = "Time (hr)") +
+  scale_color_brewer(name = "Data", palette = "Set1") +
+  scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
+
+ggsave(
+  file = here("figs/time_plot.pdf"),
+  width = 7,
+  height = 7
+)
+
+
+
+
+
+
+# g <- ggplot(out_f, 
+#     aes(
+#       x = chains, 
+#       y = time / 3600, 
+#     )
+#   ) +
+#   geom_point() +
+#   # geom_hline(yintercept = 12255 / 3600, lty = "dashed", colour = "grey60") + 
+#   # annotate(x = 1, y = 12255 / 3600 * 1.2, size = fs,
+#   #   label = "Time taken for ADVI", geom = "text", hjust = 0) +
+#   geom_hline(yintercept = tmax / (10 * 3600), lty = "dashed", colour = "grey60") + 
+#   annotate(x = 1, y = tmax / (10 * 3600) * 1.2, size = fs,
+#     label = "10x speedup", geom = "text", hjust = 0) +
+#   geom_hline(yintercept = tmax / (100 * 3600), lty = "dashed", colour = "grey60") + 
+#   annotate(x = 1, y = tmax / (100 * 3600) * 1.2, size = fs,
+#     label = "100x speedup", geom = "text", hjust = 0) +
+#   geom_line() +
+#   geom_text(
+#     data = out_f, 
+#     hjust = 0.4,
+#     size = fs,
+#     mapping = aes(
+#       x = chains,
+#       y = 25,
+#       label = n_str),
+#     show.legend = FALSE
+#   ) +
+#   labs(x = "Number of partitions", y = "Time") +
+#   scale_x_continuous(trans = "log2", breaks = c(1, 2, 4, 8, 16, 32, 64, 128)) +
+#   scale_y_continuous(
+#     trans = "log10", 
+#     breaks = c(0.16666, 0.5, 1, 2, 5, 15), 
+#     labels = c("10 min", "30 min", "1 hr", "2 hr", "5 hr", "15 hr")
+#   )
