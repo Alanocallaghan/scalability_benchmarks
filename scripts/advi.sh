@@ -11,4 +11,4 @@ module load igmm/apps/R/3.6.0
 
 dataset=$(sed -n "$SGE_TASK_ID p" data/datasets.txt)
 
-singularity exec image.sif Rscript scripts/advi.R $dataset /exports/eddie/scratch/s1372510/advi/$SGE_TASK_ID
+Rscript scripts/advi.R $dataset /exports/eddie/scratch/s1372510/advi/$SGE_TASK_ID
