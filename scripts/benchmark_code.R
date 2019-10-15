@@ -42,7 +42,7 @@ divide_and_conquer_benchmark <- function(
   } else {
       try({
         t <- system.time(
-          chain <- multi_MCMC(
+          chain <- Scalability:::multi_MCMC(
             Data,
             NSubsets = NSubsets,
             mc.cores = Cores,
