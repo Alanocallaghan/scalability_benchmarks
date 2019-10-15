@@ -9,7 +9,7 @@ args <- commandArgs(trailingOnly = TRUE)
 source(here("scripts/benchmark_code.R"))
 
 
-data <- get(args[[1]])
+data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[5]]
 dir.create(dir, recursive = TRUE)
 print(dir)

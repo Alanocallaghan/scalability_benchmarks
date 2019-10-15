@@ -8,7 +8,7 @@ library("here")
 library("BASiCS")
 library("Scalability")
 
-data <- get(args[[1]])
+data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[2]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 with_spikes <- as.logical(length(altExpNames(data)))
