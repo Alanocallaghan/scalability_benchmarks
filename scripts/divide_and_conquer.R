@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
 library("packrat")
+source("packrat/init.R")
 library("here")
 library("BASiCS")
 library("Scalability")
@@ -31,7 +32,7 @@ config <- data[["config"]]
 if (length(chains) == 1) {
   collapsed <- chains
 } else {
-  collapsed <- combine_subposteriors(
+  collapsed <- Scalability:::combine_subposteriors(
     chains,
     subset_by = config[["by"]],
     method = "pie",
