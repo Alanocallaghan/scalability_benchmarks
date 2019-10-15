@@ -2,8 +2,7 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 
-
-library("devtools")
+library("packrat")
 library("here")
 library("BASiCS")
 library("Scalability")
