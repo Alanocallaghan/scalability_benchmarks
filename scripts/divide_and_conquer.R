@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-library("devtools")
+library("packrat")
 library("here")
 library("BASiCS")
 library("Scalability")
