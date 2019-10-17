@@ -2,3 +2,4 @@ downloads
 packrat/lib*/
 *.sh.*
 packrat
+*.tar.gz
