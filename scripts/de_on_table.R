@@ -117,7 +117,7 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   facet_wrap(~variable) +
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(name = "Portion perturbed", labels = scales::percent) +
-  scale_color_brewer(name = "Data", palette = "Set1")
+  scale_color_brewer(name = "Data", palette = "Set2")
 
 ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
 

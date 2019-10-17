@@ -72,7 +72,7 @@ ggplot(
   ) +
   scale_x_continuous(name = "Partitions", trans = "log2") +
   scale_y_continuous(name = "Time (hr)") +
-  scale_color_brewer(name = "Data", palette = "Set1") +
+  scale_color_brewer(name = "Data", palette = "Set2") +
   scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
 
 ggsave(
