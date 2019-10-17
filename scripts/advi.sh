@@ -1,8 +1,8 @@
 #!/bin/bash -f
 #$ -S /bin/bash
-#$ -l h_vmem=30G
+#$ -l h_vmem=20G
 #$ -cwd
-#$ -l h_rt=72:00:00
+#$ -l h_rt=12:00:00
 
 . /etc/profile.d/modules.sh
 MODULEPATH=$MODULEPATH:/exports/igmm/software/etc/el7/modules
