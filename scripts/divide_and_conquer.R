@@ -13,7 +13,7 @@ source(here("scripts/benchmark_code.R"))
 
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[5]]
-dir.create(dir, recursive = TRUE)
+dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
 
 data <- divide_and_conquer_benchmark(
@@ -24,9 +24,9 @@ data <- divide_and_conquer_benchmark(
   Seed = args[[3]],
   Regression = TRUE,
   Verbose = FALSE,
-  # N = 10,
-  # Thin = 2,
-  # Burn = 4
+#  N = 10,
+#  Thin = 2,
+#  Burn = 4
   N = 20000,
   Thin = 10,
   Burn = 10000
