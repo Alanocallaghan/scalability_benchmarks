@@ -8,20 +8,24 @@ library("here")
 library("BASiCS")
 library("Scalability")
 
+
+set.seed(args[[2]])
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))
-dir <- args[[2]]
+dir <- args[[3]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
+
 with_spikes <- as.logical(length(altExpNames(data)))
 time <- system.time(
   chain <- Scalability:::BASiCS_stan(
     data,
     WithSpikes = with_spikes,
-    Regression = TRUE,
-    iter = 10,
-    tol_rel_obj = 1,
-    eta = 0.1,
-    eval_elbo = 2,
-    adapt_engaged = FALSE
+    Regression = TRUE
+    # ,
+    # iter = 10,
+    # tol_rel_obj = 1,
+    # eta = 0.1,
+    # eval_elbo = 2,
+    # adapt_engaged = FALSE
   )
 )
 chain <- Scalability:::stan2basics(

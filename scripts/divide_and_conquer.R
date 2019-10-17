@@ -7,25 +7,29 @@ library("BASiCS")
 library("Scalability")
 
 args <- commandArgs(trailingOnly = TRUE)
+
 source(here("scripts/benchmark_code.R"))
 
 
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[5]]
 dir.create(dir, recursive = TRUE)
-print(dir)
+
 
 data <- divide_and_conquer_benchmark(
   Data = data,
   DataName = args[[1]],
-  SubsetBy = "gene",
+  SubsetBy = args[[4]],
   NSubsets = args[[2]],
   Seed = args[[3]],
   Regression = TRUE,
   Verbose = FALSE,
-  N = 10,
-  Thin = 2,
-  Burn = 4
+  # N = 10,
+  # Thin = 2,
+  # Burn = 4
+  N = 20000,
+  Thin = 10,
+  Burn = 10000
 )
 chains <- data[["chain"]]
 config <- data[["config"]]
