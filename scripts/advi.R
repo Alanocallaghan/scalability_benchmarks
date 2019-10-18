@@ -20,12 +20,12 @@ time <- system.time(
     data,
     WithSpikes = with_spikes,
     Regression = TRUE
-    # ,
-    # iter = 10,
-    # tol_rel_obj = 1,
-    # eta = 0.1,
-    # eval_elbo = 2,
-    # adapt_engaged = FALSE
+#    ,
+#    iter = 10,
+#    tol_rel_obj = 1,
+#    eta = 0.1,
+#    eval_elbo = 2,
+#    adapt_engaged = FALSE
   )
 )
 chain <- Scalability:::stan2basics(
