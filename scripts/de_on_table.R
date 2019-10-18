@@ -7,11 +7,21 @@
 edr <- mclapply(
   seq_len(nrow(df)),
   function(i) {
+    cat(i, "/", nrow(df), "\n")
     if (isTRUE(df[[i, "chains"]] == 1)) {
       return(rep(list(NULL), 3))
     }
     ind <- references[["data"]] == df[[i, "data"]]
     chain <- readRDS(df[[i, "file"]])
+    if (length(chain) > 1) {
+      capture.output(
+        chain <- Scalability:::combine_subposteriors(
+          chain,
+          subset_by = "gene",
+          mc.cores = 1
+        )
+      )
+    }
     cp <- intersect(c("nu", "s", "phi"), names(chain@parameters))
     chain@parameters[cp] <- lapply(
       chain@parameters[cp],
@@ -20,7 +30,7 @@ edr <- mclapply(
         x
       }
     )
-    chain@parameters <- reorder_params(
+    chain@parameters <- Scalability:::reorder_params(
       chain@parameters,
       gene_order = rownames(references[[which(ind), "chain"]]),
       cell_order = gsub(
@@ -54,7 +64,7 @@ edr <- mclapply(
       }
     )
   },
-  mc.cores = 6
+  mc.cores = 4
 )
 
 
@@ -87,6 +97,7 @@ sdf  <- df[,
   c("data", "chains", "pDiffExp", "pDiffDisp", "pDiffResDisp")
 ]
 mdf <- melt(sdf, id.vars = c("data", "chains"))
+mdf$chains <- as.numeric(mdf$chains)
 mdf$variable <- gsub("^pDiffExp$", "mu", mdf$variable)
 mdf$variable <- gsub("^pDiffDisp$", "delta", mdf$variable)
 mdf$variable <- gsub("^pDiffResDisp$", "epsilon", mdf$variable)
@@ -95,33 +106,55 @@ mdf$variable <- factor(
   levels = c("mu", "delta", "epsilon")
 )
 
+mdf$data <- sub(
+  "([[:alpha:]])", "\\U\\1",
+  mdf$data,
+  perl = TRUE
+)
+mdf$data <- sub(
+  "Pbmc",
+  "10x PBMC",
+  mdf$data
+)
+
+advi_mdf <- mdf %>% filter(is.na(chains)) %>% 
+  group_by(data, variable, chains) %>% 
+  summarize(value = median(value))
+
 
 ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   aes(
     x = factor(chains),
     y = value,
-    # group = variable,
+    # group = data,
     color = data
   )
 ) + 
-  geom_jitter(position = position_jitterdodge()) +
-  geom_violin() +
+  geom_quasirandom(
+    groupOnX = TRUE,
+    dodge.width = 1,
+    # position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
+    size = 0.5
+  ) +
+  # geom_point(
+  #   position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
+  #   size = 0.5
+  # ) +
+  # geom_violin() +
   geom_hline(
-    data = mdf[is.na(mdf$chains), ], 
+    data = advi_mdf, 
     aes(
       yintercept = value,
       color = data,
       linetype = "ADVI")
   ) +
-  scale_linetype_manual(values = 2) +
+  scale_linetype_manual(name = NULL, labels = "Mean ADVI results", values = 2) +
   facet_wrap(~variable) +
   scale_x_discrete(name = "Partitions") +
-  scale_y_continuous(name = "Portion perturbed", labels = scales::percent) +
+  scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
   scale_color_brewer(name = "Data", palette = "Set2")
 
 ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
-
-
 
 ###############################################################################
 ##
