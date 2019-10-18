@@ -1,6 +1,3 @@
-library("ggplot2")
-library("here")
-library("dplyr")
 
 advi_df <- df %>% 
   dplyr::filter(by == "advi") %>%
@@ -47,7 +44,7 @@ time_df$data <- sub(
 ggplot(
   time_df, 
   aes(
-    x = chains,
+    x = as.numeric(chains),
     y = time / 3600,
     color = paste(
       data, "\n", 
@@ -56,7 +53,7 @@ ggplot(
     )
   )
 ) +
-  geom_line(aes(linetype = "Divide and\nconquer")) +
+  geom_line(aes(group = data, linetype = "Divide and\nconquer")) +
   geom_hline(
     aes(
       yintercept = time / 3600,
@@ -70,7 +67,11 @@ ggplot(
     ),
     data = advi_df
   ) +
-  scale_x_continuous(name = "Partitions", trans = "log2") +
+  scale_x_continuous(
+    name = "Partitions",
+    trans = "log2",
+    breaks = c(1, 2, 4, 8, 16, 32)
+  ) +
   scale_y_continuous(name = "Time (hr)") +
   scale_color_brewer(name = "Data", palette = "Set2") +
   scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
@@ -83,8 +84,52 @@ ggsave(
 
 
 
+# mean_df <- df %>% dplyr::filter(by != "advi") %>%
+#   dplyr::group_by(data, chains) %>% 
+#   dplyr::summarize(
+#     time = mean(time),
+#     nGenes = nGenes[[1]],
+#     nCells = nCells[[1]],
+#   )
 
 
+# df$chains <- factor(df$chains, levels = c(1, 2, 4, 8, 16, 32))
+
+# ggplot(
+#   df,
+#   aes(
+#     x = chains,
+#     y = time / 3600,
+#     color = paste(
+#       data, "\n", 
+#       nGenes, "genes;", nCells, "cells",
+#       "\n"
+#     )
+#   )
+# ) +
+#   geom_line(data = mean_df, aes(group = data, linetype = "Divide and\nconquer")) +
+#   geom_boxplot()
+#   geom_hline(
+#     aes(
+#       yintercept = time / 3600,
+#       color = paste(
+#         data, "\n", 
+#         nGenes, "genes;",
+#         nCells, "cells",
+#         "\n"
+#       ),
+#       lty = "ADVI",
+#     ),
+#     data = advi_df
+#   ) +
+#   scale_x_continuous(
+#     name = "Partitions",
+#     trans = "log2",
+#     breaks = c(1, 2, 4, 8, 16, 32)
+#   ) +
+#   scale_y_continuous(name = "Time (hr)") +
+#   scale_color_brewer(name = "Data", palette = "Set2") +
+#   scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
 
 # g <- ggplot(out_f, 
 #     aes(
