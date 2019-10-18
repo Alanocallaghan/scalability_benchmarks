@@ -225,9 +225,10 @@ all_overlap_df$data <- sub(
 all_overlap_df$data <- gsub("Pbmc", "10X PBMC", all_overlap_df$data)
 all_overlap_df$chains <- factor(
   paste(all_overlap_df$chains, "chains"),
-  levels = paste(sort(unique(all_overlap_df$chains)), "chains")
+  levels = c(paste(sort(as.numeric(unique(all_overlap_df$chains))), "chains"), "ADVI")
 )
-all_overlap_df <- all_overlap_df[!is.na(all_overlap_df$chains), ]
+all_overlap_df$chains[is.na(all_overlap_df$chains)] <- "ADVI"
+# all_overlap_df <- all_overlap_df[!is.na(all_overlap_df$chains), ]
 
 
 count_df <- all_overlap_df %>% 
