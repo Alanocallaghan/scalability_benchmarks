@@ -25,12 +25,6 @@ sce <- SingleCellExperiment(
   rowData = x10$genes
 )
 
-ind_gene <- rowMeans(counts(sce) != 0) > 0.2
-ind_cell <- colSums(counts(sce)) > 1000
-
-
-sce <- sce[ind_gene, ind_cell]
-
 
 markers <- markers[markers$Ensembl %in% rownames(sce), ]
 
@@ -44,7 +38,7 @@ sce <- normalize(sce)
 sce <- sce[, logcounts(sce)["ENSG00000105374", ] > 3]
 
 
-ind_gene <- rowMeans(counts(sce) != 0) > 0.5
+ind_gene <- rowMeans(counts(sce) != 0) > 0.2
 ind_cell <- colSums(counts(sce)) > 1000
 
 sce <- sce[ind_gene, ind_cell]
@@ -61,8 +55,8 @@ feature_drop <- isOutlier(
   type = "lower",
   log = TRUE
 )
-ind_expressed <- Matrix::rowMeans(counts(sce)) >= 1 &
-  Matrix::rowMeans(counts(sce) != 0) >= 0.5
+ind_expressed <- Matrix::rowMeans(counts(sce)) > 0.1 &
+  Matrix::rowMeans(counts(sce) != 0) >= 0.2
 
 ind_drop <- libsize_drop | feature_drop
 sce <- sce[ind_expressed, !ind_drop]
