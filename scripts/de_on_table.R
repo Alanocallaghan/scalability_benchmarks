@@ -117,6 +117,8 @@ mdf$data <- sub(
   mdf$data
 )
 
+mdf <- mdf %>% filter(variable %in% c("mu", "delta"))
+
 advi_mdf <- mdf %>% filter(is.na(chains)) %>% 
   group_by(data, variable, chains) %>% 
   summarize(value = median(value))
@@ -127,7 +129,7 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
     x = factor(chains),
     y = value,
     # group = data,
-    color = data
+    color = variable
   )
 ) + 
   geom_quasirandom(
@@ -149,7 +151,7 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
       linetype = "ADVI")
   ) +
   scale_linetype_manual(name = NULL, labels = "Mean ADVI results", values = 2) +
-  facet_wrap(~variable) +
+  facet_wrap(~data, nrow = 2, ncol = 2) +
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
   scale_color_brewer(name = "Data", palette = "Set2")
