@@ -11,4 +11,4 @@ module load igmm/apps/R/3.6.0
 
 settings=($(sed -n "$SGE_TASK_ID p" data/advi_grid.txt))
 
-Rscript scripts/advi.R ${settings[@]} /exports/eddie/scratch/s1372510/advi/$SGE_TASK_ID
+Rscript scripts/chain-scripts/advi.R ${settings[@]} /exports/eddie/scratch/s1372510/advi/$SGE_TASK_ID

@@ -14,7 +14,7 @@ edr <- mclapply(
     ind <- references[["data"]] == df[[i, "data"]]
     chain <- readRDS(df[[i, "file"]])
     if (length(chain) > 1) {
-      capture.output(
+      suppressMessages(
         chain <- Scalability:::combine_subposteriors(
           chain,
           subset_by = "gene",
@@ -64,7 +64,7 @@ edr <- mclapply(
       }
     )
   },
-  mc.cores = 4
+  mc.cores = 2
 )
 
 
