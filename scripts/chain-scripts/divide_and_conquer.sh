@@ -12,6 +12,6 @@ module load igmm/apps/R/3.6.0
 
 settings=($(sed -n "$SGE_TASK_ID p" data/subgrid.txt))
 
-Rscript scripts/divide_and_conquer.R ${settings[@]} /exports/eddie/scratch/s1372510/divide_and_conquer/$SGE_TASK_ID
+Rscript scripts/chain-scripts/divide_and_conquer.R ${settings[@]} /exports/eddie/scratch/s1372510/divide_and_conquer/$SGE_TASK_ID
 
 

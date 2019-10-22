@@ -3,7 +3,7 @@ advi_df <- df %>%
   dplyr::filter(by == "advi") %>%
   dplyr::group_by(data) %>% 
   dplyr::summarize(
-    time = mean(time),
+    time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],
   )
@@ -24,7 +24,7 @@ time_df <- df %>%
   dplyr::filter(by != "advi") %>%
   dplyr::group_by(data, chains) %>% 
   dplyr::summarize(
-    time = mean(time),
+    time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],
   )
