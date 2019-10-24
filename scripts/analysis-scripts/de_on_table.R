@@ -53,7 +53,10 @@ edr <- mclapply(
         references[[which(ind), "chain"]],
         chain,
         Plot = FALSE,
-        PlotOffset = FALSE
+        PlotOffset = FALSE,
+        EFDR_M = NULL,
+        EFDR_D = NULL,
+        EFDR_R = NULL
       )
     )
     lapply(

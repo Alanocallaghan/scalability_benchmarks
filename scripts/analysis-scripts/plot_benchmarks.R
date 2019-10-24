@@ -30,11 +30,26 @@ file2triplets <- function(files) {
 ## Convergence first
 parse_elbo <- function(c) {
   c <- gsub("Chain 1:\\s+", "", c)
-  elbo <- c[(grep("Begin stochastic", c) + 1):(grep("Drawing", c) - 2)]
+  normal <- grep("Drawing", c)
+  abnormal <- grep("Informational", c)
+  if (!length(normal)) {
+    stop("Something is deeply wrong here")
+  }
+  ind_end <- normal - 2
+  if (length(abnormal)) {
+    ind_end <- abnormal - 1
+  }
+  elbo <- c[(grep("Begin stochastic", c) + 1):ind_end]
+  ## This ain't quite right
+  elbo <- gsub("MAY BE DIVERGING... INSPECT ELBO", "", elbo, fixed = TRUE)
   elbo[-c(1, grep("CONVERGED", elbo))] <- paste(
     elbo[-c(1, grep("CONVERGED", elbo))],
-    "NOTCONVERGED")
-  elbo <- gsub("(MEDIAN )?ELBO CONVERGED", "CONVERGED", elbo)
+    "NOTCONVERGED"
+  )
+  ## If both mean and median elbo converge this ends up with CONVERGED CONVERGED
+  ## and therefore another column
+  elbo <- gsub("(MEDIAN |MEAN )?ELBO CONVERGED", "CONVERGED", elbo)
+  elbo <- gsub("(\\s+CONVERGED){2}", " CONVERGED", elbo)
   elbo <- strsplit(elbo, "\\s+")
   elbo <- do.call(rbind, elbo)
   colnames(elbo) <- elbo[1, ]
@@ -44,12 +59,14 @@ parse_elbo <- function(c) {
   elbo
 }
 
-
 advi_files <- list.files("/home/alan/Documents/scratchdir/advi", full.names = TRUE)
 advi_triplets <- file2triplets(advi_files)
 advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))
 advi_triplets <- lapply(advi_triplets, function(x) x[-3])
 advi_df <- read_triplets(advi_triplets)
+
+
+source(here("scripts/analysis-scripts/elbo_plots.R"))
 
 
 dc_files <- list.files("/home/alan/Documents/scratchdir/divide_and_conquer", full.names = TRUE)

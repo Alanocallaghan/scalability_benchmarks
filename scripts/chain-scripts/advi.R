@@ -16,7 +16,7 @@ dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 with_spikes <- as.logical(length(altExpNames(data)))
 time <- system.time(
   elbo <- capture.output(
-    chain <- Scalability:::BASiCS_stan(
+    chain <- BASiCS_stan(
       data,
       WithSpikes = with_spikes,
       Regression = TRUE
@@ -29,7 +29,7 @@ time <- system.time(
     )
   )
 )
-chain <- Scalability:::stan2basics(
+chain <- stan2basics(
   chain, 
   gene_names = rownames(counts(data)),
   cell_names = colnames(data)
@@ -38,11 +38,8 @@ config <- list(
   chains = NA,
   by = "advi",
   data = args[[1]],
-  seed = NA
+  seed = args[[2]]
 )
-
-
-
 
 saveRDS(elbo, file.path(dir, "elbo.rds"))
 saveRDS(time, file.path(dir, "time.rds"))
