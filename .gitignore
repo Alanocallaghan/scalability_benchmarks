@@ -1,5 +1,5 @@
 downloads
 packrat/lib*/
+packrat/src
 *.sh.*
-packrat
 *.tar.gz
