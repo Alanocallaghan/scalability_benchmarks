@@ -61,7 +61,7 @@ parse_elbo <- function(c) {
 }
 
 
-saveRDS(parse_elbo(elbo), file.path(dir, "elbo.rds"))
+saveRDS(elbo, file.path(dir, "elbo.rds"))
 saveRDS(time, file.path(dir, "time.rds"))
 saveRDS(config, file.path(dir, "config.rds"))
 saveRDS(chain, file.path(dir, "chain.rds"))
