@@ -3,7 +3,7 @@ local({
   ## Helper function to get the path to the library directory for a
   ## given packrat project.
   getPackratLibDir <- function(projDir = NULL) {
-    path <- file.path("packrat", "lib", R.version$platform, getRversion())
+    path <- here("packrat", "lib", R.version$platform, getRversion())
 
     if (!is.null(projDir)) {
 

@@ -1,6 +1,8 @@
 library("edgeR")
 library("scran")
 library("scater")
+library("Seurat")
+
 
 # https://support.10xgenomics.com/single-cell-gene-expression/datasets/3.1.0/5k_pbmc_protein_v3
 
@@ -26,11 +28,13 @@ sce <- SingleCellExperiment(
 )
 
 
-markers <- markers[markers$Ensembl %in% rownames(sce), ]
-
 clusters <- quickCluster(sce, min.size = 100)
 sce <- computeSumFactors(sce, cluster = clusters)
 sce <- normalize(sce)
+
+
+
+markers <- markers[markers$Ensembl %in% rownames(sce), ]
 
 # Heatmap(logcounts(d)[markers$Ensembl, ], row_split = markers$Subpopulation)
 
