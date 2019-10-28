@@ -120,7 +120,7 @@ mdf$data <- sub(
   mdf$data
 )
 
-mdf <- mdf %>% filter(variable %in% c("mu", "delta"))
+# mdf <- mdf %>% filter(variable %in% c("mu", "epsilon"))
 
 advi_mdf <- mdf %>% filter(is.na(chains)) %>% 
   group_by(data, variable, chains) %>% 
@@ -150,14 +150,14 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
     data = advi_mdf, 
     aes(
       yintercept = value,
-      color = data,
+      color = variable,
       linetype = "ADVI")
   ) +
   scale_linetype_manual(name = NULL, labels = "Mean ADVI results", values = 2) +
   facet_wrap(~data, nrow = 2, ncol = 2) +
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
-  scale_color_brewer(name = "Data", palette = "Set2")
+  scale_color_brewer(name = "Data", palette = "Set1")
 
 ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
 
