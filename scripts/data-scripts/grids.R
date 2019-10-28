@@ -1,5 +1,7 @@
-source("scripts/benchmark_code.R")
 library("SingleCellExperiment")
+library("here")
+
+source(here("scripts/chain-scripts/benchmark_code.R"))
 
 seeds <- benchmarkSeeds()
 
