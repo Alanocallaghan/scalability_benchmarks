@@ -14,7 +14,7 @@ datasets <- c(
   # , "williams"
 )
 
-advi_grid <- expand.grid(datasets, seeds)
+advi_grid <- expand.grid(datasets, seeds + 1)
 
 write.table(
   advi_grid,
