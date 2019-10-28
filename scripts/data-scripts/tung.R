@@ -36,7 +36,6 @@ ind_cell_one <- cell_lines == sort(unique(cell_lines))[[cell_ind]]
 
 reads <- reads[, ind_cell_one]
 
-reads <- reads[rowSums(reads) > 0, ]
 ind_expressed <- rowMeans(reads) >= 1 & rowMeans(reads != 0) > 0.5
 reads <- reads[ind_expressed, ]
 reads <- reads[, colMeans(reads != 0) > 0.65]

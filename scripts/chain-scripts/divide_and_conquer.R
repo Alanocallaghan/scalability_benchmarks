@@ -1,14 +1,13 @@
 #!/usr/bin/env Rscript
 
-library("packrat")
-source("packrat/init.R")
 library("here")
+source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
 
 args <- commandArgs(trailingOnly = TRUE)
 
-source(here("scripts/benchmark_code.R"))
+source(here("scripts/chain-scripts/benchmark_code.R"))
 
 
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))

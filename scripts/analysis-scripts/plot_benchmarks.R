@@ -27,17 +27,46 @@ file2triplets <- function(files) {
   triplets <- lapply(files, list.files, full.names = TRUE)
 }
 
+## Convergence first
+parse_elbo <- function(c) {
+  c <- gsub("Chain 1:\\s+", "", c)
+  normal <- grep("Drawing", c)
+  abnormal <- grep("Informational", c)
+  if (!length(normal)) {
+    stop("Something is deeply wrong here")
+  }
+  ind_end <- normal - 2
+  if (length(abnormal)) {
+    ind_end <- abnormal - 1
+  }
+  elbo <- c[(grep("Begin stochastic", c) + 1):ind_end]
+  ## This ain't quite right
+  elbo <- gsub("MAY BE DIVERGING... INSPECT ELBO", "", elbo, fixed = TRUE)
+  elbo[-c(1, grep("CONVERGED", elbo))] <- paste(
+    elbo[-c(1, grep("CONVERGED", elbo))],
+    "NOTCONVERGED"
+  )
+  ## If both mean and median elbo converge this ends up with CONVERGED CONVERGED
+  ## and therefore another column
+  elbo <- gsub("(MEDIAN |MEAN )?ELBO CONVERGED", "CONVERGED", elbo)
+  elbo <- gsub("(\\s+CONVERGED){2}", " CONVERGED", elbo)
+  elbo <- strsplit(elbo, "\\s+")
+  elbo <- do.call(rbind, elbo)
+  colnames(elbo) <- elbo[1, ]
+  elbo <- elbo[-1, ]
+  elbo <- as.data.frame(elbo, stringsAsFactors=FALSE)
+  elbo[, 1:4] <- lapply(elbo[, 1:4], as.numeric)
+  elbo
+}
 
 advi_files <- list.files("/home/alan/Documents/scratchdir/advi", full.names = TRUE)
 advi_triplets <- file2triplets(advi_files)
-advi_elbo <- lapply(triplets, function(x) x[[3]])
-advi_triplets <- lapply(triplets,
-  function(x) {
-    x[[4]] <- NULL
-    x
-  }
-)
+advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))
+advi_triplets <- lapply(advi_triplets, function(x) x[-3])
 advi_df <- read_triplets(advi_triplets)
+
+
+source(here("scripts/analysis-scripts/elbo_plots.R"))
 
 
 dc_files <- list.files("/home/alan/Documents/scratchdir/divide_and_conquer", full.names = TRUE)
@@ -62,13 +91,8 @@ colnames(data_dims) <- c("nGenes", "nCells")
 data_dims[["data"]] <- datasets
 df <- merge(file_df, data_dims)
 
-source("scripts/time_plot.R")
+source(here("scripts/analysis-scripts/time_plot.R"))
 references <- df[which(df[["chains"]] == 1), ]
 references[["chain"]] <- lapply(references[["file"]], readRDS)
 
-source("scripts/de_on_table.R")
-
-
-
-c1 <- readRDS((filter(file_df, chains == 1, data == "buettner", seed == 7) %>% pull("file"))[[1]])
-c2 <- readRDS((filter(file_df, chains == 32, data == "buettner", seed == 7) %>% pull("file"))[[1]])
+source(here("scripts/analysis-scripts/de_on_table.R"))
