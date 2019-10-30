@@ -1,0 +1,5 @@
+zeisel	1
+zeisel	0.8
+zeisel	0.6
+zeisel	0.4
+zeisel	0.2
