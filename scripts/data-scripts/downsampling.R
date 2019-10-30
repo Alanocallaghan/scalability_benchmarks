@@ -11,15 +11,18 @@ source(here("scripts/chain-scripts/benchmark_code.R"))
 
 
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))
-dir <- args[[5]]
+dir <- args[[4]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
+
+counts <- counts(data)
+apply(counts, 2, function(col) rbinom(1, col, args[[2]]))
 
 data <- divide_and_conquer_benchmark(
   Data = data,
   DataName = args[[1]],
-  SubsetBy = args[[4]],
-  NSubsets = args[[2]],
+  SubsetBy = "gene",
+  NSubsets = 16,
   Seed = args[[3]],
   Regression = TRUE,
   Verbose = FALSE,
