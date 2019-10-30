@@ -50,6 +50,8 @@ if (length(chains) == 1) {
     mc.cores = 1
   )
 }
+cfg <- data[["config"]]
+cfg$downsample_rate <- as.numeric(args[[2]])
 saveRDS(data[["chain"]], file = file.path(dir, "chains.rds"))
 saveRDS(data[["time"]], file = file.path(dir, "time.rds"))
-saveRDS(data[["config"]], file = file.path(dir, "config.rds"))
+saveRDS(cfg, file = file.path(dir, "config.rds"))
