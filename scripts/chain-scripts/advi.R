@@ -16,7 +16,7 @@ dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 with_spikes <- as.logical(length(altExpNames(data)))
 time <- system.time(
   elbo <- capture.output(
-    chain <- BASiCS_stan(
+    chain <- Scalability:::BASiCS_stan(
       data,
       WithSpikes = with_spikes,
       Regression = TRUE
@@ -29,7 +29,7 @@ time <- system.time(
     )
   )
 )
-chain <- stan2basics(
+chain <- Scalability:::stan2basics(
   chain, 
   gene_names = rownames(counts(data)),
   cell_names = colnames(data)
