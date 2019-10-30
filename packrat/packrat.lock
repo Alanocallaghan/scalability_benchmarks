@@ -242,11 +242,10 @@ Requires: R.utils
 Package: Scalability
 Source: source
 Version: 0.0.0.9000
-Hash: ea2fe27070ee11fee7c290f28f445658
+Hash: c2362f35253234d4d19563fe0b8026de
 Requires: BASiCS, BH, Rcpp, RcppEigen, SingleCellExperiment,
-    StanHeaders, assertthat, dplyr, ggExtra, ggplot2, gridExtra,
-    hexbin, parallelMCMCcombine, reshape2, rstan, rstantools, scater,
-    viridis
+    StanHeaders, dplyr, future.apply, ggExtra, ggplot2, gridExtra,
+    hexbin, reshape2, rstan, rstantools, scater, viridis
 SourcePath: ..//Scalability
 
 Package: Seurat
