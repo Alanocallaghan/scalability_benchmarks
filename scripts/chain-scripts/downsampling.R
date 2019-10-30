@@ -15,8 +15,14 @@ dir <- args[[4]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
 
-counts <- counts(data)
-apply(counts, 2, function(col) rbinom(1, col, args[[2]]))
+counts(data)[] <- apply(
+  counts(data),
+  2,
+  function(col) {
+    rbinom(length(col), col, as.numeric(args[[2]]))
+  }
+)
+counts(data) <- counts
 
 data <- divide_and_conquer_benchmark(
   Data = data,
