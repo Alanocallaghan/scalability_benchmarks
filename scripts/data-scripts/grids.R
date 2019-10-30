@@ -51,21 +51,38 @@ rownames(dims) <- c("nGene", "nCell")
 dims <- as.data.frame(t(dims))
 dims$dataset <- rownames(dims)
 
-grid <- expand.grid(datasets, chains, seeds, subsets, stringsAsFactors = FALSE)
-colnames(grid) <- c("dataset", "chains", "seed", "subset")
+divide_and_conquer_grid <- expand.grid(datasets, chains, seeds, subsets, stringsAsFactors = FALSE)
+colnames(divide_and_conquer_grid) <- c("dataset", "chains", "seed", "subset")
 
-grid <- merge(grid, dims)
+divide_and_conquer_grid <- merge(divide_and_conquer_grid, dims)
 
-grid <- grid[grid$nGene / grid$chains > 150, ]
+ind_gene <- divide_and_conquer_grid$nGene / divide_and_conquer_grid$chains > 150
+divide_and_conquer_grid <- divide_and_conquer_grid[ind_gene, ]
 
-grid <- grid[grid$chain > 1 | (grid$chain == 1 & grid$seed == 7), ]
+ind_one <- divide_and_conquer_grid$chain > 1 | 
+  (divide_and_conquer_grid$chain == 1 & divide_and_conquer_grid$seed == 7)
+divide_and_conquer_grid <- divide_and_conquer_grid[ind_one, ]
 
 
 write.table(
-  grid[, c("dataset", "chains", "seed", "subset")],
+  divide_and_conquer_grid[, c("dataset", "chains", "seed", "subset")],
   col.names = FALSE,
   row.names = FALSE,
   sep = "\t",
   quote = FALSE,
   file = "data/divide_and_conquer_grid.txt"
+)
+
+
+downsampling_grid <- expand.grid("zeisel", seq(1, 0.2, length.out = 5), seeds)
+ind_one <- downsampling_grid$Var2 == 1 & downsampling_grid$Var3 == 7 |
+  downsampling_grid$Var2 != 1
+downsampling_grid <- downsampling_grid[ind_one, ]
+write.table(
+  downsampling_grid,
+  col.names = FALSE,
+  row.names = FALSE,
+  sep = "\t",
+  quote = FALSE,
+  file = "data/downsampling_grid.txt"
 )
