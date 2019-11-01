@@ -8,7 +8,7 @@
 . /etc/profile.d/modules.sh
 MODULEPATH=$MODULEPATH:/exports/igmm/software/etc/el7/modules
 module load igmm/compilers/gcc/5.5.0
-module load igmm/apps/R/3.6.0
+module load igmm/apps/R/3.6.1
 
 settings=($(sed -n "$SGE_TASK_ID p" data/divide_and_conquer_grid.txt))
 
