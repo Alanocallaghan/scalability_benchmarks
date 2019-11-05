@@ -25,6 +25,7 @@ counts[] <- apply(
 )
 counts(data) <- counts
 
+
 data <- divide_and_conquer_benchmark(
   Data = data,
   DataName = args[[1]],
