@@ -75,9 +75,8 @@ write.table(
 
 
 downsampling_grid <- expand.grid("zeisel", seq(1, 0.2, length.out = 5), seeds)
-ind_one <- downsampling_grid$Var2 == 1 & downsampling_grid$Var3 == 7 |
-  downsampling_grid$Var2 != 1
-downsampling_grid <- downsampling_grid[ind_one, ]
+downsampling_ref_grid <- expand.grid("zeisel", seq(1, 0.2, length.out = 5))
+
 write.table(
   downsampling_grid,
   col.names = FALSE,
@@ -85,4 +84,13 @@ write.table(
   sep = "\t",
   quote = FALSE,
   file = "data/downsampling_grid.txt"
+)
+
+write.table(
+  downsampling_ref_grid,
+  col.names = FALSE,
+  row.names = FALSE,
+  sep = "\t",
+  quote = FALSE,
+  file = "data/downsampling_ref_grid.txt"
 )
