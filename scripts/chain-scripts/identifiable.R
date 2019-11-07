@@ -3,7 +3,6 @@ print(args)
 library("packrat")
 
 data <- readRDS(paste0("data/", args[[1]], ".rds"))
-data@colData$BatchInfo <- sample(2, ncol(data@assays@data$counts), replace = TRUE)
 
 N <- 20000
 Thin <- 10
