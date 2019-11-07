@@ -94,3 +94,30 @@ write.table(
   quote = FALSE,
   file = "data/downsampling_ref_grid.txt"
 )
+
+write.table(
+  data.frame(datasets),
+  col.names = FALSE,
+  row.names = FALSE,
+  sep = "\t",
+  quote = FALSE,
+  file = "data/datasets.txt"
+)
+
+
+write.table(
+  data.frame(c(
+    "tung",
+    # "buettner",
+    # "pbmc",
+    # "splatter", 
+    "zeisel"
+    # , "williams"
+    )
+  ),
+  col.names = FALSE,
+  row.names = FALSE,
+  sep = "\t",
+  quote = FALSE,
+  file = "data/datasets_batch.txt"
+)
