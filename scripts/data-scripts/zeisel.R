@@ -5,7 +5,7 @@ library("scater")
 library("BASiCS")
 library("here")
 
-
+options(stringsAsFactors = FALSE)
 
 data.dir <- "downloads"
 
@@ -13,6 +13,7 @@ dir.create(here(data.dir), showWarnings = FALSE, recursive = TRUE)
 countsfile <- file.path(data.dir, "zeisel_counts.txt")
 spikesfile <- file.path(data.dir, "zeisel_spikes.txt")
 erccfile <- file.path(data.dir, "ercc_conc.txt")
+
 system(
   paste(
     "wget https://storage.googleapis.com/linnarsson-lab-www-blobs/blobs/cortex/expression_mRNA_17-Aug-2014.txt",
@@ -33,23 +34,24 @@ system(
 )
 
 
-Zeisel <- read.table(
+Zeisel <- read.delim(
   countsfile,
   header = FALSE,
-  sep = "\t",
-  stringsAsFactors = FALSE,
-  fill = TRUE
+  stringsAsFactors = FALSE
 )
 
 # Meta information
 Zeisel.meta <- Zeisel[1:11, ]
-Zeisel.meta <- Zeisel.meta[, -c(1, 2)]
+Zeisel.meta <- t(Zeisel.meta)
+colnames(Zeisel.meta) <- Zeisel.meta[2, ]
+Zeisel.meta <- Zeisel.meta[-(1:2), ]
+Zeisel.meta <- as.data.frame(Zeisel.meta)
 
 # Collect biological counts
 Zeisel.bio <- Zeisel[12:nrow(Zeisel),]
 rownames(Zeisel.bio) <- as.character(Zeisel.bio[, 1])
 Zeisel.bio <- Zeisel.bio[, -c(1, 2)]
-colnames(Zeisel.bio) <- as.character(Zeisel.meta[8, ])
+colnames(Zeisel.bio) <- as.character(Zeisel.meta[, 8])
 Zeisel.bio <- data.matrix(Zeisel.bio[rowMeans(data.matrix(Zeisel.bio)) > 0.1, ])
 
 # Spike-in counts
@@ -64,20 +66,21 @@ Zeisel.ERCC <- read.table(
 Zeisel.ERCC <- Zeisel.ERCC[12:nrow(Zeisel.ERCC), ]
 rownames(Zeisel.ERCC) <- as.character(Zeisel.ERCC[, 1])
 Zeisel.ERCC <- Zeisel.ERCC[, -c(1, 2)]
-colnames(Zeisel.ERCC) <- as.character(Zeisel.meta[8, ])
+colnames(Zeisel.ERCC) <- as.character(Zeisel.meta[, 8])
 Zeisel.ERCC[] <- sapply(Zeisel.ERCC, as.numeric)
 
 # Look at sizes of cell groups
-table(as.character(Zeisel.meta[9, ]))
+table(as.character(Zeisel.meta[, 9]))
 
 
 # Another cell type for downsampling - CA1
 CA1.ind <- vapply(
-  Zeisel.meta[9, ],
+  Zeisel.meta[, 9],
   function(x) x == "pyramidal CA1",
   logical(1)
 )
 CA1 <- Zeisel.bio[, CA1.ind]
+Zeisel.meta <- Zeisel.meta[CA1.ind, ]
 ERCC <- Zeisel.ERCC[, colnames(CA1)]
 
 
@@ -103,6 +106,7 @@ ind_expressed_ercc <- c(
   grep("ERCC", rownames(input))
 )
 input <- input[ind_expressed_ercc, !(libsize_drop | feature_drop)]
+Zeisel.meta <- Zeisel.meta[!(libsize_drop | feature_drop), ]
 
 ERCC.conc <- read.table(
   erccfile,
@@ -131,6 +135,7 @@ SpikeInput.1 <- data.frame(
 Data <- newBASiCS_Data(
   Counts = as.matrix(input),
   Tech = grepl("ERCC", rownames(input)),
+  BatchInfo = Zeisel.meta$group,
   SpikeInfo = SpikeInput.1
 )
 colnames(Data) <- colnames(input)
