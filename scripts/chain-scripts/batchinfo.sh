@@ -11,4 +11,4 @@ module load igmm/apps/R/3.6.1
 
 settings=($(sed -n "$SGE_TASK_ID p" data/datasets_batch.txt))
 
-Rscript scripts/chain-scripts/batchinfo.R ${settings[@]} /exports/eddie/scratch/s1372510/batchinfo/$SGE_TASK_ID
+Rscript scripts/chain-scripts/batchinfo.R ${settings[@]} outputs/batchinfo/$SGE_TASK_ID

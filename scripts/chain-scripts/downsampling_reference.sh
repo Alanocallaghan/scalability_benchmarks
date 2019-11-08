@@ -12,4 +12,4 @@ module load igmm/apps/R/3.6.1
 
 settings=($(sed -n "$SGE_TASK_ID p" data/downsampling_ref_grid.txt))
 
-Rscript scripts/chain-scripts/downsampling_reference.R ${settings[@]} /exports/eddie/scratch/s1372510/downsampling/reference/$SGE_TASK_ID
+Rscript scripts/chain-scripts/downsampling_reference.R ${settings[@]} outputs/downsampling/reference/$SGE_TASK_ID
