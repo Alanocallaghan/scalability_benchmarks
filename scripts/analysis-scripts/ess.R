@@ -47,6 +47,7 @@ plot_all_ess <- function(df, param) {
     geom_violin(alpha = 0.2) +
     geom_boxplot(alpha = 0.2, width = 0.1, outlier.colour = NA) +
     facet_wrap(~data, scales = "free_x") +
+    scale_y_log10() +
     scale_fill_brewer(
       name = "Inference method",
       palette = "Dark2",
