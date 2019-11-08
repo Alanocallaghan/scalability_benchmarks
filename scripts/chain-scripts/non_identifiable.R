@@ -10,4 +10,6 @@ non_id <- BASiCS_MCMC(
   WithSpikes = FALSE,
   Regression = TRUE
 )
-saveRDS(non_id, paste0(args[[2]], "/", args[[1]], "/non_id.rds"))
+dir <- paste0(args[[2]], "/", args[[1]])
+dir.create(dir, showWarnings = FALSE)
+saveRDS(non_id, file.path(dir, "non_id.rds"))

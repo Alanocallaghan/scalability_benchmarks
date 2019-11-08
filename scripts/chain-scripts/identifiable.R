@@ -24,5 +24,6 @@ id <- with_extlib(
     Regression = TRUE
   )
 )
-
-saveRDS(id, paste0(args[[2]], "/", args[[1]], "/id.rds"))
+dir <- paste0(args[[2]], "/", args[[1]])
+dir.create(dir, showWarnings = FALSE)
+saveRDS(id, file.path(dir, "id.rds"))
