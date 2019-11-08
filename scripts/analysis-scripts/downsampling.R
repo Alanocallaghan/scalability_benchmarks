@@ -114,7 +114,7 @@ mdf_ds$downsample_rate <- factor(
 
 
 ggplot(mdf_ds, aes(x = downsample_rate, y = value, color = variable)) +
-  geom_quasirandom(dodge.width = 0.5) +
+  geom_quasirandom(dodge.width = 0.5, size = 0.25) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   # scale_x_continuous(label = scales::percent) +
   scale_y_continuous(label = scales::percent) +
