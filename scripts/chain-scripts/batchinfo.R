@@ -29,5 +29,7 @@ non_bi <- BASiCS_MCMC(
   Regression = TRUE
 )
 
-saveRDS(bi, paste0(args[[2]], "/", args[[1]], "/batch.rds"))
-saveRDS(non_bi, paste0(args[[2]], "/", args[[1]], "/nobatch.rds"))
+dir <- paste0(args[[2]], "/", args[[1]], "/")
+dir.create(dir, showWarnings = FALSE)
+saveRDS(bi, file.path(dir, "batch.rds"))
+saveRDS(non_bi, file.path(dir, "/nobatch.rds"))
