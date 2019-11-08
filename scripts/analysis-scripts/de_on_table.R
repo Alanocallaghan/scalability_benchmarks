@@ -134,10 +134,10 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
     # group = data,
     color = variable
   )
-) + 
+) +
   geom_quasirandom(
     groupOnX = TRUE,
-    dodge.width = 1,
+    dodge.width = 0.5,
     # position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
     size = 0.5
   ) +
@@ -148,6 +148,7 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   # geom_violin() +
   geom_hline(
     data = advi_mdf, 
+    alpha = 0.5,
     aes(
       yintercept = value,
       color = variable,
@@ -157,7 +158,8 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   facet_wrap(~data, nrow = 2, ncol = 2) +
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
-  scale_color_brewer(name = "Data", palette = "Set1")
+  theme(text = element_text(size = 18)) +
+  scale_color_brewer(name = "Parameter", palette = "Set1")
 
 ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
 
