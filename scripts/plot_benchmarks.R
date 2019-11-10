@@ -1,9 +1,11 @@
 options(stringsAsFactors = FALSE)
 library("dplyr")
 library("ggplot2")
+library("ggbeeswarm")
 library("here")
 library("BASiCS")
 library("Scalability")
+
 
 theme_set(theme_bw())
 
