@@ -3,7 +3,7 @@ do_fit_plot <- function(i, maxdf, references) {
   b <- maxdf[[i, "by"]]
   if (is.list(c)) {  
     suppressMessages(
-      c <- combine_subposteriors(
+      c <- Scalability:::combine_subposteriors(
         c,
         subset_by = "gene"
       )
@@ -12,7 +12,7 @@ do_fit_plot <- function(i, maxdf, references) {
   d <- maxdf[[i, "data"]]
   rc <- references[[which(references$data == d), "chain"]]
   l2 <- if (b == "advi") "ADVI" else "Divide and conquer"
-  c <- offset_correct(rc, c)
+  c <- Scalability:::offset_correct(rc, c)
   g1 <- BASiCS_ShowFit(rc) 
   g2 <- BASiCS_ShowFit(c) 
   ggsave(g1, 
@@ -39,7 +39,7 @@ do_de_plot <- function(i, maxdf, references) {
   c <- readRDS(maxdf[[i, "file"]])
   if (is.list(c)) {  
     suppressMessages(
-      c <- combine_subposteriors(
+      c <- Scalability:::combine_subposteriors(
         c,
         gene_order = rownames(rc),
         cell_order = colnames(rc),
@@ -71,7 +71,7 @@ do_hpd_plots <- function(j, maxdf, references) {
   c <- readRDS(maxdf[[j, "file"]])
   if (is.list(c)) {  
     suppressMessages(
-      c <- combine_subposteriors(
+      c <- Scalability:::combine_subposteriors(
         c,
         gene_order = rownames(rc),
         cell_order = colnames(rc),
@@ -79,11 +79,11 @@ do_hpd_plots <- function(j, maxdf, references) {
       )
     )
   }
-  c <- offset_correct(rc, c)
+  c <- Scalability:::offset_correct(rc, c)
   l2 <- if (b == "advi") "ADVI" else "D & C"
   l3 <- paste0("log2(", l2, " HPD interval width / Reference HPD interval width)")
   l <- list(
-    plot_hpd_interval(
+    Scalability:::plot_hpd_interval(
       rc,
       "Reference",
       c,
@@ -99,7 +99,7 @@ do_hpd_plots <- function(j, maxdf, references) {
         y = l3
       ) +
       geom_hline(aes(yintercept = 0)),
-    plot_hpd_interval(
+    Scalability:::plot_hpd_interval(
       rc,
       "Reference",
       c,
@@ -121,6 +121,10 @@ do_hpd_plots <- function(j, maxdf, references) {
   l
 }
 
+
+dir.create("figs/hpd", showWarnings = FALSE, recursive = TRUE)
+dir.create("figs/fit", showWarnings = FALSE, recursive = TRUE)
+dir.create("figs/de", showWarnings = FALSE, recursive = TRUE)
 
 
 
