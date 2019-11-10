@@ -11,10 +11,6 @@ theme_set(theme_bw())
 source(here("scripts/analysis-scripts/functions.R"))
 
 
-source(here("scripts/analysis-scripts/identifiability.R"))
-source(here("scripts/analysis-scripts/batchinfo.R"))
-
-
 advi_files <- list.files("outputs/advi", full.names = TRUE)
 advi_triplets <- file2triplets(advi_files)
 advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))
@@ -60,3 +56,7 @@ source(here("scripts/analysis-scripts/chain_plots.R"))
 
 source(here("scripts/analysis-scripts/ess.R"))
 source(here("scripts/analysis-scripts/hpd.R"))
+
+
+source(here("scripts/analysis-scripts/batchinfo.R"))
+source(here("scripts/analysis-scripts/identifiability.R"))
