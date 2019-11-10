@@ -1,14 +1,13 @@
 #!/usr/bin/env Rscript
 
-library("packrat")
-source("packrat/init.R")
 library("here")
+source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
 
 args <- commandArgs(trailingOnly = TRUE)
 
-source(here("scripts/benchmark_code.R"))
+source(here("scripts/chain-scripts/benchmark_code.R"))
 
 
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))
@@ -24,9 +23,6 @@ data <- divide_and_conquer_benchmark(
   Seed = args[[3]],
   Regression = TRUE,
   Verbose = FALSE,
-#  N = 10,
-#  Thin = 2,
-#  Burn = 4
   N = 20000,
   Thin = 10,
   Burn = 10000

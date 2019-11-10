@@ -14,7 +14,7 @@ edr <- mclapply(
     ind <- references[["data"]] == df[[i, "data"]]
     chain <- readRDS(df[[i, "file"]])
     if (length(chain) > 1) {
-      capture.output(
+      suppressMessages(
         chain <- Scalability:::combine_subposteriors(
           chain,
           subset_by = "gene",
@@ -53,7 +53,10 @@ edr <- mclapply(
         references[[which(ind), "chain"]],
         chain,
         Plot = FALSE,
-        PlotOffset = FALSE
+        PlotOffset = FALSE,
+        EFDR_M = NULL,
+        EFDR_D = NULL,
+        EFDR_R = NULL
       )
     )
     lapply(
@@ -64,7 +67,7 @@ edr <- mclapply(
       }
     )
   },
-  mc.cores = 4
+  mc.cores = 2
 )
 
 
@@ -117,6 +120,8 @@ mdf$data <- sub(
   mdf$data
 )
 
+# mdf <- mdf %>% filter(variable %in% c("mu", "epsilon"))
+
 advi_mdf <- mdf %>% filter(is.na(chains)) %>% 
   group_by(data, variable, chains) %>% 
   summarize(value = median(value))
@@ -127,12 +132,12 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
     x = factor(chains),
     y = value,
     # group = data,
-    color = data
+    color = variable
   )
-) + 
+) +
   geom_quasirandom(
     groupOnX = TRUE,
-    dodge.width = 1,
+    dodge.width = 0.5,
     # position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
     size = 0.5
   ) +
@@ -143,16 +148,18 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   # geom_violin() +
   geom_hline(
     data = advi_mdf, 
+    alpha = 0.5,
     aes(
       yintercept = value,
-      color = data,
+      color = variable,
       linetype = "ADVI")
   ) +
   scale_linetype_manual(name = NULL, labels = "Mean ADVI results", values = 2) +
-  facet_wrap(~variable) +
+  facet_wrap(~data, nrow = 2, ncol = 2) +
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
-  scale_color_brewer(name = "Data", palette = "Set2")
+  theme(text = element_text(size = 18)) +
+  scale_color_brewer(name = "Parameter", palette = "Set1")
 
 ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
 
@@ -225,9 +232,10 @@ all_overlap_df$data <- sub(
 all_overlap_df$data <- gsub("Pbmc", "10X PBMC", all_overlap_df$data)
 all_overlap_df$chains <- factor(
   paste(all_overlap_df$chains, "chains"),
-  levels = paste(sort(unique(all_overlap_df$chains)), "chains")
+  levels = c(paste(sort(as.numeric(unique(all_overlap_df$chains))), "chains"), "ADVI")
 )
-all_overlap_df <- all_overlap_df[!is.na(all_overlap_df$chains), ]
+all_overlap_df$chains[is.na(all_overlap_df$chains)] <- "ADVI"
+# all_overlap_df <- all_overlap_df[!is.na(all_overlap_df$chains), ]
 
 
 count_df <- all_overlap_df %>% 

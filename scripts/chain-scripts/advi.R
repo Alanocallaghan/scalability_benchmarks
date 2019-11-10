@@ -2,9 +2,8 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 
-library("packrat")
-source("packrat/init.R")
 library("here")
+source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
 
@@ -16,16 +15,12 @@ dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 
 with_spikes <- as.logical(length(altExpNames(data)))
 time <- system.time(
-  chain <- Scalability:::BASiCS_stan(
-    data,
-    WithSpikes = with_spikes,
-    Regression = TRUE
-#    ,
-#    iter = 10,
-#    tol_rel_obj = 1,
-#    eta = 0.1,
-#    eval_elbo = 2,
-#    adapt_engaged = FALSE
+  elbo <- capture.output(
+    chain <- Scalability:::BASiCS_stan(
+      data,
+      WithSpikes = with_spikes,
+      Regression = TRUE
+    )
   )
 )
 chain <- Scalability:::stan2basics(
@@ -37,9 +32,10 @@ config <- list(
   chains = NA,
   by = "advi",
   data = args[[1]],
-  seed = NA
+  seed = args[[2]]
 )
 
+saveRDS(elbo, file.path(dir, "elbo.rds"))
 saveRDS(time, file.path(dir, "time.rds"))
 saveRDS(config, file.path(dir, "config.rds"))
 saveRDS(chain, file.path(dir, "chain.rds"))

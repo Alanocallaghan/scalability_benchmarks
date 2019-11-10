@@ -6,13 +6,14 @@ library("here")
 
 data.dir <- "downloads"
 tungfile <- file.path(data.dir, "tung_molecules-filter.txt")
-erccfile <- file.path(data.dir, "ercc_conc.txt")
+erccfile <- file.path(data.dir, "tung_ercc_conc.txt")
 system(
   paste(
-    "wget https://assets.thermofisher.com/TFS-Assets/LSG/manuals/cms_095046.txt",
+    "wget https://raw.githubusercontent.com/jdblischak/singleCellSeq/b6ebd4a36925995e0b9b806a4172e9fb1f99e7b6/data/expected-ercc-molecules.txt",
     "-O", erccfile
   )
 )
+
 
 system(
   paste(
@@ -36,7 +37,6 @@ ind_cell_one <- cell_lines == sort(unique(cell_lines))[[cell_ind]]
 
 reads <- reads[, ind_cell_one]
 
-reads <- reads[rowSums(reads) > 0, ]
 ind_expressed <- rowMeans(reads) >= 1 & rowMeans(reads != 0) > 0.5
 reads <- reads[ind_expressed, ]
 reads <- reads[, colMeans(reads != 0) > 0.65]
@@ -49,30 +49,16 @@ reads <- reads[, !(libsize_drop | feature_drop)]
 spikes <- rownames(reads)[grep("ERC", rownames(reads))]
 
 
-ERCC.conc <- read.table(
+ERCC_num <- read.table(
   erccfile,
   header = TRUE,
   sep = "\t",
   fill = TRUE
 )
+ERCC_num <- ERCC_num[, c("id", "ercc_molecules_well")]
+rownames(ERCC_num) <- ERCC_num[["id"]]
 
-ERCC.num <- matrix(
-  data = NA,
-  nrow = nrow(ERCC.conc),
-  ncol = 1
-)
-
-ERCC.num[, 1] <- (ERCC.conc[, 4] * (10^(-18))) * 
-  (6.0221417 * (10^23))
-ERCC.num.final <- ERCC.num / 2500000
-rownames(ERCC.num) <- rownames(ERCC.num.final) <- ERCC.conc[, 2]
-
-SpikeInput <- ERCC.num.final[rownames(reads)[grepl("ERCC", rownames(reads))], 1]
-SpikeInput.1 <- data.frame(
-  "Name" = names(SpikeInput),
-  "Molecules" = SpikeInput,
-  stringsAsFactors = FALSE
-)
+SpikeInput <- ERCC_num[grep("ERCC", rownames(reads), value = TRUE), ]
 
 batches <- gsub(".*\\.(r\\d)\\..*", "\\1", colnames(reads))
 
@@ -80,7 +66,7 @@ bd <- newBASiCS_Data(
   Counts = reads,
   BatchInfo = batches,
   Tech = rownames(reads) %in% spikes,
-  SpikeInfo = SpikeInput.1
+  SpikeInfo = SpikeInput
 )
 colnames(bd) <- colnames(reads)
 saveRDS(bd, file = "data/tung.rds")

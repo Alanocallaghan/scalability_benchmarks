@@ -1,6 +1,8 @@
 library("edgeR")
 library("scran")
 library("scater")
+library("Seurat")
+
 
 # https://support.10xgenomics.com/single-cell-gene-expression/datasets/3.1.0/5k_pbmc_protein_v3
 
@@ -25,18 +27,14 @@ sce <- SingleCellExperiment(
   rowData = x10$genes
 )
 
-ind_gene <- rowMeans(counts(sce) != 0) > 0.2
-ind_cell <- colSums(counts(sce)) > 1000
-
-
-sce <- sce[ind_gene, ind_cell]
-
-
-markers <- markers[markers$Ensembl %in% rownames(sce), ]
 
 clusters <- quickCluster(sce, min.size = 100)
 sce <- computeSumFactors(sce, cluster = clusters)
 sce <- normalize(sce)
+
+
+
+markers <- markers[markers$Ensembl %in% rownames(sce), ]
 
 # Heatmap(logcounts(d)[markers$Ensembl, ], row_split = markers$Subpopulation)
 
@@ -44,7 +42,7 @@ sce <- normalize(sce)
 sce <- sce[, logcounts(sce)["ENSG00000105374", ] > 3]
 
 
-ind_gene <- rowMeans(counts(sce) != 0) > 0.5
+ind_gene <- rowMeans(counts(sce) != 0) > 0.2
 ind_cell <- colSums(counts(sce)) > 1000
 
 sce <- sce[ind_gene, ind_cell]
@@ -61,8 +59,8 @@ feature_drop <- isOutlier(
   type = "lower",
   log = TRUE
 )
-ind_expressed <- Matrix::rowMeans(counts(sce)) >= 1 &
-  Matrix::rowMeans(counts(sce) != 0) >= 0.5
+ind_expressed <- Matrix::rowMeans(counts(sce)) > 0.1 &
+  Matrix::rowMeans(counts(sce) != 0) >= 0.2
 
 ind_drop <- libsize_drop | feature_drop
 sce <- sce[ind_expressed, !ind_drop]

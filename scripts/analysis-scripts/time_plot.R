@@ -1,22 +1,22 @@
 
-advi_df <- df %>% 
+advi_time_df <- df %>% 
   dplyr::filter(by == "advi") %>%
   dplyr::group_by(data) %>% 
   dplyr::summarize(
-    time = mean(time),
+    time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],
   )
 
-advi_df$data <- sub(
+advi_time_df$data <- sub(
   "([[:alpha:]])", "\\U\\1",
-  advi_df$data,
+  advi_time_df$data,
   perl = TRUE
 )
-advi_df$data <- sub(
+advi_time_df$data <- sub(
   "Pbmc",
   "10x PBMC",
-  advi_df$data
+  advi_time_df$data
 )
 
 
@@ -24,7 +24,7 @@ time_df <- df %>%
   dplyr::filter(by != "advi") %>%
   dplyr::group_by(data, chains) %>% 
   dplyr::summarize(
-    time = mean(time),
+    time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],
   )
@@ -65,7 +65,7 @@ ggplot(
       ),
       lty = "ADVI",
     ),
-    data = advi_df
+    data = advi_time_df
   ) +
   scale_x_continuous(
     name = "Partitions",
@@ -120,7 +120,7 @@ ggsave(
 #       ),
 #       lty = "ADVI",
 #     ),
-#     data = advi_df
+#     data = advi_time_df
 #   ) +
 #   scale_x_continuous(
 #     name = "Partitions",
