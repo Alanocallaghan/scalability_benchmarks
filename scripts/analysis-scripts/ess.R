@@ -5,6 +5,7 @@ get_ess <- function(chain, param) {
 
 plot_all_ess <- function(df, param) {
   ess_all_list <- mclapply(seq_len(nrow(df)), function(i) {
+    cat(i, "/", nrow(df), "\n")
     chain <- readRDS(df[[i, "file"]])
     if (length(chain) > 1) {
       suppressMessages(
