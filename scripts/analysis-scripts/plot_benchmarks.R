@@ -11,6 +11,9 @@ theme_set(theme_bw())
 source(here("scripts/analysis-scripts/functions.R"))
 
 
+source(here("scripts/analysis-scripts/data_comparison.R"))
+
+
 advi_files <- list.files("outputs/advi", full.names = TRUE)
 advi_triplets <- file2triplets(advi_files)
 advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))

@@ -34,8 +34,8 @@ bde2 <- BASiCS_TestDE(
 )
 g1 <- BASiCS_PlotDE(bde1, Which = c("MAPlot", "VolcanoPlot"))
 g2 <- BASiCS_PlotDE(bde2, Which = c("MAPlot", "VolcanoPlot"))
-ggsave(g1, file = "figs/de_batch_tung.pdf", width = 10, height = 10)
-ggsave(g2, file = "figs/de_batch_zeisel.pdf", width = 10, height = 10)
+ggsave(g1, file = "figs/de_batch_tung.pdf", width = 12, height = 10)
+ggsave(g2, file = "figs/de_batch_zeisel.pdf", width = 12, height = 10)
 
 
 ess_b <- lapply(c("mu", "delta", "epsilon"), 

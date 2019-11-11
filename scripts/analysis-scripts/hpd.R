@@ -5,6 +5,7 @@ get_normalised_hpd_width <- function(chain, param) {
 
 plot_all_hpds <- function(df, param) {
   hpds_all <- mclapply(seq_len(nrow(df)), function(i) {
+    cat(i, "/", nrow(df), "\n")
     chain <- readRDS(df[[i, "file"]])
     if (length(chain) > 1) {
       suppressMessages(
