@@ -4,31 +4,33 @@ get_ess <- function(chain, param) {
 
 
 plot_all_ess <- function(df, param) {
-  ess_all_list <- mclapply(seq_len(nrow(df)), function(i) {
-    cat(i, "/", nrow(df), "\n")
-    chain <- readRDS(df[[i, "file"]])
-    if (length(chain) > 1) {
-      suppressMessages(
-        chain <- Scalability:::combine_subposteriors(
-          chain,
-          subset_by = "gene",
-          mc.cores = 1
+  ess_all_list <- lapply(seq_len(nrow(df)),
+    function(i) {
+      cat(i, "/", nrow(df), "\n")
+      chain <- readRDS(df[[i, "file"]])
+      if (length(chain) > 1) {
+        suppressMessages(
+          chain <- Scalability:::combine_subposteriors(
+            chain,
+            subset_by = "gene",
+            mc.cores = 1
+          )
         )
+      }
+      data.frame(
+        data = df[[i, "data"]],
+        chains = df[[i, "chains"]],
+        seed = df[[i, "seed"]],
+        by = df[[i, "by"]],
+        feature = colnames(chain@parameters[[param]]),
+        ESS = get_ess(chain, param)
       )
     }
-    data.frame(
-      data = df[[i, "data"]],
-      chains = df[[i, "chains"]],
-      seed = df[[i, "seed"]],
-      by = df[[i, "by"]],
-      feature = colnames(chain@parameters[[param]]),
-      ESS = get_ess(chain, param)
-    )
-  }, mc.cores = 2)  
+  )  
 
   ess_all <- bind_rows(ess_all_list)
   ess_all[which(ess_all[["chains"]] == 1), "by"] <- "Reference"
-  ess_all[ess_all[["by"]] == "advi", "by"] <- "ADVI"
+  ess_all <- ess_all[ess_all[["by"]] != "advi", ]
   ess_all[ess_all[["by"]] == "gene", "by"] <- "Divide and conquer"
   ess_all[["chains"]] <- factor(ess_all[["chains"]], levels = c(1, 2, 4, 8, 16, 32))
 

@@ -4,27 +4,30 @@ get_normalised_hpd_width <- function(chain, param) {
 }
 
 plot_all_hpds <- function(df, param) {
-  hpds_all <- mclapply(seq_len(nrow(df)), function(i) {
-    cat(i, "/", nrow(df), "\n")
-    chain <- readRDS(df[[i, "file"]])
-    if (length(chain) > 1) {
-      suppressMessages(
-        chain <- Scalability:::combine_subposteriors(
-          chain,
-          subset_by = "gene",
-          mc.cores = 1
+  hpds_all <- mclapply(
+    seq_len(nrow(df)),
+    function(i) {
+      cat(i, "/", nrow(df), "\n")
+      chain <- readRDS(df[[i, "file"]])
+      if (length(chain) > 1) {
+        suppressMessages(
+          chain <- Scalability:::combine_subposteriors(
+            chain,
+            subset_by = "gene",
+            mc.cores = 1
+          )
         )
+      }
+      data.frame(
+        data = df[[i, "data"]],
+        chains = df[[i, "chains"]],
+        seed = df[[i, "seed"]],
+        by = df[[i, "by"]],
+        feature = colnames(chain@parameters[[param]]),
+        hpd = get_normalised_hpd_width(chain, param)
       )
-    }
-    data.frame(
-      data = df[[i, "data"]],
-      chains = df[[i, "chains"]],
-      seed = df[[i, "seed"]],
-      by = df[[i, "by"]],
-      feature = colnames(chain@parameters[[param]]),
-      hpd = get_normalised_hpd_width(chain, param)
-    )
-  }, mc.cores = 2)  
+    } # , mc.cores = 2
+  )  
 
   hpdf_all <- bind_rows(hpds_all)
   hpdf_all[which(hpdf_all[["chains"]] == 1), "by"] <- "Reference"
@@ -86,5 +89,5 @@ plot_all_hpds <- function(df, param) {
   invisible(g)
 }
 
-plot_all_hpds(df, "mu")
-plot_all_hpds(df, "epsilon")
+plot_all_hpds(dc_df, "mu")
+plot_all_hpds(dc_df, "epsilon")
