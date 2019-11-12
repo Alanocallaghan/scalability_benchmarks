@@ -4,3 +4,4 @@
 # qsub -t 1-$(cat data/downsampling_grid.txt | wc -l) -tc 5 scripts/chain-scripts/downsampling_divide.sh
 qsub -t 1-$(cat data/datasets_batch.txt | wc -l) -tc 5 scripts/chain-scripts/identifiable.sh
 qsub -t 1-$(cat data/datasets_batch.txt | wc -l) -tc 5 scripts/chain-scripts/batchinfo.sh
+qsub scripts/chain-scripts/timing.sh
