@@ -12,4 +12,4 @@ module load igmm/apps/R/3.6.1
 
 settings=($(sed -n "$SGE_TASK_ID p" data/downsampling_grid.txt))
 
-Rscript scripts/chain-scripts/removing_cells.R ${settings[@]} outputs/downsampling/removing_cells/$SGE_TASK_ID
+Rscript scripts/chain-scripts/removing_cells.R ${settings[@]} outputs/removing_cells/removing/$SGE_TASK_ID

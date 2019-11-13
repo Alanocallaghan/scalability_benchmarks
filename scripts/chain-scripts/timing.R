@@ -2,7 +2,7 @@ library("Scalability")
 library("BASiCS")
 
 args <- commandArgs(trailingOnly = TRUE)
-
+dir.create("outputs/time/", recursive = TRUE, showWarnings = FALSE)
 data <- args[[1]]
 
 time_mcmc <- function(n, times = 1) {
