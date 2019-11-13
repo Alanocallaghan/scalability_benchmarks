@@ -74,8 +74,8 @@ write.table(
 )
 
 
-downsampling_grid <- expand.grid("zeisel", seq(1, 0.2, length.out = 5), seeds)
-downsampling_ref_grid <- expand.grid("zeisel", seq(1, 0.2, length.out = 5))
+downsampling_grid <- expand.grid("zeisel", seq(1, 0.1, length.out = 10), seeds)
+downsampling_ref_grid <- expand.grid("zeisel", seq(1, 0.1, length.out = 10))
 
 write.table(
   downsampling_grid,
