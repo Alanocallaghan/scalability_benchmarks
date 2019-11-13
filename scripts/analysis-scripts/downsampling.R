@@ -9,12 +9,12 @@ library("Scalability")
 theme_set(theme_bw())
 source(here("scripts/analysis-scripts/functions.R"))
 
-ds_files <- list.files("/home/alan/Documents/scratchdir/downsampling/divide/", full.names = TRUE)
+ds_files <- list.files("outputs/downsampling/divide/", full.names = TRUE)
 dst <- file2triplets(ds_files)
 dst <- dst[as.logical(sapply(dst, length))]
 ds_df <- read_triplets(dst, combine = TRUE)
 
-ref_files <- list.files("/home/alan/Documents/scratchdir/downsampling/reference", full.names = TRUE)
+ref_files <- list.files("outputs/downsampling/reference", full.names = TRUE)
 ref_df <- read_triplets(file2triplets(ref_files), combine = TRUE)
 ref_df$chain <- lapply(ref_df$file, readRDS)
 

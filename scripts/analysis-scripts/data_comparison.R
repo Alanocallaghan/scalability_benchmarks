@@ -39,9 +39,9 @@ l <- lapply(names(datas),
     )
   }
 )
-df <- do.call(rbind, l)
+data_df <- do.call(rbind, l)
 
-ggplot(df, aes(x = lib_sizes, color = name, fill = name)) + 
+ggplot(data_df, aes(x = lib_sizes, color = name, fill = name)) + 
   labs(x = "Library size") +
   scale_color_brewer(palette = "Set2", name = "Dataset", aesthetics = c("color", "fill")) +
   geom_density(alpha = 0.2) +
@@ -49,7 +49,7 @@ ggplot(df, aes(x = lib_sizes, color = name, fill = name)) +
 
 ggsave("figs/libsize_density.pdf", width = 5, height = 4)
 
-ggplot(df, aes(x = num_feats, color = name, fill = name)) +
+ggplot(data_df, aes(x = num_feats, color = name, fill = name)) +
   labs(x = "Number of expressed features") +
   scale_color_brewer(palette = "Set2", name = "Dataset", aesthetics = c("color", "fill")) +
   geom_density(alpha = 0.2) +
@@ -66,16 +66,16 @@ l <- lapply(names(datas),
     )
   }
 )
-df <- do.call(rbind, l)
+data_df <- do.call(rbind, l)
 
-ggplot(df, aes(x = mean_expression, color = name, fill = name)) +
+ggplot(data_df, aes(x = mean_expression, color = name, fill = name)) +
   labs(x = "Mean expression") +
   scale_color_brewer(palette = "Set2", name = "Dataset", aesthetics = c("color", "fill")) +
   geom_density(alpha = 0.2) +
   scale_x_log10()
 ggsave("figs/expression_density.pdf", width = 5, height = 4)
 
-ggplot(df, aes(x = dropout, color = name, fill = name)) +
+ggplot(data_df, aes(x = dropout, color = name, fill = name)) +
   labs(x = "Proportion of dropout") +
   scale_color_brewer(palette = "Set2", name = "Dataset", aesthetics = c("color", "fill")) +
   geom_density(alpha = 0.2)
