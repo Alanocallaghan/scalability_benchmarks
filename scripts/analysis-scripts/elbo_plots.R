@@ -1,3 +1,5 @@
+dir.create("figs/elbo", recursive = TRUE, showWarnings = FALSE)
+
 parsed_elbos <- lapply(advi_elbo, parse_elbo)
 
 

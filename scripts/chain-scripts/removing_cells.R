@@ -1,0 +1,36 @@
+#!/usr/bin/env Rscript
+
+library("here")
+source(here("packrat/init.R"))
+library("BASiCS")
+library("Scalability")
+
+args <- commandArgs(trailingOnly = TRUE)
+
+source(here("scripts/chain-scripts/benchmark_code.R"))
+
+
+data <- readRDS(here("data", paste0(args[[1]], ".rds")))
+dir <- args[[4]]
+dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+
+frac <- as.numeric(args[[2]])
+data <- data[, sample(ncol(counts(data)), floor(ncol(counts(data)) * frac))]
+
+data <- divide_and_conquer_benchmark(
+  Data = data,
+  DataName = args[[1]],
+  SubsetBy = "gene",
+  NSubsets = 16,
+  Seed = args[[3]],
+  Regression = TRUE,
+  Verbose = FALSE,
+  N = 20000,
+  Thin = 10,
+  Burn = 10000
+)
+cfg <- data[["config"]]
+cfg$proportion_retained <- as.numeric(args[[2]])
+saveRDS(data[["chain"]], file = file.path(dir, "chains.rds"))
+saveRDS(data[["time"]], file = file.path(dir, "time.rds"))
+saveRDS(cfg, file = file.path(dir, "config.rds"))

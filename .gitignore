@@ -3,6 +3,8 @@ packrat/lib*/
 packrat/src
 *.sh.*
 *.tar.gz
+*.tar.xz
 outputs
 outputs_old/
 figs/
+*.RData
