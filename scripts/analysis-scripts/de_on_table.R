@@ -4,90 +4,7 @@
 ##
 ###############################################################################
 
-edr <- mclapply(
-  seq_len(nrow(df)),
-  function(i) {
-    cat(i, "/", nrow(df), "\n")
-    if (isTRUE(df[[i, "chains"]] == 1)) {
-      return(rep(list(NULL), 3))
-    }
-    ind <- references[["data"]] == df[[i, "data"]]
-    chain <- readRDS(df[[i, "file"]])
-    if (length(chain) > 1) {
-      suppressMessages(
-        chain <- Scalability:::combine_subposteriors(
-          chain,
-          subset_by = "gene",
-          mc.cores = 1
-        )
-      )
-    }
-    cp <- intersect(c("nu", "s", "phi"), names(chain@parameters))
-    chain@parameters[cp] <- lapply(
-      chain@parameters[cp],
-      function(x) {
-        colnames(x) <- gsub("_Batch.*", "", colnames(x))
-        x
-      }
-    )
-    chain@parameters <- Scalability:::reorder_params(
-      chain@parameters,
-      gene_order = rownames(references[[which(ind), "chain"]]),
-      cell_order = gsub(
-        "_Batch.*",
-        "",
-        colnames(references[[which(ind), "chain"]])
-      )
-    )
-    nsamples <- nrow(
-      references[[which(ind), "chain"]]@parameters[["mu"]]
-    )
-    chain@parameters <- lapply(
-      chain@parameters,
-      function(x) {
-        x[seq_len(nsamples), ]
-      }
-    )
-    suppressMessages(
-      de <- BASiCS_TestDE(
-        references[[which(ind), "chain"]],
-        chain,
-        Plot = FALSE,
-        PlotOffset = FALSE,
-        EFDR_M = NULL,
-        EFDR_D = NULL,
-        EFDR_R = NULL
-      )
-    )
-    lapply(
-      de@Results,
-      function(x) {
-        l <- DiffRes(x)[["GeneName"]]
-        if (!length(l)) NULL else l
-      }
-    )
-  },
-  mc.cores = 2
-)
-
-
-edr_df <- do.call(rbind, edr)
-colnames(edr_df) <- c("DiffExp", "DiffDisp", "DiffResDisp")
-edr_df <- as.data.frame(edr_df)
-df <- cbind(df, edr_df)
-
-
-df[, c("nDiffExp", "nDiffDisp", "nDiffResDisp")] <- lapply(
-  df[, c("DiffExp", "DiffDisp", "DiffResDisp")],
-  function(x) sapply(x, length)
-)
-
-df[c("pDiffExp", "pDiffDisp", "pDiffResDisp")] <- round(
-  df[c("nDiffExp", "nDiffDisp", "nDiffResDisp")] / df[["nGenes"]],
-  digits = 3
-)
-
-
+df <- do_de(df, ref_df = references, match_column = "data")
 
 
 ###############################################################################
@@ -152,7 +69,8 @@ ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
     aes(
       yintercept = value,
       color = variable,
-      linetype = "ADVI")
+      linetype = "ADVI"
+    )
   ) +
   scale_linetype_manual(name = NULL, labels = "Mean ADVI results", values = 2) +
   facet_wrap(~data, nrow = 2, ncol = 2) +
