@@ -72,7 +72,7 @@ ggplot(
     trans = "log2",
     breaks = c(1, 2, 4, 8, 16, 32)
   ) +
-  scale_y_continuous(name = "Time (hr)") +
+  scale_y_continuous(name = "Time (hr)", trans = "log10") +
   scale_color_brewer(name = "Data", palette = "Set2") +
   scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
 
