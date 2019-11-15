@@ -57,9 +57,16 @@ do_de_plot <- function(i, maxdf, references) {
     EFDR_D = NULL,
     EFDR_R = NULL
   )
-  g <- BASiCS_PlotDE(de@Results[[1]], Which = c("MAPlot", "VolcanoPlot"))
+  g <- BASiCS_PlotDE(de@Results[[1]],
+    Plots = c("MAPlot", "VolcanoPlot"),
+    Mu = de@Results$Mean@Table$MeanOverall
+  )
   ggsave(g, file = here(paste0("figs/de/mu_", d, "_", b, ".pdf")), width = 9, height = 5)
-  g <- BASiCS_PlotDE(de@Results[[3]], Which = c("MAPlot", "VolcanoPlot"))
+  g <- BASiCS_PlotDE(
+    de@Results[[3]],
+    Plots = c("MAPlot", "VolcanoPlot"),
+    Mu = de@Results$Mean@Table$MeanOverall
+  )
   ggsave(g, file = here(paste0("figs/de/epsilon_", d, "_", b, ".pdf")), width = 9, height = 5)
   g
 }
@@ -121,7 +128,47 @@ do_hpd_plots <- function(j, maxdf, references) {
   l
 }
 
+do_ess_plot <- function(j, maxdf, references) {
+  d <- maxdf[[j, "data"]]
+  b <- maxdf[[j, "by"]]
+  rc <- references[[which(references$data == d), "chain"]]
+  c <- readRDS(maxdf[[j, "file"]])
+  if (is.list(c)) {  
+    suppressMessages(
+      c <- Scalability:::combine_subposteriors(
+        c,
+        gene_order = rownames(rc),
+        cell_order = colnames(rc),
+        subset_by = "gene"
+      )
+    )
+  }
+  c <- Scalability:::offset_correct(rc, c)
 
+  ess <- effectiveSize(as.mcmc(c@parameters[["epsilon"]]))
+
+  df <- data.frame(
+    x = colMedians(rc@parameters[["mu"]]),
+    y = colMedians(rc@parameters[["epsilon"]] - c@parameters[["epsilon"]]),
+    color = ess
+  )
+  df <- df[order(df$color, decreasing = TRUE), ]
+  ggplot(df, aes(x = x, y = y, color = color)) + 
+    geom_point(alpha = 0.75) +
+    scale_x_log10() +
+    labs(x = bquote(mu[i]), y = bquote(epsilon[i]^Ref - epsilon[i]^Scalable)) +
+    scale_color_viridis(
+      name = bquote('Effective sample size'~epsilon[i]),
+      trans = "log10"
+    )
+  ggsave(file = here(paste0("figs/ess/", b, "_", d, ".pdf")), width = 7, height = 5)
+}
+
+
+
+
+
+dir.create("figs/ess", showWarnings = FALSE, recursive = TRUE)
 dir.create("figs/hpd", showWarnings = FALSE, recursive = TRUE)
 dir.create("figs/fit", showWarnings = FALSE, recursive = TRUE)
 dir.create("figs/de", showWarnings = FALSE, recursive = TRUE)
@@ -140,6 +187,13 @@ maxdfe <- df %>% filter(!is.na(chains)) %>%
   top_n(n = 1, wt = nDiffResDisp) %>%
   distinct(data, .keep_all = TRUE)
 
+
+ess_plots <- lapply(
+  seq_len(nrow(maxdfe)),
+  do_ess_plot,
+  maxdf = maxdfe,
+  references = references
+)
 
 fit_plots <- lapply(
   seq_len(nrow(maxdfe)),
