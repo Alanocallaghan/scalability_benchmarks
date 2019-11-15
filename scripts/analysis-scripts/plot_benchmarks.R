@@ -41,6 +41,7 @@ colnames(data_dims) <- c("nGenes", "nCells")
 data_dims[["data"]] <- datasets
 
 source(here("scripts/analysis-scripts/downsampling.R"))
+source(here("scripts/analysis-scripts/removing_cells.R"))
 
 
 dc_files <- list.files("outputs/divide_and_conquer", full.names = TRUE)
