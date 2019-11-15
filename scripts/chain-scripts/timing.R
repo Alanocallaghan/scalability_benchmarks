@@ -8,24 +8,24 @@ data <- args[[1]]
 time_mcmc <- function(n, times = 1) {
   replicate(times, {
     subsets <- Scalability:::generateSubsets(
-    	readRDS(paste0("data/", data, ".rds")),
-    	NSubsets = n,
-    	SubsetBy = "gene",
-    	WithSpikes = TRUE
+      readRDS(paste0("data/", data, ".rds")),
+      NSubsets = n,
+      SubsetBy = "gene",
+      WithSpikes = TRUE
     )
     system.time(
       suppressMessages(
-      	capture.output(
-	        BASiCS_MCMC(
-	          subsets[[1]],
-	          N = 20000,
-	          Thin = 10,
-	          Burn = 10000,
-	          WithSpikes = data != "pbmc",
-	          Regression = TRUE,
-	          PrintProgress = FALSE
-	        )
-    		)
+        capture.output(
+          BASiCS_MCMC(
+            subsets[[1]],
+            N = 20000,
+            Thin = 10,
+            Burn = 10000,
+            WithSpikes = data != "pbmc",
+            Regression = TRUE,
+            PrintProgress = FALSE
+          )
+        )
       )
     )[["elapsed"]]
   })
