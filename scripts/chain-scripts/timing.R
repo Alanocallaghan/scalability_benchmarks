@@ -21,7 +21,7 @@ time_mcmc <- function(n, times = 1) {
 	          N = 20000,
 	          Thin = 10,
 	          Burn = 10000,
-	          WithSpikes = TRUE,
+	          WithSpikes = data != "pbmc",
 	          Regression = TRUE,
 	          PrintProgress = FALSE
 	        )
