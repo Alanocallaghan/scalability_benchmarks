@@ -1,3 +1,14 @@
+time_files <- list.files(here("outputs/time/"), full.names = TRUE)
+
+time_df_dc <- data.frame(
+  data = gsub(".*/(\\w+)_(\\d+).rds", "\\1", time_files),
+  chains = gsub(".*/(\\w+)_(\\d+).rds", "\\2", time_files)
+)
+time_df_dc <- time_df_dc[rep(seq_len(nrow(time_df_dc)), each = 6), ]
+time_df_dc[["times"]] <- as.vector(sapply(time_files, readRDS))
+time_df_dc[["seeds"]] <- seq(7, 42, length.out = 6)
+
+
 
 advi_time_df <- df %>% 
   dplyr::filter(by == "advi") %>%
@@ -29,20 +40,34 @@ time_df <- df %>%
     nCells = nCells[[1]],
   )
 
-time_df$data <- sub(
+time_df_merge <- merge(time_df_dc, time_df)
+time_df_merge <- time_df_merge[, 
+  c("data", "chains", "seeds", "times", "nGenes", "nCells")
+]
+time_df_merge[["time"]] <- time_df_merge[["times"]]
+
+time_df_merge$data <- sub(
   "([[:alpha:]])", "\\U\\1",
-  time_df$data,
+  time_df_merge$data,
   perl = TRUE
 )
-time_df$data <- sub(
+time_df_merge$data <- sub(
   "Pbmc",
   "10x PBMC",
-  time_df$data
+  time_df_merge$data
 )
 
+time_df <- time_df_merge %>% 
+  dplyr::group_by(data, chains) %>% 
+  dplyr::summarize(
+    time = median(time),
+    nGenes = nGenes[[1]],
+    nCells = nCells[[1]],
+  )
 
-ggplot(
-  time_df, 
+
+g <- ggplot(
+  time_df_merge, 
   aes(
     x = as.numeric(chains),
     y = time / 3600,
