@@ -14,6 +14,7 @@ data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[4]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
+set.seed(as.numeric(args[[3]]))
 
 counts <- counts(data)
 counts[] <- apply(
