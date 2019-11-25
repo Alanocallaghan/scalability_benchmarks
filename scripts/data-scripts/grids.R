@@ -74,8 +74,30 @@ write.table(
 )
 
 
-downsampling_grid <- expand.grid("zeisel", seq(1, 0.1, length.out = 10), seeds)
-downsampling_ref_grid <- expand.grid("zeisel", seq(1, 0.1, length.out = 10))
+removing_grid <- expand.grid("zeisel", seq(1, 0.1, length.out = 10), seeds)
+removing_grid_ref <- expand.grid("zeisel", seq(1, 0.1, length.out = 10))
+
+write.table(
+  removing_grid,
+  col.names = FALSE,
+  row.names = FALSE,
+  sep = "\t",
+  quote = FALSE,
+  file = "data/removing_grid.txt"
+)
+
+write.table(
+  removing_grid_ref,
+  col.names = FALSE,
+  row.names = FALSE,
+  sep = "\t",
+  quote = FALSE,
+  file = "data/removing_grid_ref.txt"
+)
+
+
+downsampling_grid <- expand.grid("buettner", seq(1, 0.1, length.out = 10), seeds)
+downsampling_ref_grid <- expand.grid("buettner", seq(1, 0.1, length.out = 10))
 
 write.table(
   downsampling_grid,
@@ -92,8 +114,13 @@ write.table(
   row.names = FALSE,
   sep = "\t",
   quote = FALSE,
-  file = "data/downsampling_ref_grid.txt"
+  file = "data/downsampling_grid_ref.txt"
 )
+
+
+
+
+
 
 write.table(
   data.frame(datasets),
