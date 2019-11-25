@@ -6,7 +6,7 @@ library("BASiCS")
 library("Scalability")
 
 args <- commandArgs(trailingOnly = TRUE)
-
+print(args)
 source(here("scripts/chain-scripts/benchmark_code.R"))
 
 set.seed(42)
