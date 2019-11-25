@@ -32,8 +32,8 @@ ide2 <- BASiCS_TestDE(
   EFDR_D = NULL,
   EFDR_R = NULL
 )
-g1 <- BASiCS_PlotDE(ide1, Which = c("MAPlot", "VolcanoPlot"))
-g2 <- BASiCS_PlotDE(ide2, Which = c("MAPlot", "VolcanoPlot"))
+g1 <- BASiCS_PlotDE(ide1, Plots = c("MAPlot", "VolcanoPlot"))
+g2 <- BASiCS_PlotDE(ide2, Plots = c("MAPlot", "VolcanoPlot"))
 ggsave(g1, file = "figs/de_id_tung.pdf", width = 12, height = 10)
 ggsave(g2, file = "figs/de_id_zeisel.pdf", width = 12, height = 10)
 
@@ -57,6 +57,11 @@ ess_dfs <- lapply(ess_id, function(x) do.call(rbind, x))
 ess_df_id <- do.call(rbind, ess_dfs)
 ess_df_id$data <- gsub("tung", "Tung", ess_df_id$data)
 ess_df_id$data <- gsub("zeisel", "Zeisel", ess_df_id$data)
+ess_df_id[["param"]] <- factor(ess_df_id[["param"]],
+  levels = c("mu", "delta", "epsilon")
+)
+
+
 
 ggplot(ess_df_id, aes(x = param, y = ess, color = type, fill = type)) + 
   geom_violin(alpha = 0.5) +
