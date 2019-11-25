@@ -9,7 +9,7 @@ MODULEPATH=$MODULEPATH:/exports/igmm/software/etc/el7/modules
 module load igmm/compilers/gcc/5.5.0
 module load igmm/apps/R/3.6.1
 
-Rscript scripts/timing.R tung
-Rscript scripts/timing.R zeisel
-Rscript scripts/timing.R pbmc
-Rscript scripts/timing.R buettner
+Rscript scripts/chain-scripts/timing.R tung
+Rscript scripts/chain-scripts/timing.R zeisel
+Rscript scripts/chain-scripts/timing.R pbmc
+Rscript scripts/chain-scripts/timing.R buettner
