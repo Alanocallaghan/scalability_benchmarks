@@ -4,14 +4,14 @@ library("BASiCS")
 args <- commandArgs(trailingOnly = TRUE)
 dir.create("outputs/time/", recursive = TRUE, showWarnings = FALSE)
 data <- args[[1]]
-
+cat("Doing", data, "\n")
 time_mcmc <- function(n, times = 1) {
   replicate(times, {
     subsets <- Scalability:::generateSubsets(
       readRDS(paste0("data/", data, ".rds")),
       NSubsets = n,
       SubsetBy = "gene",
-      WithSpikes = TRUE
+      WithSpikes = data != "pbmc"
     )
     system.time(
       suppressMessages(
@@ -32,6 +32,7 @@ time_mcmc <- function(n, times = 1) {
 }
 
 for (n in c(2, 4, 8, 16, 32)) {
+  cat(n, "chains\n")
   time <- time_mcmc(n, times = 6)
   saveRDS(time, paste0("outputs/time/", data, "_", n, ".rds"))
 }
