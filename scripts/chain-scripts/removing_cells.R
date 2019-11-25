@@ -17,6 +17,11 @@ dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 set.seed(as.numeric(args[[3]]))
 frac <- as.numeric(args[[2]])
 data <- data[, sample(ncol(counts(data)), floor(ncol(counts(data)) * frac))]
+if (length(altExpNames(data))) {
+  spikes <- altExp(data, "spike-ins")
+  spikes <- spikes[rowSums(assay(spikes) != 0, ]
+  altExp(data, "spike-ins") <- spikes
+}
 
 data <- divide_and_conquer_benchmark(
   Data = data,
