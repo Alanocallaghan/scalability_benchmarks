@@ -4,13 +4,14 @@ library("here")
 source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
+library("future")
+plan("multicore")
 
 args <- commandArgs(trailingOnly = TRUE)
 print(args)
 source(here("scripts/chain-scripts/benchmark_code.R"))
 
 set.seed(42)
-
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[3]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
