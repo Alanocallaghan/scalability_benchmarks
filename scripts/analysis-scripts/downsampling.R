@@ -31,7 +31,6 @@ mdf_ds$downsample_rate <- factor(
   levels = paste(sort(unique(ds_df$downsample_rate), decreasing = TRUE) * 100, "%")
 )
 
-
 ggplot(mdf_ds, aes(x = downsample_rate, y = value, color = variable)) +
   geom_quasirandom(dodge.width = 0.5, size = 0.25) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
