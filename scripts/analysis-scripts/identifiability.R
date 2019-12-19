@@ -37,6 +37,8 @@ g2 <- BASiCS_PlotDE(ide2, Plots = c("MAPlot", "VolcanoPlot"))
 ggsave(g1, file = "figs/de_id_tung.pdf", width = 12, height = 10)
 ggsave(g2, file = "figs/de_id_zeisel.pdf", width = 12, height = 10)
 
+
+
 ess_id <- lapply(c("mu", "delta", "epsilon"), 
   function(param) {
     lapply(seq_along(chains_id),
