@@ -1,4 +1,5 @@
 options(stringsAsFactors = FALSE)
+library("devtools")
 library("dplyr")
 library("ggplot2")
 library("ggbeeswarm")
@@ -39,6 +40,7 @@ data_dims <- vapply(
 data_dims <- as.data.frame(t(data_dims))
 colnames(data_dims) <- c("nGenes", "nCells")
 data_dims[["data"]] <- datasets
+
 
 source(here("scripts/analysis-scripts/downsampling.R"))
 source(here("scripts/analysis-scripts/removing_cells.R"))
