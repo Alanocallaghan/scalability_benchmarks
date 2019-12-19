@@ -42,7 +42,7 @@ time_df <- df %>%
 
 time_df_merge <- merge(time_df, time_df_dc, all = TRUE)
 time_df_merge <- time_df_merge[, 
-  c("data", "chains", "seeds", "times", "nGenes", "nCells")
+  c("data", "chains", "seeds", "time", "times", "nGenes", "nCells")
 ]
 time_df_merge <- time_df_merge %>% 
   group_by(data) %>%
@@ -51,7 +51,8 @@ time_df_merge <- time_df_merge %>%
     nCells = mean(nCells, na.rm = TRUE)
   )
 ind_na_time <- is.na(time_df_merge[["times"]])
-time_df_merge[["time"]][!ind_na_time] <- time_df_merge[["times"]][!ind_na_time]
+time_df_merge[ind_na_time, "times"] <- time_df_merge[ind_na_time, "time"]
+time_df_merge[["time"]] <- time_df_merge[["times"]]
 
 time_df_merge$data <- sub(
   "([[:alpha:]])", "\\U\\1",

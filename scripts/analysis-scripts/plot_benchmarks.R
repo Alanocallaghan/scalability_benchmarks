@@ -51,6 +51,7 @@ file_df <- rbind(advi_df, dc_df)
 df <- merge(file_df, data_dims)
 
 source(here("scripts/analysis-scripts/time_plot.R"))
+
 references <- df[which(df[["chains"]] == 1), ]
 references[["chain"]] <- lapply(references[["file"]], readRDS)
 
