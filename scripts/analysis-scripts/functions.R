@@ -52,7 +52,7 @@ parse_elbo <- function(c) {
 
 
 
-do_de <-function(df, ref_df, match_column) {
+do_de <-function(df, ref_df, match_column, mc.cores = 2) {
   edr <- mclapply(
     seq_len(nrow(df)),
     function(i) {
@@ -111,7 +111,7 @@ do_de <-function(df, ref_df, match_column) {
         }
       )
     },
-    mc.cores = 2
+    mc.cores = mc.cores
   )
 
   edr_df <- do.call(rbind, edr)
