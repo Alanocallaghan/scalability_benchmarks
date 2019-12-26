@@ -161,7 +161,7 @@ do_ess_plot <- function(j, maxdf, references) {
       name = bquote('Effective sample size'~epsilon[i]),
       trans = "log10"
     )
-  ggsave(file = here(paste0("figs/ess/", b, "_", d, ".pdf")), width = 7, height = 5)
+  ggsave(file = here(paste0("figs/ess/", b, "_", d, ".pdf")), width = 5, height = 4)
 }
 
 
