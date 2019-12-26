@@ -40,10 +40,18 @@ time_df <- df %>%
     nCells = nCells[[1]],
   )
 
-time_df_merge <- merge(time_df_dc, time_df)
+time_df_merge <- merge(time_df, time_df_dc, all = TRUE)
 time_df_merge <- time_df_merge[, 
-  c("data", "chains", "seeds", "times", "nGenes", "nCells")
+  c("data", "chains", "seeds", "time", "times", "nGenes", "nCells")
 ]
+time_df_merge <- time_df_merge %>% 
+  group_by(data) %>%
+  mutate(
+    nGenes = mean(nGenes, na.rm = TRUE),
+    nCells = mean(nCells, na.rm = TRUE)
+  )
+ind_na_time <- is.na(time_df_merge[["times"]])
+time_df_merge[ind_na_time, "times"] <- time_df_merge[ind_na_time, "time"]
 time_df_merge[["time"]] <- time_df_merge[["times"]]
 
 time_df_merge$data <- sub(
