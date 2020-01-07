@@ -18,7 +18,7 @@ rm_ref_files <- list.files("outputs/removing_cells/reference", full.names = TRUE
 ref_df_rm <- read_triplets(file2triplets(rm_ref_files), combine = TRUE)
 ref_df_rm$chain <- lapply(ref_df_rm$file, readRDS)
 
-rm_df <- do_de(rm_df, ref_df = ref_df_rm, match_column = "proportion_retained")
+rm_df <- do_de(rm_df, ref_df = ref_df_rm, match_column = "proportion_retained", mc.cores = 8)
 
 mdf_rm <- reshape2::melt(
   rm_df,

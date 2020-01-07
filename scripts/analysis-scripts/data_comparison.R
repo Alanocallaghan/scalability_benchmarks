@@ -76,7 +76,7 @@ ggplot(data_df, aes(x = mean_expression, color = name, fill = name)) +
 ggsave("figs/expression_density.pdf", width = 5, height = 4)
 
 ggplot(data_df, aes(x = dropout, color = name, fill = name)) +
-  labs(x = "Proportion of dropout") +
+  labs(x = "Proportion of zeros") +
   scale_color_brewer(palette = "Set2", name = "Dataset", aesthetics = c("color", "fill")) +
   geom_density(alpha = 0.2)
 ggsave("figs/dropout_density.pdf", width = 5, height = 4)

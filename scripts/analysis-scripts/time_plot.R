@@ -40,10 +40,18 @@ time_df <- df %>%
     nCells = nCells[[1]],
   )
 
-time_df_merge <- merge(time_df_dc, time_df)
+time_df_merge <- merge(time_df, time_df_dc, all = TRUE)
 time_df_merge <- time_df_merge[, 
-  c("data", "chains", "seeds", "times", "nGenes", "nCells")
+  c("data", "chains", "seeds", "time", "times", "nGenes", "nCells")
 ]
+time_df_merge <- time_df_merge %>% 
+  group_by(data) %>%
+  mutate(
+    nGenes = mean(nGenes, na.rm = TRUE),
+    nCells = mean(nCells, na.rm = TRUE)
+  )
+ind_na_time <- is.na(time_df_merge[["times"]])
+time_df_merge[ind_na_time, "times"] <- time_df_merge[ind_na_time, "time"]
 time_df_merge[["time"]] <- time_df_merge[["times"]]
 
 time_df_merge$data <- sub(
@@ -67,10 +75,10 @@ time_df <- time_df_merge %>%
 
 
 g <- ggplot(
-  time_df_merge, 
+  time_df, 
   aes(
     x = as.numeric(chains),
-    y = time / 3600,
+    y = time / 60,
     color = paste(
       data, "\n", 
       nGenes, "genes;", nCells, "cells",
@@ -81,7 +89,7 @@ g <- ggplot(
   geom_line(aes(group = data, linetype = "Divide and\nconquer")) +
   geom_hline(
     aes(
-      yintercept = time / 3600,
+      yintercept = time / 60,
       color = paste(
         data, "\n", 
         nGenes, "genes;",
@@ -97,7 +105,7 @@ g <- ggplot(
     trans = "log2",
     breaks = c(1, 2, 4, 8, 16, 32)
   ) +
-  scale_y_continuous(name = "Time (hr)", trans = "log10") +
+  scale_y_continuous(name = "Time (mins)", trans = "log10") +
   scale_color_brewer(name = "Data", palette = "Set2") +
   scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
 

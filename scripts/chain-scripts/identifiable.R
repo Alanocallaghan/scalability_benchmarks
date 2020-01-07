@@ -10,11 +10,6 @@ N <- 20000
 Thin <- 10
 Burn <- 10000
 
-N <- 10
-Thin <- 2
-Burn <- 4
-
-
 id <- with_extlib(
   c(
     "SingleCellExperiment",

@@ -1,4 +1,5 @@
 options(stringsAsFactors = FALSE)
+library("devtools")
 library("dplyr")
 library("ggplot2")
 library("ggbeeswarm")
@@ -40,6 +41,7 @@ data_dims <- as.data.frame(t(data_dims))
 colnames(data_dims) <- c("nGenes", "nCells")
 data_dims[["data"]] <- datasets
 
+
 source(here("scripts/analysis-scripts/downsampling.R"))
 source(here("scripts/analysis-scripts/removing_cells.R"))
 
@@ -51,6 +53,7 @@ file_df <- rbind(advi_df, dc_df)
 df <- merge(file_df, data_dims)
 
 source(here("scripts/analysis-scripts/time_plot.R"))
+
 references <- df[which(df[["chains"]] == 1), ]
 references[["chain"]] <- lapply(references[["file"]], readRDS)
 

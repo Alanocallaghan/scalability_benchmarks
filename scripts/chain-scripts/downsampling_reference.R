@@ -4,6 +4,8 @@ library("here")
 source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
+library("future")
+plan("multicore")
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -12,6 +14,7 @@ dir <- args[[3]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
 
+set.seed(42)
 counts <- counts(data)
 counts[] <- apply(
   counts,
@@ -21,7 +24,6 @@ counts[] <- apply(
   }
 )
 counts(data) <- counts
-set.seed(42)
 
 time <- system.time(
   chain <- BASiCS_MCMC(
