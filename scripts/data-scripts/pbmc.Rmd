@@ -141,11 +141,13 @@ feature_drop <- isOutlier(
   type = "lower",
   log = TRUE
 )
+ind_drop <- libsize_drop | feature_drop
+sce <- sce[, !ind_drop]
+
 ind_expressed <- rowMeans(counts(sce) != 0) > 0.2 & 
   Matrix::rowMeans(counts(sce)) > 0.1
-ind_drop <- libsize_drop | feature_drop
+sce <- sce[ind_expressed, ]
 
-sce <- sce[ind_expressed, !ind_drop]
 ```
 
 

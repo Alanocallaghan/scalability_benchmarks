@@ -35,13 +35,12 @@
 
     ## The following objects are masked from 'package:base':
     ## 
-    ##     anyDuplicated, append, as.data.frame, basename, cbind,
-    ##     colnames, dirname, do.call, duplicated, eval, evalq, Filter,
-    ##     Find, get, grep, grepl, intersect, is.unsorted, lapply, Map,
-    ##     mapply, match, mget, order, paste, pmax, pmax.int, pmin,
-    ##     pmin.int, Position, rank, rbind, Reduce, rownames, sapply,
-    ##     setdiff, sort, table, tapply, union, unique, unsplit, which,
-    ##     which.max, which.min
+    ##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    ##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    ##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    ##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    ##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    ##     union, unique, unsplit, which, which.max, which.min
 
     ## Loading required package: S4Vectors
 
@@ -107,10 +106,6 @@
     ##     plotMDS
 
     library("Seurat")
-
-    ## Registered S3 method overwritten by 'R.oo':
-    ##   method        from       
-    ##   throw.default R.methodsS3
 
     ## 
     ## Attaching package: 'Seurat'
@@ -207,36 +202,36 @@
     ##     CD2, CD7, CD27, TCF7, ARL4C, SPOCK2, HIST1H4C, BCL11B, CCR7, SYNE2 
     ##     GZMM, ITM2A, MAL, LEF1, CXCR4, OXNAD1, TRAT1, RORA, TRABD2A, BCL2 
     ## Negative:  FCN1, LYZ, CST3, MNDA, CTSS, PSAP, S100A9, FGL2, AIF1, NCF2 
-    ##     GRN, LST1, CD68, CYBB, SERPINA1, TYMP, CLEC12A, VCAN, TNFAIP2, CSTA 
-    ##     TYROBP, CPVL, MPEG1, S100A8, SPI1, CD14, KLF4, IGSF6, MS4A6A, CFD 
+    ##     GRN, LST1, CD68, CYBB, SERPINA1, TYMP, VCAN, CLEC12A, TNFAIP2, CSTA 
+    ##     TYROBP, CPVL, MPEG1, SPI1, S100A8, CD14, KLF4, IGSF6, MS4A6A, CFD 
     ## PC_ 2 
-    ## Positive:  CD79A, MS4A1, IGHM, BANK1, HLA-DQA1, IGKC, CD79B, LINC00926, RALGPS2, TNFRSF13C 
+    ## Positive:  CD79A, MS4A1, BANK1, IGHM, HLA-DQA1, IGKC, CD79B, LINC00926, RALGPS2, TNFRSF13C 
     ##     VPREB3, IGHD, SPIB, CD22, FCRL1, HLA-DQB1, BLK, FCRLA, FAM129C, TCL1A 
-    ##     GNG7, COBLL1, PAX5, TCF4, SWAP70, CD40, ARHGAP24, P2RX5, BCL11A, CD24 
+    ##     GNG7, COBLL1, TCF4, PAX5, SWAP70, CD40, ARHGAP24, P2RX5, BCL11A, CD24 
     ## Negative:  NKG7, CST7, GZMA, PRF1, KLRD1, CTSW, FGFBP2, GNLY, GZMH, CCL5 
-    ##     KLRF1, GZMM, HOPX, CD247, SPON2, ADGRG1, TRDC, GZMB, MATK, FCGR3A 
-    ##     CCL4, EFHD2, CLIC3, S100A4, IL2RB, KLRB1, TBX21, TTC38, PTGDR, PLEKHF1 
+    ##     GZMM, KLRF1, CD247, HOPX, SPON2, ADGRG1, TRDC, GZMB, MATK, FCGR3A 
+    ##     EFHD2, CCL4, CLIC3, S100A4, IL2RB, KLRB1, TBX21, TTC38, PTGDR, PLEKHF1 
     ## PC_ 3 
-    ## Positive:  GZMB, NKG7, GNLY, PRF1, CLIC3, KLRD1, FGFBP2, KLRF1, SPON2, CST7 
-    ##     GZMH, FCGR3A, ADGRG1, GZMA, HOPX, TRDC, CTSW, PLAC8, CCL4, HLA-DPB1 
-    ##     TTC38, PLEK, C12orf75, APOBEC3G, CXXC5, TBX21, CYBA, PRSS23, MATK, SYNGR1 
-    ## Negative:  IL7R, TCF7, MAL, LEF1, TRABD2A, TRAC, CCR7, FOS, CD27, OXNAD1 
-    ##     RGCC, LRRN3, CAMK4, LTB, FHIT, TRAT1, FOSB, RGS10, BCL11B, CD3D 
-    ##     AQP3, TNFRSF25, SOCS3, CD40LG, CD3G, VIM, FLT3LG, INPP4B, SLC2A3, TSHZ2 
+    ## Positive:  IL7R, TCF7, MAL, LEF1, TRABD2A, TRAC, CCR7, FOS, CD27, OXNAD1 
+    ##     LTB, LRRN3, RGCC, CAMK4, FHIT, TRAT1, FOSB, RGS10, BCL11B, CD3D 
+    ##     AQP3, SOCS3, TNFRSF25, CD40LG, CD3G, VIM, FLT3LG, INPP4B, SLC2A3, TSHZ2 
+    ## Negative:  GZMB, NKG7, GNLY, PRF1, KLRD1, CLIC3, FGFBP2, KLRF1, SPON2, CST7 
+    ##     GZMH, FCGR3A, ADGRG1, GZMA, HOPX, TRDC, CTSW, CCL4, PLAC8, HLA-DPB1 
+    ##     TTC38, PLEK, C12orf75, APOBEC3G, TBX21, CXXC5, PRSS23, CYBA, MATK, SYNGR1 
     ## PC_ 4 
-    ## Positive:  IL3RA, SERPINF1, LILRA4, TPM2, PLD4, CLEC4C, SMPD3, GAS6, SCT, PROC 
-    ##     PACSIN1, ITM2C, PTCRA, DERL3, LAMP5, DNASE1L3, KCNK17, P2RY14, MZB1, UGCG 
-    ##     ASIP, PPM1J, EPHB1, LGMN, AC119428.2, MAP1A, FCER1A, LINC00996, PPP1R14B, RUNX2 
-    ## Negative:  MS4A1, CD79A, LINC00926, BANK1, CD79B, TNFRSF13C, VPREB3, RALGPS2, FCRL1, IGHD 
-    ##     CD22, BLK, PAX5, CD24, P2RX5, SWAP70, CD19, CD40, IGHM, FCER2 
+    ## Positive:  MS4A1, CD79A, LINC00926, BANK1, TNFRSF13C, CD79B, VPREB3, RALGPS2, FCRL1, IGHD 
+    ##     CD22, BLK, PAX5, CD24, P2RX5, SWAP70, CD19, IGHM, CD40, FCER2 
     ##     ARHGAP24, PDLIM1, POU2AF1, TNFRSF13B, HLA-DOB, IGHG3, FCRL2, OSBPL10, IGHA1, FCRLA 
+    ## Negative:  IL3RA, SERPINF1, LILRA4, TPM2, PLD4, CLEC4C, SMPD3, GAS6, SCT, PROC 
+    ##     PACSIN1, ITM2C, PTCRA, LAMP5, DERL3, KCNK17, DNASE1L3, P2RY14, MZB1, UGCG 
+    ##     ASIP, AC119428.2, PPM1J, EPHB1, LGMN, MAP1A, FCER1A, LINC00996, PPP1R14B, RUNX2 
     ## PC_ 5 
     ## Positive:  S100A12, PADI4, S100A8, VNN2, CYP1B1, VCAN, CES1, ITGAM, QPCT, MCEMP1 
     ##     MGST1, RBP7, MARC1, NCF1, BST1, CLEC4E, FOLR3, MEGF9, CD14, CSF3R 
-    ##     S100A9, ALOX5AP, NFE2, PADI2, TPM2, PGD, CRISPLD2, STEAP4, CKAP4, LILRA4 
-    ## Negative:  C1QA, TCF7L2, CDKN1C, CTSL, BATF3, HES4, SIGLEC10, RHOC, CSF1R, IFITM3 
+    ##     ALOX5AP, S100A9, NFE2, TPM2, PADI2, MZB1, CRISPLD2, CLEC4C, JCHAIN, PGD 
+    ## Negative:  C1QA, TCF7L2, CDKN1C, BATF3, CTSL, HES4, SIGLEC10, RHOC, IFITM3, CSF1R 
     ##     FCGR3A, CAMK1, MGLL, ABI3, MTSS1, RRAS, CKB, ZNF703, CXCL16, AC064805.1 
-    ##     SMIM25, LY6E, HMOX1, MYOF, FMNL2, NEURL1, ADGRE2, MS4A4A, NAP1L1, SPRED1
+    ##     LY6E, SMIM25, HMOX1, MYOF, FMNL2, NEURL1, ADGRE2, SPRED1, MS4A4A, NAP1L1
 
     DimPlot(pbmc, reduction = "pca")
 
@@ -250,7 +245,7 @@
     pbmc <- ScoreJackStraw(pbmc, dims = 1:50)
     JackStrawPlot(pbmc, dims = 1:28)
 
-    ## Warning: Removed 42094 rows containing missing values (geom_point).
+    ## Warning: Removed 42000 rows containing missing values (geom_point).
 
 ![](rmd_files/pbmc/pca-3.png)
 
@@ -269,11 +264,11 @@
     ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
     ## 
     ## Number of nodes: 4231
-    ## Number of edges: 156744
+    ## Number of edges: 156831
     ## 
     ## Running Louvain algorithm...
-    ## Maximum modularity in 10 random starts: 0.8960
-    ## Number of communities: 10
+    ## Maximum modularity in 10 random starts: 0.8967
+    ## Number of communities: 11
     ## Elapsed time: 0 seconds
 
     pbmc <- RunUMAP(pbmc, dims = 1:20)
@@ -282,26 +277,26 @@
     ## To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
     ## This message will be shown once per session
 
-    ## 16:56:14 UMAP embedding parameters a = 0.9922 b = 1.112
+    ## 20:27:28 UMAP embedding parameters a = 0.9922 b = 1.112
 
-    ## 16:56:14 Read 4231 rows and found 20 numeric columns
+    ## 20:27:28 Read 4231 rows and found 20 numeric columns
 
-    ## 16:56:14 Using Annoy for neighbor search, n_neighbors = 30
+    ## 20:27:28 Using Annoy for neighbor search, n_neighbors = 30
 
-    ## 16:56:14 Building Annoy index with metric = cosine, n_trees = 50
+    ## 20:27:28 Building Annoy index with metric = cosine, n_trees = 50
 
     ## 0%   10   20   30   40   50   60   70   80   90   100%
 
     ## [----|----|----|----|----|----|----|----|----|----|
 
     ## **************************************************|
-    ## 16:56:14 Writing NN index file to temp file /tmp/RtmpjRIKft/file60de5e127883
-    ## 16:56:14 Searching Annoy index using 1 thread, search_k = 3000
-    ## 16:56:15 Annoy recall = 100%
-    ## 16:56:16 Commencing smooth kNN distance calibration using 1 thread
-    ## 16:56:17 Initializing from normalized Laplacian + noise
-    ## 16:56:17 Commencing optimization for 500 epochs, with 178568 positive edges
-    ## 16:56:26 Optimization finished
+    ## 20:27:29 Writing NN index file to temp file /tmp/Rtmp6HIxm1/file6b843dd4c64c
+    ## 20:27:29 Searching Annoy index using 1 thread, search_k = 3000
+    ## 20:27:30 Annoy recall = 100%
+    ## 20:27:31 Commencing smooth kNN distance calibration using 1 thread
+    ## 20:27:32 Initializing from normalized Laplacian + noise
+    ## 20:27:32 Commencing optimization for 500 epochs, with 178726 positive edges
+    ## 20:27:44 Optimization finished
 
     DimPlot(pbmc, reduction = "umap", cols = "Paired")
 
@@ -333,6 +328,8 @@
     ## Calculating cluster 8
 
     ## Calculating cluster 9
+
+    ## Calculating cluster 10
 
     g3 <- pbmc_markers %>% 
       filter(cluster == 0) %>% 
@@ -388,11 +385,12 @@
       type = "lower",
       log = TRUE
     )
+    ind_drop <- libsize_drop | feature_drop
+    sce <- sce[, !ind_drop]
+
     ind_expressed <- rowMeans(counts(sce) != 0) > 0.2 & 
       Matrix::rowMeans(counts(sce)) > 0.1
-    ind_drop <- libsize_drop | feature_drop
-
-    sce <- sce[ind_expressed, !ind_drop]
+    sce <- sce[ind_expressed, ]
 
     pbmc <- sce
     saveRDS(pbmc, here("data/pbmc.rds"))
