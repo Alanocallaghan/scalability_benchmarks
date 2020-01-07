@@ -26,7 +26,7 @@ plot_all_hpds <- function(df, param) {
         feature = colnames(chain@parameters[[param]]),
         hpd = get_normalised_hpd_width(chain, param)
       )
-    } # , mc.cores = 2
+    }, mc.cores = 2
   )  
 
   hpdf_all <- bind_rows(hpds_all)
@@ -89,5 +89,5 @@ plot_all_hpds <- function(df, param) {
   invisible(g)
 }
 
-plot_all_hpds(dc_df, "mu")
-plot_all_hpds(dc_df, "epsilon")
+plot_all_hpds(df, "mu")
+plot_all_hpds(df, "epsilon")

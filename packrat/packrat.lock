@@ -5,21 +5,20 @@ Repos: CRAN=https://cloud.r-project.org/
 
 Package: BASiCS
 Source: github
-Version: 1.7.19
+Version: 1.9.10
 GithubRepo: BASiCS
 GithubUsername: catavallejos
 GithubRef: prior_scaling
-GithubSha1: 8fc397fdfba663f8dbc4e8bfa3985e0ced61e6c3
+GithubSha1: 3236b7878f6dbd85652a02d0c3582f725901c29b
 RemoteHost: api.github.com
 RemoteRepo: BASiCS
 RemoteUsername: catavallejos
 RemoteRef: prior_scaling
-RemoteSha: 8fc397fdfba663f8dbc4e8bfa3985e0ced61e6c3
-Hash: ef84c44b2df35f5c53a6870f279567c8
+RemoteSha: 3236b7878f6dbd85652a02d0c3582f725901c29b
+Hash: a87c006f61a98e7d9cda3472156d3daf
 Requires: Biobase, BiocGenerics, Rcpp, RcppArmadillo, S4Vectors,
-    SingleCellExperiment, SummarizedExperiment, coda, cowplot,
-    data.table, ggExtra, ggplot2, hexbin, matrixStats, reshape2, scran,
-    viridis
+    SingleCellExperiment, SummarizedExperiment, coda, cowplot, ggExtra,
+    ggplot2, hexbin, matrixStats, reshape2, scran, viridis
 
 Package: BH
 Source: CRAN
@@ -496,6 +495,11 @@ Package: fansi
 Source: CRAN
 Version: 0.4.0
 Hash: f147621f72b561485bfffcae78c4f5d5
+
+Package: farver
+Source: CRAN
+Version: 2.0.1
+Hash: eb671f52c8ebb4b81617eba93abda72b
 
 Package: fastmap
 Source: CRAN

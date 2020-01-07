@@ -4,6 +4,8 @@ library("here")
 source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
+library("future")
+plan("multicore")
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -14,8 +16,15 @@ data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[4]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
+set.seed(as.numeric(args[[3]]))
 frac <- as.numeric(args[[2]])
 data <- data[, sample(ncol(counts(data)), floor(ncol(counts(data)) * frac))]
+if (length(altExpNames(data))) {
+  spikes <- altExp(data, "spike-ins")
+  ind_keep_spike <- rowSums(assay(spikes)) != 0
+  metadata(data)$SpikeInput <- metadata(data)$SpikeInput[ind_keep_spike, ]
+  altExp(data, "spike-ins") <- spikes[ind_keep_spike, ]
+}
 
 data <- divide_and_conquer_benchmark(
   Data = data,

@@ -17,7 +17,7 @@ ds_df <- read_triplets(dst, combine = TRUE)
 ref_files <- list.files("outputs/downsampling/reference", full.names = TRUE)
 ref_df_ds <- read_triplets(file2triplets(ref_files), combine = TRUE)
 ref_df_ds$chain <- lapply(ref_df_ds$file, readRDS)
-ds_df <- do_de(ds_df, ref_df_ds, "downsample_rate")
+ds_df <- do_de(ds_df, ref_df_ds, "downsample_rate", mc.cores = 8)
 
 mdf_ds <- reshape2::melt(ds_df,
   measure.vars = c("pDiffExp", "pDiffDisp", "pDiffResDisp")
@@ -26,17 +26,19 @@ mdf_ds$variable <- gsub("pDiffExp", "mu", mdf_ds$variable)
 mdf_ds$variable <- gsub("pDiffDisp", "delta", mdf_ds$variable)
 mdf_ds$variable <- gsub("pDiffResDisp", "epsilon", mdf_ds$variable)
 mdf_ds$variable <- factor(mdf_ds$variable, levels = c("mu", "delta", "epsilon"))
-mdf_ds$downsample_rate <- factor(
+
+libsize <- colSums(counts(readRDS(paste0("data/", ref_df_ds[[1, "data"]], ".rds"))))
+mdf_ds$mean_libsize <- median(libsize) * mdf_ds$downsample_rate
+mdf_ds$downsample_rate_t <- factor(
   paste(mdf_ds$downsample_rate * 100, "%"),
   levels = paste(sort(unique(ds_df$downsample_rate), decreasing = TRUE) * 100, "%")
 )
 
-
-ggplot(mdf_ds, aes(x = downsample_rate, y = value, color = variable)) +
-  geom_quasirandom(dodge.width = 0.5, size = 0.25) +
+ggplot(mdf_ds, aes(x = round(mean_libsize), y = value, color = variable)) +
+  geom_quasirandom(dodge.width = 250, size = 0.25) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
-  # scale_x_continuous(label = scales::percent) +
+  scale_x_reverse() +
   scale_y_continuous(label = scales::percent) +
-  labs(x = "Proportion of original counts", y = "Portion of genes perturbed")
+  labs(x = "Expected median library size", y = "Portion of genes perturbed")
 
 ggsave("figs/downsampling.pdf", width = 6, height = 4)

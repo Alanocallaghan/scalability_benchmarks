@@ -4,19 +4,27 @@ library("here")
 source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
+library("future")
+plan("multicore")
 
 args <- commandArgs(trailingOnly = TRUE)
-
+print(args)
 source(here("scripts/chain-scripts/benchmark_code.R"))
 
 set.seed(42)
-
 data <- readRDS(here("data", paste0(args[[1]], ".rds")))
 dir <- args[[3]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
 frac <- as.numeric(args[[2]])
 data <- data[, sample(ncol(counts(data)), floor(ncol(counts(data)) * frac))]
+if (length(altExpNames(data))) {
+  spikes <- altExp(data, "spike-ins")
+  ind_keep_spike <- rowSums(assay(spikes)) != 0
+  metadata(data)$SpikeInput <- metadata(data)$SpikeInput[ind_keep_spike, ]
+  altExp(data, "spike-ins") <- spikes[ind_keep_spike, ]
+}
+
 
 chain <- BASiCS_MCMC(
   data,
