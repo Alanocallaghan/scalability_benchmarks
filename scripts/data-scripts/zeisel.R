@@ -83,10 +83,8 @@ CA1 <- Zeisel.bio[, CA1.ind]
 Zeisel.meta <- Zeisel.meta[CA1.ind, ]
 ERCC <- Zeisel.ERCC[, colnames(CA1)]
 
-
 input <- rbind(CA1, ERCC)
-bio <- input[!grepl("ERCC", rownames(input)), , drop=FALSE]
-ind_expressed <- rowMeans(bio) >= 1 & rowMeans(bio != 0) > 0.5
+
 
 libsize_drop <- isOutlier(
   colSums(input),
@@ -100,13 +98,20 @@ feature_drop <- isOutlier(
   type = "lower",
   log = TRUE
 )
+input <- input[, !(libsize_drop | feature_drop)]
+Zeisel.meta <- Zeisel.meta[!(libsize_drop | feature_drop), ]
+
+
+bio <- input[!grepl("ERCC", rownames(input)), , drop = FALSE]
+ind_expressed <- rowMeans(bio) >= 1 & rowMeans(bio != 0) > 0.5
+
 
 ind_expressed_ercc <- c(
   which(ind_expressed),
   grep("ERCC", rownames(input))
 )
-input <- input[ind_expressed_ercc, !(libsize_drop | feature_drop)]
-Zeisel.meta <- Zeisel.meta[!(libsize_drop | feature_drop), ]
+input <- input[ind_expressed_ercc, ]
+
 
 ERCC.conc <- read.table(
   erccfile,

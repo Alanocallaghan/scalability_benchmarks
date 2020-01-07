@@ -37,16 +37,15 @@ ind_cell_one <- cell_lines == sort(unique(cell_lines))[[cell_ind]]
 
 reads <- reads[, ind_cell_one]
 
-ind_expressed <- rowMeans(reads) >= 1 & rowMeans(reads != 0) > 0.5
-reads <- reads[ind_expressed, ]
-reads <- reads[, colMeans(reads != 0) > 0.65]
-
 libsize_drop <- isOutlier(colSums(reads), nmads = 3, type = "lower", log = TRUE)
 feature_drop <- isOutlier(colSums(reads != 0), nmads = 3, type = "lower", log = TRUE)
 
 reads <- reads[, !(libsize_drop | feature_drop)]
 
-spikes <- rownames(reads)[grep("ERC", rownames(reads))]
+spikes <- rownames(reads)[grep("ERCC", rownames(reads))]
+
+ind_expressed <- rowMeans(reads) >= 1 & rowMeans(reads != 0) > 0.5
+reads <- reads[ind_expressed, ]
 
 
 ERCC_num <- read.table(

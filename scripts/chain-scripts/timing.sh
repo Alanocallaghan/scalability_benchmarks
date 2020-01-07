@@ -2,6 +2,7 @@
 #$ -S /bin/bash
 #$ -l h_vmem=5G
 #$ -cwd
+#$ -pe sharedmem 5
 #$ -l h_rt=72:00:00
 
 . /etc/profile.d/modules.sh
