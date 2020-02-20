@@ -3,7 +3,6 @@
 args <- commandArgs(trailingOnly = TRUE)
 
 library("here")
-source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
 

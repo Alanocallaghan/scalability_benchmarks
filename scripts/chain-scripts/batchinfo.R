@@ -1,6 +1,5 @@
 args <- commandArgs(trailingOnly = TRUE)
 
-library("packrat")
 
 data <- readRDS(paste0("data/", args[[1]], ".rds"))
 
