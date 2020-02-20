@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 
 library("here")
-source(here("packrat/init.R"))
 library("BASiCS")
 library("Scalability")
 library("future")

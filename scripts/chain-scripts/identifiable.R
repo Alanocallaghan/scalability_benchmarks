@@ -2,8 +2,6 @@ args <- commandArgs(trailingOnly = TRUE)
 print(args)
 
 
-library("packrat")
-
 D <- readRDS(paste0("data/", args[[1]], ".rds"))
 
 N <- 20000
