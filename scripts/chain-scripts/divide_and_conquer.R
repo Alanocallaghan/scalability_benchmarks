@@ -2,7 +2,8 @@
 
 library("here")
 library("BASiCS")
-library("Scalability")
+# library("Scalability")
+devtools::load_all("../Scalability")
 library("future")
 plan("multicore")
 
@@ -23,7 +24,7 @@ data <- divide_and_conquer_benchmark(
   NSubsets = args[[2]],
   Seed = args[[3]],
   Regression = TRUE,
-  Verbose = FALSE,
+  MinGenesPerRBF = 1,
   N = 20000,
   Thin = 10,
   Burn = 10000

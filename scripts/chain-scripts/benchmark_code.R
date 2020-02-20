@@ -23,7 +23,7 @@ divide_and_conquer_benchmark <- function(
     Regression = TRUE,
     WithSpikes = length(SingleCellExperiment::altExpNames(Data)) > 0,
     Seed = 42,
-    Verbose = FALSE) {
+    ...) {
 
   SubsetBy <- match.arg(SubsetBy)
   if (NSubsets == 1) {
@@ -36,7 +36,7 @@ divide_and_conquer_benchmark <- function(
         WithSpikes = WithSpikes,
         PrintProgress = FALSE,
         Regression = Regression,
-        Verbose = Verbose
+        ...
       )
     )
   } else {
@@ -53,8 +53,8 @@ divide_and_conquer_benchmark <- function(
             WithSpikes = WithSpikes,
             PrintProgress = FALSE,
             Regression = Regression,
-            Verbose = Verbose,
-            Seed = Seed
+            Seed = Seed,
+            ...
           )
       )
     })
