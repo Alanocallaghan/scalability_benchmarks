@@ -209,11 +209,6 @@
       "Version": "0.23.25",
       "Source": "Bioconductor"
     },
-    "SDMTools": {
-      "Package": "SDMTools",
-      "Version": "1.1-221.1",
-      "Source": "CRAN"
-    },
     "Scalability": {
       "Package": "Scalability",
       "Version": "0.0.0.9000",
@@ -747,11 +742,6 @@
     "packrat": {
       "Package": "packrat",
       "Version": "0.5.0",
-      "Source": "CRAN"
-    },
-    "parallelMCMCcombine": {
-      "Package": "parallelMCMCcombine",
-      "Version": "1.0",
       "Source": "CRAN"
     },
     "pbapply": {
