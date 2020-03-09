@@ -1,9 +1,7 @@
 #!/usr/bin/env Rscript
 
 library("here")
-devtools::load_all("../BASiCS")
-# library("Scalability")
-# devtools::load_all("../Scalability")
+library("BASiCS")
 library("future")
 plan("multicore")
 options(stringsAsFactors=FALSE)
@@ -35,7 +33,7 @@ config <- data[["config"]]
 if (length(chains) == 1) {
   collapsed <- chains
 } else {
-  collapsed <- Scalability:::combine_subposteriors(
+  collapsed <- BASiCS:::combine_subposteriors(
     chains,
     subset_by = config[["by"]],
     method = "pie",
