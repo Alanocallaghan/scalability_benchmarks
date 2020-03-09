@@ -2,6 +2,12 @@
 
 txts := $(wildcard data/*.txt)
 
+downloads/chen.rds:
+	curl https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/chen.rds > downloads/chen.rds
+
+data/chen.rds: downloads/chen.rds scripts/data-scripts/chen.R
+	Rscript scripts/data-scripts/chen.R
+
 data/tung.rds: scripts/data-scripts/tung.R
 	Rscript scripts/data-scripts/tung.R
 
