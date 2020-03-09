@@ -19,7 +19,6 @@ divide_and_conquer_benchmark <- function(
     DataName,
     NSubsets = 1,
     SubsetBy = c("gene", "cell"),
-    Cores = min(NSubsets, detectCores(all.tests = FALSE, logical = TRUE)),
     Regression = TRUE,
     WithSpikes = length(SingleCellExperiment::altExpNames(Data)) > 0,
     Seed = 42,
@@ -42,10 +41,9 @@ divide_and_conquer_benchmark <- function(
   } else {
       try({
         t <- system.time(
-          chain <- Scalability:::multi_MCMC(
+          chain <- BASiCS::multi_MCMC(
             Data,
             NSubsets = NSubsets,
-            mc.cores = Cores,
             SubsetBy = SubsetBy,
             N = N,
             Thin = Thin,
