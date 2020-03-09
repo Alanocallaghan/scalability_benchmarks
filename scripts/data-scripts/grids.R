@@ -8,7 +8,8 @@ seeds <- benchmarkSeeds()
 datasets <- c(
   "tung",
   "buettner",
-  "pbmc",
+  # "pbmc",
+  "chen",
   # "splatter", 
   "zeisel"
   # , "williams"
