@@ -25,7 +25,10 @@ advi_df <- read_triplets(advi_triplets)
 source(here("scripts/analysis-scripts/elbo_plots.R"))
 
 
-datasets <- unique(advi_df[["data"]])
+dc_files <- list.files("outputs/divide_and_conquer", full.names = TRUE)
+dc_df <- read_triplets(file2triplets(dc_files), combine = TRUE)
+
+datasets <- unique(dc_df[["data"]])
 data_dims <- vapply(
   datasets,
   function(x) {
@@ -45,9 +48,6 @@ data_dims[["data"]] <- datasets
 source(here("scripts/analysis-scripts/downsampling.R"))
 source(here("scripts/analysis-scripts/removing_cells.R"))
 
-
-dc_files <- list.files("outputs/divide_and_conquer", full.names = TRUE)
-dc_df <- read_triplets(file2triplets(dc_files), combine = TRUE)
 
 file_df <- rbind(advi_df, dc_df)
 df <- merge(file_df, data_dims)
