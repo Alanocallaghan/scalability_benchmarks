@@ -9,3 +9,4 @@ outputs
 outputs_old/
 figs/
 *.RData
+Rplots.pdf
