@@ -17,7 +17,8 @@ theme_set(theme_bw())
 datasets <- c(
   "tung",
   "buettner",
-  "pbmc",
+  # "pbmc",
+  "chen",
   "zeisel"
 )
 datas <- lapply(datasets,function(d) readRDS(paste0("data/", d, ".rds")))
@@ -25,7 +26,8 @@ datas <- lapply(datasets,function(d) readRDS(paste0("data/", d, ".rds")))
 names(datas) <- c(
   "Tung",
   "Buettner",
-  "10x PBMC",
+  # "10x PBMC",
+  "Chen",
   "Zeisel"
 )
 
