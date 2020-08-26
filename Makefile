@@ -17,17 +17,17 @@ data/zeisel.rds: scripts/data-scripts/zeisel.R
 data/buettner.rds: scripts/data-scripts/buettner.R
 	Rscript scripts/data-scripts/buettner.R
 
-data/pbmc.rds: scripts/data-scripts/pbmc.Rmd
-	Rscript -e 'rmarkdown::render("scripts/data-scripts/pbmc.Rmd")'
+# data/pbmc.rds: scripts/data-scripts/pbmc.Rmd
+# 	Rscript -e 'rmarkdown::render("scripts/data-scripts/pbmc.Rmd")'
 
 datasets: data/tung.rds data/zeisel.rds data/buettner.rds data/pbmc.rds
 
 data/%.txt: scripts/data-scripts/grids.R
 	Rscript scripts/data-scripts/grids.R
 
-outputs/divide_and_conquer: scripts/chain-scripts/divide_and_conquer.sh 
-outputs/divide_and_conquer: datasets data/divide_and_conquer_grid.txt
-	qsub -t 1-$(cat data/divide_and_conquer_grid.txt | wc -l) -tc 10 scripts/chain-scripts/divide_and_conquer.sh
+# outputs/divide_and_conquer: scripts/chain-scripts/divide_and_conquer.sh 
+# outputs/divide_and_conquer: datasets data/divide_and_conquer_grid.txt
+# 	qsub -t 1-$(cat data/divide_and_conquer_grid.txt | wc -l) -tc 10 scripts/chain-scripts/divide_and_conquer.sh
 
 outputs/advi: scripts/chain-scripts/advi.R datasets data/advi_grid.txt
 	qsub -t 1-$(cat data/advi_grid.txt | wc -l) -tc 5 scripts/chain-scripts/advi.sh 

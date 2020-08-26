@@ -1,15 +1,27 @@
 #!/usr/bin/env Rscript
+if (!require("argparse")) {
+    install.packages("argparse")
+}
+suppressPackageStartupMessages({
+  library("argparse")
+  library("here")
+  # library("BASiCS")
+  devtools::load_all("../BASiCS")
+  library("future")
+  devtools::load_all("../Scalability")
+  plan("multicore")
+})
+options(stringsAsFactors=FALSE)
+parser <- ArgumentParser()
+parser$add_argument("-d", "--data")
+parser$add_argument("-s", "--seed")
+parser$add_argument("-o", "--output")
+args <- parser$parse_args()
 
-args <- commandArgs(trailingOnly = TRUE)
 
-library("here")
-library("BASiCS")
-library("Scalability")
-
-
-set.seed(args[[2]])
-data <- readRDS(here("data", paste0(args[[1]], ".rds")))
-dir <- args[[3]]
+set.seed(args[["seed"]])
+data <- readRDS(here("data", paste0(args[["data"]], ".rds")))
+dir <- args[["output"]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 
 with_spikes <- as.logical(length(altExpNames(data)))
@@ -30,8 +42,8 @@ chain <- Scalability:::stan2basics(
 config <- list(
   chains = NA,
   by = "advi",
-  data = args[[1]],
-  seed = args[[2]]
+  data = args[["data"]],
+  seed = args[["seed"]]
 )
 
 saveRDS(elbo, file.path(dir, "elbo.rds"))
