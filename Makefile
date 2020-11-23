@@ -6,24 +6,24 @@ downloads/chen.rds:
 	curl https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/chen.rds > downloads/chen.rds
 
 data/chen.rds: downloads/chen.rds scripts/data-scripts/chen.R
-	Rscript scripts/data-scripts/chen.R
+	qsub scripts/data-scripts/data-runner.sh "scripts/data-scripts/chen.R"
 
 data/tung.rds: scripts/data-scripts/tung.R
-	Rscript scripts/data-scripts/tung.R
+	qsub scripts/data-scripts/data-runner.sh "scripts/data-scripts/tung.R"
 
 data/zeisel.rds: scripts/data-scripts/zeisel.R
-	Rscript scripts/data-scripts/zeisel.R
+	qsub scripts/data-scripts/data-runner.sh "scripts/data-scripts/zeisel.R"
 
 data/buettner.rds: scripts/data-scripts/buettner.R
-	Rscript scripts/data-scripts/buettner.R
+	qsub scripts/data-scripts/data-runner.sh "scripts/data-scripts/buettner.R"
 
-data/pbmc.rds: scripts/data-scripts/pbmc.Rmd
-	Rscript -e 'rmarkdown::render("scripts/data-scripts/pbmc.Rmd")'
+# data/pbmc.rds: scripts/data-scripts/pbmc.Rmd
+# 	Rscript -e 'rmarkdown::render("scripts/data-scripts/pbmc.Rmd")'
 
 datasets: data/tung.rds data/zeisel.rds data/buettner.rds data/pbmc.rds
 
 data/%.txt: scripts/data-scripts/grids.R
-	Rscript scripts/data-scripts/grids.R
+	qsub scripts/data-scripts/data-runner.sh "scripts/data-scripts/grids.R"
 
 outputs/divide_and_conquer: scripts/chain-scripts/divide_and_conquer.sh 
 outputs/divide_and_conquer: datasets data/divide_and_conquer_grid.txt
