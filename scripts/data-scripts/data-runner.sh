@@ -10,3 +10,7 @@ module load igmm/compilers/gcc/5.5.0
 module load igmm/apps/R/3.6.1
 
 Rscript $1
+
+
+module load roslin/gcc/7.3.0
+module load roslin/R/4.0.0
