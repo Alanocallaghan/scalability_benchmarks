@@ -63,9 +63,8 @@ rule all:
 
 
 rule divide_and_conquer:
-    # threads: 4
-    # resources:
-    #     mem_mb=5000
+    resources:
+        mem_mb=5000
     output:
         "outputs/divide_and_conquer/data-{data}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/"
     shell:
@@ -79,6 +78,8 @@ rule divide_and_conquer:
         """
 
 rule downsampling_ref:
+    resources:
+        mem_mb=5000
     output:
         "outputs/downsampling/reference/data-{data}_fraction-{fraction}/"
     shell:
@@ -91,6 +92,8 @@ rule downsampling_ref:
 
 
 rule downsampling_divide:
+    resources:
+        mem_mb=5000
     output:
         "outputs/downsampling/divide/data-{data}_fraction-{fraction}_seed-{seed}/"
     shell:
@@ -104,6 +107,8 @@ rule downsampling_divide:
 
 
 rule removing_ref:
+    resources:
+        mem_mb=5000
     output:
         "outputs/removing/reference/data-{data}_fraction-{fraction}/"
     shell:
@@ -115,6 +120,8 @@ rule removing_ref:
         """
 
 rule removing_divide:
+    resources:
+        mem_mb=5000
     output:
         "outputs/removing/divide/data-{data}_fraction-{fraction}_seed-{seed}/"
     shell:
@@ -127,6 +134,8 @@ rule removing_divide:
         """
 
 rule batchinfo:
+    resources:
+        mem_mb=5000
     output:
         "outputs/batchinfo/data-{data}/"
     shell:
@@ -137,6 +146,8 @@ rule batchinfo:
         """
 
 rule data:
+    resources:
+        mem_mb=5000
     input:
         "scripts/data-scripts/{dataset}.R"
     output:
