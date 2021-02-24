@@ -11,53 +11,55 @@ fractions = [x/10 for x in range(2, 11, 2)]
 rule all:
     input:
         expand(
-            "outputs/divide_and_conquer/data-{data}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
-            data = data,
+            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            dataset = data,
             nsubsets = chains,
             by = by,
             seed = seeds
         ),
         # expand(
-        #     "outputs/advi/data-{data}_seed-{seed}/",
+        #     "outputs/advi/data-{dataset}_seed-{seed}/",
         #     data = data,
         #     seed  = seeds
         # ),
         expand(
-            "outputs/downsampling/divide/data-{data}_fraction-{fraction}_seed-{seed}/",
-            data = data,
+            "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+            dataset = data,
             seed = seeds,
             fraction = fractions
         ),
         expand(
-            "outputs/downsampling/reference/data-{data}_fraction-{fraction}/",
-            data = data,
+            "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
+            dataset = data,
             fraction = fractions
         ),
         expand(
-            "outputs/removing/reference/data-{data}_fraction-{fraction}/",
-            data = data,
+            "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
+            dataset = data,
             fraction = fractions
         ),
         expand(
-            "outputs/removing/divide/data-{data}_fraction-{fraction}_seed-{seed}/",
-            data = data,
+            "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+            dataset = data,
             seed = seeds,
             fraction = fractions
         ),
         expand(
-            "outputs/batchinfo/data-{data}/",
-            data = data_batch
+            "outputs/batchinfo/data-{dataset}/",
+            dataset = data_batch
         )
 
 # rule advi:
 #     conda:
 #          "conda.yaml"
 #     output:
-#         "outputs/advi/data-{data}_seed-{seed}/"
+#         "outputs/advi/data-{dataset}_seed-{seed}/"
+#     input:
+#         "data/{dataset}.rds"
 #     shell:
 #         """
 #         ./src/chain-scripts/advi.R \
-#             --data {wildcards.data} \
+#             --data {wildcards.dataset} \
 #             --seed {wildcards.seed} \
 #             --output {output}
 #         """
@@ -68,12 +70,14 @@ rule divide_and_conquer:
         "conda.yaml"
     resources:
         mem_mb=5000
+    input:
+        "data/{dataset}.rds"
     output:
-        "outputs/divide_and_conquer/data-{data}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/"
+        "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/"
     shell:
         """
         ./src/chain-scripts/divide_and_conquer.R \
-            --data {wildcards.data} \
+            --data {wildcards.dataset} \
             --nsubsets {wildcards.nsubsets} \
             --seed {wildcards.seed} \
             --subsetby {wildcards.by} \
@@ -85,12 +89,14 @@ rule downsampling_ref:
         "conda.yaml"
     resources:
         mem_mb=5000
+    input:
+        "data/{dataset}.rds"
     output:
-        "outputs/downsampling/reference/data-{data}_fraction-{fraction}/"
+        "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/"
     shell:
         """
         ./src/chain-scripts/downsampling_reference.R \
-            --data {wildcards.data} \
+            --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
         """
@@ -101,12 +107,14 @@ rule downsampling_divide:
         "conda.yaml"
     resources:
         mem_mb=5000
+    input:
+        "data/{dataset}.rds"
     output:
-        "outputs/downsampling/divide/data-{data}_fraction-{fraction}_seed-{seed}/"
+        "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/"
     shell:
         """
         ./src/chain-scripts/downsampling_divide.R \
-            --data {wildcards.data} \
+            --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -118,12 +126,14 @@ rule removing_ref:
         "conda.yaml"
     resources:
         mem_mb=5000
+    input:
+        "data/{dataset}.rds"
     output:
-        "outputs/removing/reference/data-{data}_fraction-{fraction}/"
+        "outputs/removing/reference/data-{dataset}_fraction-{fraction}/"
     shell:
         """
         ./src/chain-scripts/removing_cells_ref.R \
-            --data {wildcards.data} \
+            --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
         """
@@ -133,12 +143,14 @@ rule removing_divide:
         "conda.yaml"
     resources:
         mem_mb=5000
+    input:
+        "data/{dataset}.rds"
     output:
-        "outputs/removing/divide/data-{data}_fraction-{fraction}_seed-{seed}/"
+        "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/"
     shell:
         """
         ./src/chain-scripts/removing_cells.R \
-            --data {wildcards.data} \
+            --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -149,12 +161,14 @@ rule batchinfo:
         "conda.yaml"
     resources:
         mem_mb=5000
+    input:
+        "data/{dataset}.rds"
     output:
-        "outputs/batchinfo/data-{data}/"
+        "outputs/batchinfo/data-{dataset}/"
     shell:
         """
         ./src/chain-scripts/batchinfo.R \
-            --data {wildcards.data} \
+            --data {wildcards.dataset} \
             --output {output}
         """
 
@@ -164,7 +178,7 @@ rule data:
     resources:
         mem_mb=5000
     input:
-        "scripts/data-scripts/{dataset}.R"
+        "src/data-scripts/{dataset}.R"
     output:
         "data/{dataset}.rds"
     shell:
