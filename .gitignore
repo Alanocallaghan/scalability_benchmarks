@@ -11,3 +11,4 @@ figs/
 *.RData
 Rplots.pdf
 .snakemake
+cluster_logs
