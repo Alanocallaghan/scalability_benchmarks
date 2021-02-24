@@ -1,9 +1,9 @@
-chains = [1, 2, 4, 8, 16, 32, 64, 128, 256]
+chains = [1, 2, 4, 8, 16, 32, 64, 128]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
 data_batch = ["tung", "zeisel"]
 seeds = [7, 14, 21, 28, 35, 42]
-fractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+fractions = [x/10 for x in range(2, 11, 2)]
 
 # configfile: "config/snakemake_config.yaml"
 # conda: config["conda"]
@@ -11,55 +11,53 @@ fractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 rule all:
     input:
         expand(
-            "outputs/divide_and_conquer/d-{d}_n-{n}_s-{s}_b-{b}/",
-            d = data,
-            n = chains,
-            b = by,
-            s = seeds
+            "outputs/divide_and_conquer/data-{data}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            data = data,
+            nsubsets = chains,
+            by = by,
+            seed = seeds
         ),
         expand(
-            "outputs/advi/d-{d}_s-{s}/",
-            d = data,
-            s = seeds
+            "outputs/advi/data-{data}_seed-{seed}/",
+            data = data,
+            seed  = seeds
         ),
         expand(
-            "outputs/downsampling/divide/d-{d}_f-{f}_s-{s}/",
-            d = data,
-            s = seeds,
-            f = fractions
+            "outputs/downsampling/divide/data-{data}_fraction-{fraction}_seed-{seed}/",
+            data = data,
+            seed = seeds,
+            fraction = fractions
         ),
         expand(
-            "outputs/downsampling/reference/d-{d}_f-{f}/",
-            d = data,
-            f = fractions
+            "outputs/downsampling/reference/data-{data}_fraction-{fraction}/",
+            data = data,
+            fraction = fractions
         ),
         expand(
-            "outputs/removing/reference/d-{d}_f-{f}/",
-            d = data,
-            f = fractions
+            "outputs/removing/reference/data-{data}_fraction-{fraction}/",
+            data = data,
+            fraction = fractions
         ),
         expand(
-            "outputs/removing/divide/d-{d}_f-{f}_s-{s}/",
-            d = data,
-            s = seeds,
-            f = fractions
+            "outputs/removing/divide/data-{data}_fraction-{fraction}_seed-{seed}/",
+            data = data,
+            seed = seeds,
+            fraction = fractions
         ),
         expand(
-            "outputs/batchinfo/d-{d}/",
-            d = data_batch
+            "outputs/batchinfo/data-{data}/",
+            data = data_batch
         )
-
-
 
 rule advi:
     output:
-        "outputs/advi/d-{d}_s-{s}/"
+        "outputs/advi/data-{data}_seed-{seed}/"
     shell:
         """
         ./src/chain-scripts/advi.R \
-            -d {wildcards.d} \
-            -s {wildcards.s} \
-            -o {output}
+            --data {wildcards.data} \
+            --seed {wildcards.seed} \
+            --output {output}
         """
 
 
@@ -68,73 +66,73 @@ rule divide_and_conquer:
     # resources:
     #     mem_mb=5000
     output:
-        "outputs/divide_and_conquer/d-{d}_n-{n}_s-{s}_b-{b}/"
+        "outputs/divide_and_conquer/data-{data}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/"
     shell:
         """
         ./src/chain-scripts/divide_and_conquer.R \
-            -d {wildcards.d} \
-            -n {wildcards.n} \
-            -s {wildcards.s} \
-            -b {wildcards.b} \
-            -o {output}
+            --data {wildcards.data} \
+            --nsubsets {wildcards.nsubsets} \
+            --seed {wildcards.seed} \
+            --subsetby {wildcards.by} \
+            --output {output}
         """
 
 rule downsampling_ref:
     output:
-        "outputs/downsampling/reference/d-{d}_f-{f}/"
+        "outputs/downsampling/reference/data-{data}_fraction-{fraction}/"
     shell:
         """
         ./src/chain-scripts/downsampling_reference.R \
-            -d {wildcards.d} \
-            -f {wildcards.f} \
-            -o {output}
+            --data {wildcards.data} \
+            --fraction {wildcards.fraction} \
+            --output {output}
         """
 
 
 rule downsampling_divide:
     output:
-        "outputs/downsampling/divide/d-{d}_f-{f}_s-{s}/"
+        "outputs/downsampling/divide/data-{data}_fraction-{fraction}_seed-{seed}/"
     shell:
         """
         ./src/chain-scripts/downsampling_divide.R \
-            -d {wildcards.d} \
-            -s {wildcards.s} \
-            -f {wildcards.f} \
-            -o {output}
+            --data {wildcards.data} \
+            --seed {wildcards.seed} \
+            --fraction {wildcards.fraction} \
+            --output {output}
         """
 
 
 rule removing_ref:
     output:
-        "outputs/removing/reference/d-{d}_f-{f}/"
+        "outputs/removing/reference/data-{data}_fraction-{fraction}/"
     shell:
         """
         ./src/chain-scripts/removing_cells_ref.R \
-            -d {wildcards.d} \
-            -f {wildcards.f} \
-            -o {output}
+            --data {wildcards.data} \
+            --fraction {wildcards.fraction} \
+            --output {output}
         """
 
 rule removing_divide:
     output:
-        "outputs/removing/divide/d-{d}_f-{f}_s-{s}/"
+        "outputs/removing/divide/data-{data}_fraction-{fraction}_seed-{seed}/"
     shell:
         """
         ./src/chain-scripts/removing_cells.R \
-            -d {wildcards.d} \
-            -s {wildcards.s} \
-            -f {wildcards.f} \
-            -o {output}
+            --data {wildcards.data} \
+            --seed {wildcards.seed} \
+            --fraction {wildcards.fraction} \
+            --output {output}
         """
 
 rule batchinfo:
     output:
-        "outputs/batchinfo/d-{d}/"
+        "outputs/batchinfo/data-{data}/"
     shell:
         """
         ./src/chain-scripts/batchinfo.R \
-            -d {wildcards.d} \
-            -o {output}
+            --data {wildcards.data} \
+            --output {output}
         """
 
 rule data:
