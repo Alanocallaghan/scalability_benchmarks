@@ -54,12 +54,11 @@ config <- data[["config"]]
 if (length(chains) == 1) {
   collapsed <- chains
 } else {
-  collapsed <- Scalability:::combine_subposteriors(
+  collapsed <- BASiCS:::.combine_subposteriors(
     chains,
-    subset_by = config[["by"]],
-    method = "pie",
-    weight_method = "n_weight",
-    mc.cores = 1
+    SubsetBy = config[["by"]],
+    CombineMethod = "pie",
+    Weighting = "n_weight"
   )
 }
 cfg <- data[["config"]]

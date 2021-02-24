@@ -11,10 +11,9 @@ plot_all_hpds <- function(df, param) {
       chain <- readRDS(df[[i, "file"]])
       if (length(chain) > 1) {
         suppressMessages(
-          chain <- Scalability:::combine_subposteriors(
+          chain <- BASiCS:::.combine_subposteriors(
             chain,
-            subset_by = "gene",
-            mc.cores = 1
+            SubsetBy = "gene"
           )
         )
       }

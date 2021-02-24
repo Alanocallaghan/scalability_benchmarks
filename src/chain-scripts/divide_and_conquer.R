@@ -47,7 +47,7 @@ if (length(chains) == 1) {
 } else {
   collapsed <- BASiCS:::.combine_subposteriors(
     chains,
-    subset_by = config[["by"]],
+    SubsetBy = config[["by"]],
     CombineMethod = "pie",
     Weighting = "n_weight"
   )

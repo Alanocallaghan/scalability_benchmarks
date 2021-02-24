@@ -85,9 +85,9 @@ file <- list.files("outputs/divide_and_conquer", full.names = TRUE)[33]
 chains <- readRDS(paste0(file, "/chains.rds"))
 config <- readRDS(paste0(file, "/config.rds"))
 if (is.list(chains)) {
-  chains <- combine_subposteriors(
+  chains <- BASiCS:::.combine_subposteriors(
     chains,
-    subset_by = config$by
+    SubsetBy = config$by
   )
 }
 

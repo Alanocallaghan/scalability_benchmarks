@@ -1,4 +1,3 @@
-library("Scalability")
 library("BASiCS")
 
 theme_set(theme_bw())
@@ -17,12 +16,11 @@ ref_file <- (df %>% filter(chains == 1, data == "zeisel") %>% pull(file))[[1]]
 
 ref <- readRDS(ref_file)
 
-fitc <- combine_subposteriors(
+fitc <- BASiCS:::.combine_subposteriors(
   fit,
-  gene_order = colnames(ref@parameters[["mu"]]),
-  cell_order = colnames(ref@parameters[["nu"]]),
-  subset_by = "cell",
-  mc.cores = 1
+  GeneOrder = colnames(ref@parameters[["mu"]]),
+  CellOrder = colnames(ref@parameters[["nu"]]),
+  SubsetBy = "cell"
 )
 
 d <- BASiCS_TestDE(

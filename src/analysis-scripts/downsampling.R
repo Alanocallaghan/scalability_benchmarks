@@ -4,7 +4,6 @@ library("ggplot2")
 library("ggbeeswarm")
 library("here")
 library("BASiCS")
-library("Scalability")
 
 theme_set(theme_bw())
 source(here("scripts/analysis-scripts/functions.R"))

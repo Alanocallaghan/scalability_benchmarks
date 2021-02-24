@@ -64,10 +64,9 @@ do_de <-function(df, ref_df, match_column, mc.cores = 2) {
       chain <- readRDS(df[[i, "file"]])
       if (length(chain) > 1) {
         suppressMessages(
-          chain <- Scalability:::combine_subposteriors(
+          chain <- BASiCS:::.combine_subposteriors(
             chain,
-            subset_by = "gene",
-            mc.cores = 1 
+            SubsetBy = "gene"
           )
         )
       }
@@ -79,9 +78,9 @@ do_de <-function(df, ref_df, match_column, mc.cores = 2) {
           x
         }
       )
-      chain@parameters <- Scalability:::reorder_params(
+      chain@parameters <- BASiCS:::.reorder_params(
         chain@parameters,
-        gene_order = rownames(ref_df[[which(ind), "chain"]])
+        GeneOrder = rownames(ref_df[[which(ind), "chain"]])
       )
       nsamples <- nrow(
         ref_df[[which(ind), "chain"]]@parameters[["mu"]]

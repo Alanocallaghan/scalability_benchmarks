@@ -17,11 +17,11 @@ rule all:
             by = by,
             seed = seeds
         ),
-        expand(
-            "outputs/advi/data-{data}_seed-{seed}/",
-            data = data,
-            seed  = seeds
-        ),
+        # expand(
+        #     "outputs/advi/data-{data}_seed-{seed}/",
+        #     data = data,
+        #     seed  = seeds
+        # ),
         expand(
             "outputs/downsampling/divide/data-{data}_fraction-{fraction}_seed-{seed}/",
             data = data,
@@ -49,16 +49,16 @@ rule all:
             data = data_batch
         )
 
-rule advi:
-    output:
-        "outputs/advi/data-{data}_seed-{seed}/"
-    shell:
-        """
-        ./src/chain-scripts/advi.R \
-            --data {wildcards.data} \
-            --seed {wildcards.seed} \
-            --output {output}
-        """
+# rule advi:
+#     output:
+#         "outputs/advi/data-{data}_seed-{seed}/"
+#     shell:
+#         """
+#         ./src/chain-scripts/advi.R \
+#             --data {wildcards.data} \
+#             --seed {wildcards.seed} \
+#             --output {output}
+#         """
 
 
 rule divide_and_conquer:

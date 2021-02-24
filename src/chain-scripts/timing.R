@@ -1,4 +1,3 @@
-library("Scalability")
 library("BASiCS")
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -7,7 +6,7 @@ data <- args[[1]]
 cat("Doing", data, "\n")
 time_mcmc <- function(n, times = 1) {
   replicate(times, {
-    subsets <- Scalability:::generateSubsets(
+    subsets <- BASiCS:::.generateSubsets(
       readRDS(paste0("data/", data, ".rds")),
       NSubsets = n,
       SubsetBy = "gene",
