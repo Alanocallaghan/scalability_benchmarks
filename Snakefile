@@ -58,7 +58,7 @@ rule all:
 #         "data/{dataset}.rds"
 #     shell:
 #         """
-#         ./src/chain-scripts/advi.R \
+#         Rscript ./src/chain-scripts/advi.R \
 #             --data {wildcards.dataset} \
 #             --seed {wildcards.seed} \
 #             --output {output}
@@ -76,7 +76,7 @@ rule divide_and_conquer:
         "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/"
     shell:
         """
-        ./src/chain-scripts/divide_and_conquer.R \
+        Rscript ./src/chain-scripts/divide_and_conquer.R \
             --data {wildcards.dataset} \
             --nsubsets {wildcards.nsubsets} \
             --seed {wildcards.seed} \
@@ -95,7 +95,7 @@ rule downsampling_ref:
         "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/"
     shell:
         """
-        ./src/chain-scripts/downsampling_reference.R \
+        Rscript ./src/chain-scripts/downsampling_reference.R \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -113,7 +113,7 @@ rule downsampling_divide:
         "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/"
     shell:
         """
-        ./src/chain-scripts/downsampling_divide.R \
+        Rscript ./src/chain-scripts/downsampling_divide.R \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
@@ -132,7 +132,7 @@ rule removing_ref:
         "outputs/removing/reference/data-{dataset}_fraction-{fraction}/"
     shell:
         """
-        ./src/chain-scripts/removing_cells_ref.R \
+        Rscript ./src/chain-scripts/removing_cells_ref.R \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -149,7 +149,7 @@ rule removing_divide:
         "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/"
     shell:
         """
-        ./src/chain-scripts/removing_cells.R \
+        Rscript ./src/chain-scripts/removing_cells.R \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
@@ -167,7 +167,7 @@ rule batchinfo:
         "outputs/batchinfo/data-{dataset}/"
     shell:
         """
-        ./src/chain-scripts/batchinfo.R \
+        Rscript ./src/chain-scripts/batchinfo.R \
             --data {wildcards.dataset} \
             --output {output}
         """
