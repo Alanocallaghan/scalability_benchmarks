@@ -3,7 +3,7 @@ library("here")
 
 source(here("scripts/chain-scripts/benchmark_code.R"))
 
-seeds <- benchmarkSeeds()
+seeds <- c(7, 14, 21, 28, 35, 42)
 
 datasets <- c(
   "tung",
