@@ -7,6 +7,7 @@ fractions = [x/10 for x in range(2, 11, 2)]
 
 # configfile: "config/snakemake_config.yaml"
 # conda: config["conda"]
+conda: "env.yaml"
 
 rule all:
     input:
