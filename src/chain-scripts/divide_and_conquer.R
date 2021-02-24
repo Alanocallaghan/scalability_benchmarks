@@ -10,7 +10,7 @@ parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-n", "--nsubsets", type = "double")
 parser$add_argument("-s", "--seed", type = "double")
-parser$add_argument("-b", "--subsetby", type = "double")
+parser$add_argument("-b", "--subsetby")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
