@@ -1,15 +1,3 @@
-#' Random seed used for benchmarking
-benchmarkSeeds <- function() {
-    c(7, 
-        14, 
-        21, 
-        28, 
-        35, 
-        42
-    )
-}
-
-
 ## Runs BASiCS in a divide and conquer setting
 divide_and_conquer_benchmark <- function(
         Data,
@@ -37,6 +25,7 @@ divide_and_conquer_benchmark <- function(
             PrintProgress = FALSE,
             Regression = Regression,
             ...
+        )
     )
     list(
         time = t,
