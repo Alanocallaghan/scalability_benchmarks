@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
-if (!require("argparse")) {
-    install.packages("argparse")
-}
+
 suppressPackageStartupMessages({
   library("argparse")
   library("here")
@@ -10,8 +8,9 @@ suppressPackageStartupMessages({
 options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
-parser$add_argument("-f", "--fraction")
+parser$add_argument("-f", "--fraction", type="double")
 parser$add_argument("-o", "--output")
+
 args <- parser$parse_args()
 
 source(here("src/chain-scripts/benchmark_code.R"))
@@ -21,7 +20,7 @@ data <- readRDS(here("data", paste0(args[["data"]], ".rds")))
 dir <- args[["output"]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
-frac <- as.numeric(args[["fraction"]])
+frac <- args[["fraction"]]
 data <- data[, sample(ncol(counts(data)), floor(ncol(counts(data)) * frac))]
 if (length(altExpNames(data))) {
   spikes <- altExp(data, "spike-ins")
@@ -47,7 +46,7 @@ config <- list(
   chains = 1,
   by = "gene",
   seed = 42,
-  proportion_retained = as.numeric(args[["fraction"]])
+  proportion_retained = args[["fraction"]]
 )
 saveRDS(chain, file = file.path(dir, "chains.rds"))
 saveRDS(NULL, file = file.path(dir, "time.rds"))

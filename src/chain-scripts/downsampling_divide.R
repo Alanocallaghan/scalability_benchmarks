@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
-if (!require("argparse")) {
-    install.packages("argparse")
-}
+
 suppressPackageStartupMessages({
   library("argparse")
   library("here")
@@ -10,8 +8,8 @@ suppressPackageStartupMessages({
 options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
-parser$add_argument("-s", "--seed")
-parser$add_argument("-f", "--fraction")
+parser$add_argument("-s", "--seed", type = "double")
+parser$add_argument("-f", "--fraction", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 

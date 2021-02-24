@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
-if (!require("argparse")) {
-    install.packages("argparse")
-}
+
 suppressPackageStartupMessages({
   library("argparse")
   library("here")
