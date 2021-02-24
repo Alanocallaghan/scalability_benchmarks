@@ -6,11 +6,7 @@ if (!require("argparse")) {
 suppressPackageStartupMessages({
   library("argparse")
   library("here")
-  # library("BASiCS")
-  devtools::load_all("../BASiCS")
-  library("future")
-  devtools::load_all("../Scalability")
-  plan("multicore")
+  library("BASiCS")
 })
 options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
@@ -49,12 +45,11 @@ config <- data[["config"]]
 if (length(chains) == 1) {
   collapsed <- chains
 } else {
-  collapsed <- Scalability:::combine_subposteriors(
+  collapsed <- BASiCS:::.combine_subposteriors(
     chains,
     subset_by = config[["by"]],
-    method = "pie",
-    weight_method = "n_weight",
-    mc.cores = 1
+    CombineMethod = "pie",
+    Weighting = "n_weight"
   )
 }
 saveRDS(data[["chain"]], file = file.path(dir, "chains.rds"))

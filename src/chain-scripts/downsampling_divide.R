@@ -5,11 +5,7 @@ if (!require("argparse")) {
 suppressPackageStartupMessages({
   library("argparse")
   library("here")
-  # library("BASiCS")
-  devtools::load_all("../BASiCS")
-  library("future")
-  devtools::load_all("../Scalability")
-  plan("multicore")
+  library("BASiCS")
 })
 options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()

@@ -1,6 +1,4 @@
 args <- commandArgs(trailingOnly = TRUE)
-print(args)
-
 
 D <- readRDS(paste0("data/", args[[1]], ".rds"))
 

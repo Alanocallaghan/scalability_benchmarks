@@ -25,42 +25,19 @@ divide_and_conquer_benchmark <- function(
         ...) {
 
     SubsetBy <- match.arg(SubsetBy)
-    if (NSubsets == 1) {
-        t <- system.time(
-            suppressMessages(capture.output(
-                chain <- BASiCS_MCMC(
-                    Data,
-                    N = N,
-                    Thin = Thin,
-                    Burn = Burn,
-                    WithSpikes = WithSpikes,
-                    PrintProgress = FALSE,
-                    Regression = Regression,
-                    ...
-                )
-            ))
-        )
-    } else {
-            try({
-                suppressMessages(capture.output(
-                    t <- system.time(
-                        chain <- Scalability:::multi_MCMC(
-                            Data,
-                            NSubsets = NSubsets,
-                            SubsetBy = SubsetBy,
-                            N = N,
-                            Thin = Thin,
-                            Burn = Burn,
-                            WithSpikes = WithSpikes,
-                            PrintProgress = FALSE,
-                            Regression = Regression,
-                            Seed = Seed,
-                            ...
-                    )
-                ))
-            )
-        })
-    }
+    t <- system.time(
+        chain <- BASiCS_MCMC(
+            Data,
+            NSubsets = NSubsets,
+            SubsetBy = SubsetBy,
+            N = N,
+            Thin = Thin,
+            Burn = Burn,
+            WithSpikes = WithSpikes,
+            PrintProgress = FALSE,
+            Regression = Regression,
+            ...
+    )
     list(
         time = t,
         chain = chain, 

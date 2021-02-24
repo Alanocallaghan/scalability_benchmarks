@@ -3,8 +3,6 @@ library("BASiCS")
 
 theme_set(theme_bw())
 
-plan("multicore")
-
 fit <- multi_MCMC(
   readRDS("data/zeisel.rds"),
   SubsetBy = "cell",
