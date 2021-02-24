@@ -2,6 +2,8 @@
 
 txts := $(wildcard data/*.txt)
 
+all: outputs
+
 downloads/chen.rds:
 	curl https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/chen.rds > downloads/chen.rds
 
@@ -27,21 +29,21 @@ data/%.txt: scripts/data-scripts/grids.R
 
 outputs/divide_and_conquer: scripts/chain-scripts/divide_and_conquer.sh 
 outputs/divide_and_conquer: datasets data/divide_and_conquer_grid.txt
-	qsub -t 1-$(cat data/divide_and_conquer_grid.txt | wc -l) -tc 10 scripts/chain-scripts/divide_and_conquer.sh
+	qsub -t 1-$(shell cat data/divide_and_conquer_grid.txt | wc -l) -tc 10 scripts/chain-scripts/divide_and_conquer.sh
 
 outputs/advi: scripts/chain-scripts/advi.R datasets data/advi_grid.txt
-	qsub -t 1-$(cat data/advi_grid.txt | wc -l) -tc 5 scripts/chain-scripts/advi.sh 
+	qsub -t 1-$(shell cat data/advi_grid.txt | wc -l) -tc 5 scripts/chain-scripts/advi.sh 
 
 outputs/downsampling: scripts/chain-scripts/downsampling_divide.sh 
 outputs/downsampling: scripts/chain-scripts/downsampling_reference.sh datasets
-	qsub -t 1-$(cat data/downsampling_ref_grid.txt | wc -l) -tc 5 scripts/chain-scripts/downsampling_reference.sh && \
-	qsub -t 1-$(cat data/downsampling_grid.txt | wc -l) -tc 5 scripts/chain-scripts/downsampling_divide.sh
+	qsub -t 1-$(shell cat data/downsampling_grid_ref.txt | wc -l) -tc 5 scripts/chain-scripts/downsampling_reference.sh && \
+	qsub -t 1-$(shell cat data/downsampling_grid.txt | wc -l) -tc 5 scripts/chain-scripts/downsampling_divide.sh
 
 outputs/identifiable: data/datasets_batch.txt scripts/chain-scripts/identifiable.sh
-	qsub -t 1-$(cat data/datasets_batch.txt | wc -l) -tc 5 scripts/chain-scripts/identifiable.sh
+	qsub -t 1-$(shell cat data/datasets_batch.txt | wc -l) -tc 5 scripts/chain-scripts/identifiable.sh
 
 outputs/batchinfo: data/datasets_batch.txt scripts/chain-scripts/batchinfo.sh
-	qsub -t 1-$(cat data/datasets_batch.txt | wc -l) -tc 5 scripts/chain-scripts/batchinfo.sh
+	qsub -t 1-$(shell cat data/datasets_batch.txt | wc -l) -tc 5 scripts/chain-scripts/batchinfo.sh
 
 outputs/time: datasets scripts/chain-scripts/timing.sh
 	qsub scripts/chain-scripts/timing.sh
