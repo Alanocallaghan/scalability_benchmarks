@@ -7,7 +7,6 @@ fractions = [x/10 for x in range(2, 11, 2)]
 
 # configfile: "config/snakemake_config.yaml"
 # conda: config["conda"]
-conda: "env.yaml"
 
 rule all:
     input:
@@ -51,6 +50,8 @@ rule all:
         )
 
 # rule advi:
+#     conda:
+#          "conda.yaml"
 #     output:
 #         "outputs/advi/data-{data}_seed-{seed}/"
 #     shell:
@@ -63,6 +64,8 @@ rule all:
 
 
 rule divide_and_conquer:
+    conda:
+        "conda.yaml"
     resources:
         mem_mb=5000
     output:
@@ -78,6 +81,8 @@ rule divide_and_conquer:
         """
 
 rule downsampling_ref:
+    conda:
+        "conda.yaml"
     resources:
         mem_mb=5000
     output:
@@ -92,6 +97,8 @@ rule downsampling_ref:
 
 
 rule downsampling_divide:
+    conda:
+        "conda.yaml"
     resources:
         mem_mb=5000
     output:
@@ -107,6 +114,8 @@ rule downsampling_divide:
 
 
 rule removing_ref:
+    conda:
+        "conda.yaml"
     resources:
         mem_mb=5000
     output:
@@ -120,6 +129,8 @@ rule removing_ref:
         """
 
 rule removing_divide:
+    conda:
+        "conda.yaml"
     resources:
         mem_mb=5000
     output:
@@ -134,6 +145,8 @@ rule removing_divide:
         """
 
 rule batchinfo:
+    conda:
+        "conda.yaml"
     resources:
         mem_mb=5000
     output:
@@ -146,6 +159,8 @@ rule batchinfo:
         """
 
 rule data:
+    conda:
+        "conda.yaml"
     resources:
         mem_mb=5000
     input:
