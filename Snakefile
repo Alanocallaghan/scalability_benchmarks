@@ -8,6 +8,8 @@ fractions = [x/10 for x in range(2, 11, 2)]
 # configfile: "config/snakemake_config.yaml"
 # conda: config["conda"]
 
+shell.prefix("source src/modules.sh;")
+
 rule all:
     input:
         expand(
