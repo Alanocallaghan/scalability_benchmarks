@@ -12,57 +12,43 @@ shell.prefix("source src/modules.sh;")
 
 rule all:
     input:
-        directory(
-            expand(
-                "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
-                dataset = data,
-                nsubsets = chains,
-                by = by,
-                seed = seeds
-            )
+        expand(
+            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            dataset = data,
+            nsubsets = chains,
+            by = by,
+            seed = seeds
         ),
-        # directory(
-        #     expand(
-        #         "outputs/advi/data-{dataset}_seed-{seed}/",
-        #         data = data,
-        #         seed  = seeds
-        #     )
+        # expand(
+        #     "outputs/advi/data-{dataset}_seed-{seed}/",
+        #     data = data,
+        #     seed  = seeds
         # ),
-        directory(
-            expand(
-                "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-                dataset = data,
-                seed = seeds,
-                fraction = fractions
-            )
+        expand(
+            "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+            dataset = data,
+            seed = seeds,
+            fraction = fractions
         ),
-        directory(
-            expand(
-                "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
-                dataset = data,
-                fraction = fractions
-            )
+        expand(
+            "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
+            dataset = data,
+            fraction = fractions
         ),
-        directory(
-            expand(
-                "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
-                dataset = data,
-                fraction = fractions
-            )
+        expand(
+            "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
+            dataset = data,
+            fraction = fractions
         ),
-        directory(
-            expand(
-                "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-                dataset = data,
-                seed = seeds,
-                fraction = fractions
-            )
+        expand(
+            "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+            dataset = data,
+            seed = seeds,
+            fraction = fractions
         ),
-        directory(
-            expand(
-                "outputs/batchinfo/data-{dataset}/",
-                dataset = data_batch
-            )
+        expand(
+            "outputs/batchinfo/data-{dataset}/",
+            dataset = data_batch
         )
 
 # rule advi:
@@ -89,7 +75,7 @@ rule divide_and_conquer:
     input:
         "data/{dataset}.rds"
     output:
-        "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/"
+        directory("outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/")
     shell:
         """
         Rscript ./src/chain-scripts/divide_and_conquer.R \
@@ -108,7 +94,7 @@ rule downsampling_ref:
     input:
         "data/{dataset}.rds"
     output:
-        "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/"
+        directory("outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/")
     shell:
         """
         Rscript ./src/chain-scripts/downsampling_reference.R \
@@ -126,7 +112,7 @@ rule downsampling_divide:
     input:
         "data/{dataset}.rds"
     output:
-        "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/"
+        directory("outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/")
     shell:
         """
         Rscript ./src/chain-scripts/downsampling_divide.R \
@@ -145,7 +131,7 @@ rule removing_ref:
     input:
         "data/{dataset}.rds"
     output:
-        "outputs/removing/reference/data-{dataset}_fraction-{fraction}/"
+        directory("outputs/removing/reference/data-{dataset}_fraction-{fraction}/")
     shell:
         """
         Rscript ./src/chain-scripts/removing_cells_ref.R \
@@ -162,7 +148,7 @@ rule removing_divide:
     input:
         "data/{dataset}.rds"
     output:
-        "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/"
+        directory("outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/")
     shell:
         """
         Rscript ./src/chain-scripts/removing_cells.R \
@@ -180,7 +166,7 @@ rule batchinfo:
     input:
         "data/{dataset}.rds"
     output:
-        "outputs/batchinfo/data-{dataset}/"
+        directory("outputs/batchinfo/data-{dataset}/")
     shell:
         """
         Rscript ./src/chain-scripts/batchinfo.R \
