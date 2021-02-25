@@ -71,7 +71,7 @@ rule divide_and_conquer:
     # conda:
     #     "conda.yaml"
     resources:
-        mem_mb=5000
+        mem_mb=10000
     input:
         "data/{dataset}.rds"
     output:
@@ -90,7 +90,7 @@ rule downsampling_ref:
     # conda:
     #     "conda.yaml"
     resources:
-        mem_mb=5000
+        mem_mb=10000
     input:
         "data/{dataset}.rds"
     output:
@@ -108,7 +108,7 @@ rule downsampling_divide:
     # conda:
     #     "conda.yaml"
     resources:
-        mem_mb=5000
+        mem_mb=10000
     input:
         "data/{dataset}.rds"
     output:
@@ -127,7 +127,7 @@ rule removing_ref:
     # conda:
     #     "conda.yaml"
     resources:
-        mem_mb=5000
+        mem_mb=10000
     input:
         "data/{dataset}.rds"
     output:
@@ -144,7 +144,7 @@ rule removing_divide:
     # conda:
     #     "conda.yaml"
     resources:
-        mem_mb=5000
+        mem_mb=10000
     input:
         "data/{dataset}.rds"
     output:
@@ -162,7 +162,7 @@ rule batchinfo:
     # conda:
     #     "conda.yaml"
     resources:
-        mem_mb=5000
+        mem_mb=10000
     input:
         "data/{dataset}.rds"
     output:
