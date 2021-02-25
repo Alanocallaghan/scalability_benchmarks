@@ -178,7 +178,7 @@ rule data:
     # conda:
     #     "conda.yaml"
     resources:
-        mem_mb=5000
+        mem_mb=10000
     input:
         "src/data-scripts/{dataset}.R"
     output:
