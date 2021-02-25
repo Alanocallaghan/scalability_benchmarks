@@ -21,5 +21,5 @@ if [ -f "/etc/profile.d/modules.sh" ]; then
 fi
 
 
-conda activate /gpfs/igmmfs01/eddie/cvallejo-scRNAseq/alan/scalability_benchmarks/.snakemake/conda/bb72d5b6
+conda activate $(find .snakemake/conda/ -mindepth 1 -maxdepth 1 -type d)
 
