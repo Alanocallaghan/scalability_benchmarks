@@ -11,7 +11,7 @@ divide_and_conquer_benchmark <- function(
         WithSpikes = length(SingleCellExperiment::altExpNames(Data)) > 0,
         Seed = 42,
         ...) {
-
+    set.seed(Seed)
     SubsetBy <- match.arg(SubsetBy)
     t <- system.time(
         chain <- BASiCS_MCMC(
