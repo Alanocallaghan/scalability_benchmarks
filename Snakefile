@@ -12,43 +12,57 @@ shell.prefix("source src/modules.sh;")
 
 rule all:
     input:
-        expand(
-            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
-            dataset = data,
-            nsubsets = chains,
-            by = by,
-            seed = seeds
+        directory(
+            expand(
+                "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+                dataset = data,
+                nsubsets = chains,
+                by = by,
+                seed = seeds
+            )
         ),
-        # expand(
-        #     "outputs/advi/data-{dataset}_seed-{seed}/",
-        #     data = data,
-        #     seed  = seeds
+        # directory(
+        #     expand(
+        #         "outputs/advi/data-{dataset}_seed-{seed}/",
+        #         data = data,
+        #         seed  = seeds
+        #     )
         # ),
-        expand(
-            "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = data,
-            seed = seeds,
-            fraction = fractions
+        directory(
+            expand(
+                "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+                dataset = data,
+                seed = seeds,
+                fraction = fractions
+            )
         ),
-        expand(
-            "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = data,
-            fraction = fractions
+        directory(
+            expand(
+                "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
+                dataset = data,
+                fraction = fractions
+            )
         ),
-        expand(
-            "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = data,
-            fraction = fractions
+        directory(
+            expand(
+                "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
+                dataset = data,
+                fraction = fractions
+            )
         ),
-        expand(
-            "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = data,
-            seed = seeds,
-            fraction = fractions
+        directory(
+            expand(
+                "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+                dataset = data,
+                seed = seeds,
+                fraction = fractions
+            )
         ),
-        expand(
-            "outputs/batchinfo/data-{dataset}/",
-            dataset = data_batch
+        directory(
+            expand(
+                "outputs/batchinfo/data-{dataset}/",
+                dataset = data_batch
+            )
         )
 
 # rule advi:
