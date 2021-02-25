@@ -68,8 +68,8 @@ rule all:
 
 
 rule divide_and_conquer:
-    conda:
-        "conda.yaml"
+    # conda:
+    #     "conda.yaml"
     resources:
         mem_mb=5000
     input:
@@ -87,8 +87,8 @@ rule divide_and_conquer:
         """
 
 rule downsampling_ref:
-    conda:
-        "conda.yaml"
+    # conda:
+    #     "conda.yaml"
     resources:
         mem_mb=5000
     input:
@@ -105,8 +105,8 @@ rule downsampling_ref:
 
 
 rule downsampling_divide:
-    conda:
-        "conda.yaml"
+    # conda:
+    #     "conda.yaml"
     resources:
         mem_mb=5000
     input:
@@ -124,8 +124,8 @@ rule downsampling_divide:
 
 
 rule removing_ref:
-    conda:
-        "conda.yaml"
+    # conda:
+    #     "conda.yaml"
     resources:
         mem_mb=5000
     input:
@@ -141,8 +141,8 @@ rule removing_ref:
         """
 
 rule removing_divide:
-    conda:
-        "conda.yaml"
+    # conda:
+    #     "conda.yaml"
     resources:
         mem_mb=5000
     input:
@@ -159,8 +159,8 @@ rule removing_divide:
         """
 
 rule batchinfo:
-    conda:
-        "conda.yaml"
+    # conda:
+    #     "conda.yaml"
     resources:
         mem_mb=5000
     input:
@@ -175,8 +175,8 @@ rule batchinfo:
         """
 
 rule data:
-    conda:
-        "conda.yaml"
+    # conda:
+    #     "conda.yaml"
     resources:
         mem_mb=5000
     input:
