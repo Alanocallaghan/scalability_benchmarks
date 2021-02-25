@@ -9,7 +9,7 @@ options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-f", "--fraction", type = "double")
-parser$add_argument("-o", "--output", type = "double")
+parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
 
