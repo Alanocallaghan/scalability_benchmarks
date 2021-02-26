@@ -14,6 +14,9 @@ parser$add_argument("-b", "--subsetby")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
+args <- list(data = "zeisel", nsubsets = 1, output = "outputs/divide_and_conquer/data-zeisel_nsubsets-1_seed-28_by-gene", 
+    seed = 28, subsetby = "gene")
+
 
 source(here("src/chain-scripts/benchmark_code.R"))
 
@@ -29,26 +32,13 @@ data <- divide_and_conquer_benchmark(
   NSubsets = args[["nsubsets"]],
   Seed = args[["seed"]],
   Regression = TRUE,
-  # MinGenesPerRBF = 100,
-  N = 10,
-  Thin = 2,
-  Burn = 4
-  # N = 20000,
-  # Thin = 10,
-  # Burn = 10000
+  N = 20000,
+  Thin = 10,
+  Burn = 10000
 )
 chains <- data[["chain"]]
 config <- data[["config"]]
-if (length(chains) == 1) {
-  collapsed <- chains
-} else {
-  collapsed <- BASiCS:::.combine_subposteriors(
-    chains,
-    SubsetBy = config[["by"]],
-    CombineMethod = "pie",
-    Weighting = "n_weight"
-  )
-}
+
 saveRDS(data[["chain"]], file = file.path(dir, "chains.rds"))
 saveRDS(data[["time"]], file = file.path(dir, "time.rds"))
 saveRDS(data[["config"]], file = file.path(dir, "config.rds"))
