@@ -39,12 +39,9 @@ data <- divide_and_conquer_benchmark(
   NSubsets = 16,
   Seed = args[["seed"]],
   Regression = TRUE,
-  # N = 20000,
-  # Thin = 10,
-  # Burn = 10000
-  N = 8,
-  Thin = 2,
-  Burn = 4
+  N = 20000,
+  Thin = 10,
+  Burn = 10000
 )
 chains <- data[["chain"]]
 config <- data[["config"]]

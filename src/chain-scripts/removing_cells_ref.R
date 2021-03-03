@@ -35,12 +35,9 @@ chain <- BASiCS_MCMC(
   Regression = TRUE,
   WithSpikes = as.logical(length(altExpNames(data))),
   PrintProgress = FALSE,
-  # N = 20000,
-  # Thin = 10,
-  # Burn = 10000
-  N = 8,
-  Thin = 2,
-  Burn = 4
+  N = 20000,
+  Thin = 10,
+  Burn = 10000
 )
 config <- list(
   data = args[["data"]],

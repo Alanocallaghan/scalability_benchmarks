@@ -14,13 +14,9 @@ args <- parser$parse_args()
 
 data <- readRDS(paste0("data/", args[["data"]], ".rds"))
 
-# N <- 20000
-# Thin <- 10
-# Burn <- 10000
-N <- 8
-Thin <- 2
-Burn <- 4
-library("BASiCS")
+N <- 20000
+Thin <- 10
+Burn <- 10000
 
 bi <- BASiCS_MCMC(
   data,
