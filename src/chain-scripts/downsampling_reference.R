@@ -35,9 +35,13 @@ time <- system.time(
     data,
     WithSpikes = length(SingleCellExperiment::altExpNames(data)) > 0,
     Regression = TRUE,
-    N = 20000,
-    Thin = 10,
-    Burn = 10000
+    PrintProgress = FALSE,
+    # N = 20000,
+    # Thin = 10,
+    # Burn = 10000
+    N = 8,
+    Thin = 2,
+    Burn = 4
   )
 )
 config <- list(

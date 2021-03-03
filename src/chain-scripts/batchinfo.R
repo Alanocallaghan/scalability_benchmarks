@@ -27,6 +27,7 @@ bi <- BASiCS_MCMC(
   N = N,
   Thin = Thin,
   Burn = Burn,
+  PrintProgress = FALSE,
   WithSpikes = FALSE,
   Regression = TRUE
 )
@@ -38,11 +39,12 @@ non_bi <- BASiCS_MCMC(
   N = N,
   Thin = Thin,
   Burn = Burn,
+  PrintProgress = FALSE,
   WithSpikes = FALSE,
   Regression = TRUE
 )
 
-dir <- args[[2]]
+dir <- args[["output"]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 saveRDS(bi, file.path(dir, "batch.rds"))
 saveRDS(non_bi, file.path(dir, "/nobatch.rds"))

@@ -168,6 +168,23 @@ rule batchinfo:
             --output {output}
         """
 
+
+rule cell:
+    # conda:
+    #     "conda.yaml"
+    resources: mem_mb=10000, runtime=3000
+    input:
+        "data/{dataset}.rds"
+    output:
+        "outputs/cell_splitting/{dataset}.rds"
+    shell:
+        """
+        Rscript ./src/chain-scripts/batchinfo.R \
+            --data {wildcards.dataset} \
+            --output {output}
+        """
+
+
 rule data:
     # conda:
     #     "conda.yaml"
