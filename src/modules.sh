@@ -8,18 +8,14 @@ if [ -f "/etc/profile.d/modules.sh" ]; then
 
     export C_INCLUDE_PATH=/exports/igmm/software/pkg/el7/apps/hdf5/1.8.13/include
 
-    set +eu
-
-    if [ -f "/home/s1372510/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/s1372510/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/s1372510/miniconda3/bin:$PATH"
-    fi
-
-    set -eu
 
 fi
 
+set -eu
+if [ -f ~/miniconda3/etc/profile.d/conda.sh ]; then
+    source ~/miniconda3/etc/profile.d/conda.sh
+fi
+set +eu
 
 conda activate $(find .snakemake/conda/ -mindepth 1 -maxdepth 1 -type d)
 

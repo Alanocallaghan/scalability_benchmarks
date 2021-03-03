@@ -11,7 +11,7 @@ unlink("E-MTAB-2805.zip")
 
 
 ## This file obtained via Fraser McPhie from Catalina Vallejos.
-erccfile <- file.path(dir, "buettner_ERCC_controls.txt")
+erccfile <- file.path("data/buettner_ERCC_controls.txt")
 
 g2m <- read.delim(file.path(dir, "G2M_singlecells_counts.txt"))
 all <- g2m

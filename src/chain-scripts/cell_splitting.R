@@ -1,38 +1,50 @@
-library("BASiCS")
+#!/usr/bin/env Rscript
+
+suppressPackageStartupMessages({
+  library("argparse")
+  library("here")
+  library("BASiCS")
+})
+options(stringsAsFactors=FALSE)
+parser <- ArgumentParser()
+parser$add_argument("-d", "--data")
+parser$add_argument("-s", "--seed", type = "double")
+parser$add_argument("-o", "--output")
+args <- parser$parse_args()
 
 theme_set(theme_bw())
 
-fit <- multi_MCMC(
+fit <- BASiCS_MCMC(
   readRDS("data/zeisel.rds"),
   SubsetBy = "cell",
   NSubsets = 32,
-  N = 20000,
-  Thin = 10,
-  Burn = 10000
+  PrintProgress = FALSE,
+  # N = 20000,
+  # Thin = 10,
+  # Burn = 10000
+  N = 8,
+  Thin = 2,
+  Burn = 4
 )
-dir.create("outputs/cell_splitting")
-saveRDS(fit, "outputs/cell_splitting/zeisel.rds")
-ref_file <- (df %>% filter(chains == 1, data == "zeisel") %>% pull(file))[[1]]
+dir.create(args[["output"]])
+saveRDS(fit, "outputs/cell_splitting/", args[["data"]], ".rds")
 
-ref <- readRDS(ref_file)
 
-fitc <- BASiCS:::.combine_subposteriors(
-  fit,
-  GeneOrder = colnames(ref@parameters[["mu"]]),
-  CellOrder = colnames(ref@parameters[["nu"]]),
-  SubsetBy = "cell"
-)
+# ref_file <- (df %>% filter(chains == 1, data == "zeisel") %>% pull(file))[[1]]
 
-d <- BASiCS_TestDE(
-  fitc,
-  ref,
-  GroupLabel1 = "D&C",
-  GroupLabel2 = "Reference"
-)
+# ref <- readRDS(ref_file)
 
-g <- BASiCS_PlotDE(
-  d@Results[[1]],
-  Plots = c("MAPlot")
-)
 
-ggsave(g, file = "figs/cell_partitions.pdf", width = 6, height = 4)
+# d <- BASiCS_TestDE(
+#   fitc,
+#   ref,
+#   GroupLabel1 = "D&C",
+#   GroupLabel2 = "Reference"
+# )
+
+# g <- BASiCS_PlotDE(
+#   d@Results[[1]],
+#   Plots = c("MAPlot")
+# )
+
+# ggsave(g, file = "figs/cell_partitions.pdf", width = 6, height = 4)
