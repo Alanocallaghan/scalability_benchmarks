@@ -1,6 +1,9 @@
 library("scater")
 library("scran")
 
+if (!file.exists("downloads/chen.rds")) {
+  system("curl https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/chen.rds > downloads/chen.rds")
+}
 
 sce <- readRDS("downloads/chen.rds")
 
