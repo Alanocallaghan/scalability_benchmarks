@@ -19,12 +19,9 @@ fit <- BASiCS_MCMC(
   SubsetBy = "cell",
   NSubsets = 32,
   PrintProgress = FALSE,
-  # N = 20000,
-  # Thin = 10,
-  # Burn = 10000
-  N = 8,
-  Thin = 2,
-  Burn = 4
+  N = 20000,
+  Thin = 10,
+  Burn = 10000
 )
 dir.create(args[["output"]])
 saveRDS(fit, "outputs/cell_splitting/", args[["data"]], ".rds")
