@@ -44,7 +44,7 @@ saveRDS(
     Deltas = list(Delta1, Delta2),
     S = list(S1, S2),
     Thetas = list(Theta1, Theta2),
-    BatchInfo = list(BatchInfo1, BatchInfo1),
+    BatchInfo = list(BatchInfo1, BatchInfo1)
   ),
   "data/simulation.rds"
 )
