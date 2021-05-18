@@ -1,8 +1,19 @@
-library("BASiCS")
+suppressPackageStartupMessages({
+  library("argparse")
+  library("here")
+  library("BASiCS")
+})
+options(stringsAsFactors=FALSE)
+parser <- ArgumentParser()
+parser$add_argument("-d", "--data")
+parser$add_argument("-f", "--fraction", type = "double")
+parser$add_argument("-i", "--iterations", type = "double")
+parser$add_argument("-o", "--output")
+args <- parser$parse_args()
 
-args <- commandArgs(trailingOnly = TRUE)
+
 dir.create("outputs/time/", recursive = TRUE, showWarnings = FALSE)
-data <- args[[1]]
+data <- args[["data"]]
 cat("Doing", data, "\n")
 time_mcmc <- function(n, times = 1) {
   replicate(times, {
@@ -17,9 +28,9 @@ time_mcmc <- function(n, times = 1) {
         capture.output(
           BASiCS_MCMC(
             subsets[[1]],
-            N = 20000,
-            Thin = 10,
-            Burn = 10000,
+            N = args[["iterations"]],
+            Thin = max((args[["iterations"]] / 2) / 1000, 2),
+            Burn = max(args[["iterations"]] / 2, 4),
             WithSpikes = data != "pbmc",
             Regression = TRUE,
             PrintProgress = FALSE
