@@ -11,7 +11,7 @@ burn = 20000
 # configfile: "config/snakemake_config.yaml"
 # conda: config["conda"]
 
-shell.prefix("source src/modules.sh;")
+shell.prefix("source src/modules.sh; ")
 
 rule all:
     input:
