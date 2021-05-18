@@ -31,15 +31,17 @@ if (length(altExpNames(data))) {
 }
 
 
-chain <- BASiCS_MCMC(
-  data,
-  Regression = TRUE,
-  WithSpikes = as.logical(length(altExpNames(data))),
-  PrintProgress = FALSE,
-  N = args[["iterations"]],
-  Thin = (args[["iterations"]] / 2) / 1000,
-  Burn = args[["iterations"]] / 2
-)
+time <- system.time({
+  chain <- BASiCS_MCMC(
+    data,
+    Regression = TRUE,
+    WithSpikes = as.logical(length(altExpNames(data))),
+    PrintProgress = FALSE,
+    N = args[["iterations"]],
+    Thin = (args[["iterations"]] / 2) / 1000,
+    Burn = args[["iterations"]] / 2
+  )
+})
 config <- list(
   data = args[["data"]],
   chains = 1,
@@ -48,5 +50,5 @@ config <- list(
   proportion_retained = args[["fraction"]]
 )
 saveRDS(chain, file = file.path(dir, "chains.rds"))
-saveRDS(NULL, file = file.path(dir, "time.rds"))
+saveRDS(time, file = file.path(dir, "time.rds"))
 saveRDS(config, file = file.path(dir, "config.rds"))
