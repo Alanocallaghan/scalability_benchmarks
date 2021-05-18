@@ -9,6 +9,7 @@ options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-f", "--fraction", type="double")
+parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 
 args <- parser$parse_args()
@@ -35,9 +36,9 @@ chain <- BASiCS_MCMC(
   Regression = TRUE,
   WithSpikes = as.logical(length(altExpNames(data))),
   PrintProgress = FALSE,
-  N = 20000,
-  Thin = 10,
-  Burn = 10000
+  N = args[["iterations"]],
+  Thin = (args[["iterations"]] / 2) / 1000,
+  Burn = args[["iterations"]] / 2
 )
 config <- list(
   data = args[["data"]],

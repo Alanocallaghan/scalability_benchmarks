@@ -12,6 +12,7 @@ parser$add_argument("-n", "--nsubsets", type = "double")
 parser$add_argument("-s", "--seed", type = "double")
 parser$add_argument("-b", "--subsetby")
 parser$add_argument("-o", "--output")
+parser$add_argument("-i", "--iterations", type = "double")
 args <- parser$parse_args()
 
 source(here("src/chain-scripts/benchmark_code.R"))
@@ -28,9 +29,9 @@ data <- divide_and_conquer_benchmark(
   NSubsets = args[["nsubsets"]],
   Seed = args[["seed"]],
   Regression = TRUE,
-  N = 20000,
-  Thin = 10,
-  Burn = 10000
+  N = args[["iterations"]],
+  Thin = (args[["iterations"]] / 2) / 1000,
+  Burn = args[["iterations"]] / 2
 )
 chains <- data[["chain"]]
 config <- data[["config"]]
