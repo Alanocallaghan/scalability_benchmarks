@@ -4,6 +4,9 @@ data = ["buettner", "chen", "tung", "zeisel"]
 data_batch = ["tung", "zeisel"]
 seeds = [7, 14, 21, 28, 35, 42]
 fractions = [x/10 for x in range(2, 11, 2)]
+iterations = 40000
+thin = 20
+burn = 20000
 
 # configfile: "config/snakemake_config.yaml"
 # conda: config["conda"]
@@ -78,6 +81,7 @@ rule divide_and_conquer:
     shell:
         """
         Rscript ./src/chain-scripts/divide_and_conquer.R \
+	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --nsubsets {wildcards.nsubsets} \
             --seed {wildcards.seed} \
@@ -96,6 +100,7 @@ rule downsampling_ref:
     shell:
         """
         Rscript ./src/chain-scripts/downsampling_reference.R \
+	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -113,6 +118,7 @@ rule downsampling_divide:
     shell:
         """
         Rscript ./src/chain-scripts/downsampling_divide.R \
+	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
@@ -131,6 +137,7 @@ rule removing_ref:
     shell:
         """
         Rscript ./src/chain-scripts/removing_cells_ref.R \
+	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -147,6 +154,7 @@ rule removing_divide:
     shell:
         """
         Rscript ./src/chain-scripts/removing_cells.R \
+	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
@@ -164,6 +172,7 @@ rule batchinfo:
     shell:
         """
         Rscript ./src/chain-scripts/batchinfo.R \
+	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --output {output}
         """
@@ -180,6 +189,7 @@ rule cell:
     shell:
         """
         Rscript ./src/chain-scripts/batchinfo.R \
+	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --output {output}
         """
