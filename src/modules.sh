@@ -17,5 +17,5 @@ if [ -f ~/miniconda3/etc/profile.d/conda.sh ]; then
 fi
 set +eu
 
-conda activate $(find .snakemake/conda/ -mindepth 1 -maxdepth 1 -type d)
-
+#conda activate $(find .snakemake/conda/ -mindepth 1 -maxdepth 1 -type d)
+conda activate scalability
