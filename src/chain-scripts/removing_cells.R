@@ -40,8 +40,8 @@ data <- divide_and_conquer_benchmark(
   Seed = args[["seed"]],
   Regression = TRUE,
   N = args[["iterations"]],
-  Thin = (args[["iterations"]] / 2) / 1000,
-  Burn = args[["iterations"]] / 2
+  Thin = max((args[["iterations"]] / 2) / 1000, 2),
+  Burn = max(args[["iterations"]] / 2, 4)
 )
 cfg <- data[["config"]]
 cfg$proportion_retained <- as.numeric(args[["fraction"]])

@@ -8,6 +8,7 @@ suppressPackageStartupMessages({
 options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
+parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
@@ -20,9 +21,9 @@ Burn <- 10000
 
 bi <- BASiCS_MCMC(
   data,
-  N = N,
-  Thin = Thin,
-  Burn = Burn,
+  N = args[["iterations"]],
+  Thin = max((args[["iterations"]] / 2) / 1000, 2),
+  Burn = max(args[["iterations"]] / 2, 4),
   PrintProgress = FALSE,
   WithSpikes = FALSE,
   Regression = TRUE

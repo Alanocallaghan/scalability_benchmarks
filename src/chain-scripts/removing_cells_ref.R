@@ -38,8 +38,8 @@ time <- system.time({
     WithSpikes = as.logical(length(altExpNames(data))),
     PrintProgress = FALSE,
     N = args[["iterations"]],
-    Thin = (args[["iterations"]] / 2) / 1000,
-    Burn = args[["iterations"]] / 2
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4)
   )
 })
 config <- list(

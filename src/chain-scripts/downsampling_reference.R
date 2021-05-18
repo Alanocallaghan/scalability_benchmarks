@@ -9,8 +9,8 @@ options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-f", "--fraction", type = "double")
-parser$add_argument("-o", "--output")
 parser$add_argument("-i", "--iterations", type = "double")
+parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
 
@@ -38,8 +38,8 @@ time <- system.time(
     Regression = TRUE,
     PrintProgress = FALSE,
     N = args[["iterations"]],
-    Thin = (args[["iterations"]] / 2) / 1000,
-    Burn = args[["iterations"]] / 2
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4)
   )
 )
 config <- list(
