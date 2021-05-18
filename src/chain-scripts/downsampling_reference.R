@@ -10,6 +10,7 @@ parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-f", "--fraction", type = "double")
 parser$add_argument("-o", "--output")
+parser$add_argument("-i", "--iterations", type = "double")
 args <- parser$parse_args()
 
 
@@ -36,9 +37,9 @@ time <- system.time(
     WithSpikes = length(SingleCellExperiment::altExpNames(data)) > 0,
     Regression = TRUE,
     PrintProgress = FALSE,
-    N = 20000,
-    Thin = 10,
-    Burn = 10000
+    N = args[["iterations"]],
+    Thin = (args[["iterations"]] / 2) / 1000,
+    Burn = args[["iterations"]] / 2
   )
 )
 config <- list(

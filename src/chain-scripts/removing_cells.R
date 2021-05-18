@@ -10,6 +10,7 @@ parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-s", "--seed", type = "double")
 parser$add_argument("-f", "--fraction", type = "double")
+parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
@@ -38,9 +39,9 @@ data <- divide_and_conquer_benchmark(
   NSubsets = 16,
   Seed = args[["seed"]],
   Regression = TRUE,
-  N = 20000,
-  Thin = 10,
-  Burn = 10000
+  N = args[["iterations"]],
+  Thin = (args[["iterations"]] / 2) / 1000,
+  Burn = args[["iterations"]] / 2
 )
 cfg <- data[["config"]]
 cfg$proportion_retained <- as.numeric(args[["fraction"]])

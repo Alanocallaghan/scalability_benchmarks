@@ -81,7 +81,7 @@ rule divide_and_conquer:
     shell:
         """
         Rscript ./src/chain-scripts/divide_and_conquer.R \
-	    --iterations {iterations} \
+            --iterations {iterations} \
             --data {wildcards.dataset} \
             --nsubsets {wildcards.nsubsets} \
             --seed {wildcards.seed} \
@@ -100,7 +100,7 @@ rule downsampling_ref:
     shell:
         """
         Rscript ./src/chain-scripts/downsampling_reference.R \
-	    --iterations {iterations} \
+            --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -118,7 +118,7 @@ rule downsampling_divide:
     shell:
         """
         Rscript ./src/chain-scripts/downsampling_divide.R \
-	    --iterations {iterations} \
+            --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
@@ -137,7 +137,7 @@ rule removing_ref:
     shell:
         """
         Rscript ./src/chain-scripts/removing_cells_ref.R \
-	    --iterations {iterations} \
+            --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
             --output {output}
@@ -154,7 +154,7 @@ rule removing_divide:
     shell:
         """
         Rscript ./src/chain-scripts/removing_cells.R \
-	    --iterations {iterations} \
+            --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --fraction {wildcards.fraction} \
