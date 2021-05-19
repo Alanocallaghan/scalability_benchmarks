@@ -26,5 +26,8 @@ conda install r-argparse \
     bioconductor-scran \
     bioconductor-singlecellexperiment \
     r-viridis \
-    snakemake
+    snakemake \
+    r-biocmanager \
+    r-devtools
+
 
