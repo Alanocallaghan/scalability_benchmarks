@@ -74,6 +74,8 @@ ind_retain <- reducedDims(droplet_sce)$PCA[, 2] > -5 &
   colData(droplet_sce)$subCellType != "presomiticMesoderm.b"
 droplet_sce <- droplet_sce[, ind_retain]
 
+counts(droplet_sce) <- as.matrix(counts(droplet_sce))
+
 droplet_sce$BatchInfo <- as.character(round(droplet_sce$sample))
 
 saveRDS(droplet_sce, "data/ibarra-soria.rds")
