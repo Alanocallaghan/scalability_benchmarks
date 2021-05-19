@@ -13,8 +13,6 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-theme_set(theme_bw())
-
 droplet_sce <- readRDS("data/ibarra-soria.rds")
 
 # Presomitic mesoderm
