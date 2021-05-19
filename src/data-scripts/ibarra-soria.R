@@ -75,3 +75,5 @@ ind_retain <- reducedDims(droplet_sce)$PCA[, 2] > -5 &
 droplet_sce <- droplet_sce[, ind_retain]
 
 droplet_sce$batch <- as.character(round(droplet_sce$sample))
+
+saveRDS(droplet_sce, "data/ibarra-soria.rds")
