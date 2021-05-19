@@ -23,9 +23,9 @@ if (!file.exists("downloads/cellAnnotation.tsv")) {
   file <- "E-MTAB-6153.processed.3.zip"
   download.file(
     paste0(website, folder, file),
-    destfile = "cluster_labels.zip"
+    destfile = "downloads/cluster_labels.zip"
   )
-  unzip(zipfile = "cluster_labels.zip", exdir = "downloads")
+  unzip(zipfile = "downloads/cluster_labels.zip", exdir = "downloads")
 }
 
 cluster_labels <- read.table("downloads/cellAnnotation.tsv",
