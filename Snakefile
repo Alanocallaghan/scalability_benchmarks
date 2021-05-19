@@ -1,8 +1,8 @@
-chains = [1, 2, 4, 8, 16, 32, 64, 128]
+chains = [1, 2, 4, 8, 16, 32, 64]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
 data_batch = ["tung", "zeisel"]
-seeds = [7, 14, 21, 28, 35, 42]
+seeds = [14, 21, 28, 35, 42]
 fractions = [x/10 for x in range(2, 11, 2)]
 iterations = 40000
 thin = 20
@@ -52,7 +52,14 @@ rule all:
         expand(
             "outputs/batchinfo/data-{dataset}/",
             dataset = data_batch
+        ),
+        "outputs/true-positives/reference/data-ibarra-soria/",
+        expand(
+            "outputs/true-positives/divide/data-ibarra-soria_nsubsets_{nsubsets}-seed_{seed}",
+            nsubsets = chains,
+            seed = seeds
         )
+
 
 # rule advi:
 #     conda:
@@ -160,6 +167,44 @@ rule removing_divide:
             --fraction {wildcards.fraction} \
             --output {output}
         """
+
+
+
+rule true_positives_ref:
+    # conda:
+    #     "conda.yaml"
+    resources: mem_mb=10000, runtime=5000
+    input:
+        "data/ibarra-soria.rds"
+    output:
+        directory("outputs/true-positives/reference/data-ibarra-soria/")
+    shell:
+        """
+        Rscript ./src/chain-scripts/true_positives.R \
+            --iterations {iterations} \
+            --nsubsets 1 \
+            --seed 42 \
+            --output {output}
+        """
+
+
+rule true_positives:
+    # conda:
+    #     "conda.yaml"
+    resources: mem_mb=10000, runtime=5000
+    input:
+        "data/ibarra-soria.rds"
+    output:
+        directory("outputs/true-positives/divide/data-ibarra-soria_nsubsets_{nsubsets}-seed_{seed}/")
+    shell:
+        """
+        Rscript ./src/chain-scripts/true_positives.R \
+            --iterations {iterations} \
+            --nsubsets {wildcards.nsubsets} \
+            --seed {wildcards.seed} \
+            --output {output}
+        """
+
 
 rule batchinfo:
     # conda:
