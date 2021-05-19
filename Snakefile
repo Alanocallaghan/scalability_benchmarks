@@ -5,8 +5,6 @@ data_batch = ["tung", "zeisel"]
 seeds = [14, 21, 28, 35, 42]
 fractions = [x/10 for x in range(2, 11, 2)]
 iterations = 40000
-thin = 20
-burn = 20000
 
 # configfile: "config/snakemake_config.yaml"
 # conda: config["conda"]
