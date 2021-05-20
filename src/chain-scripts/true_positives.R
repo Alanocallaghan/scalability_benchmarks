@@ -13,11 +13,6 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-# print(dput(args))
-# stop()
-
-args <- list(iterations = 40, nsubsets = 16, output = "outputs/true-positives/divide/data-ibarra-soria_nsubsets_16-seed_28", 
-    seed = 28)
 
 set.seed(args[["seed"]])
 
