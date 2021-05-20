@@ -193,7 +193,7 @@ rule true_positives:
     input:
         "data/ibarra-soria.rds"
     output:
-        "outputs/true-positives/divide/data-ibarra-soria_nsubsets_{nsubsets}-seed_{seed}.rds"
+        "outputs/true-positives/divide/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds"
     shell:
         """
         Rscript ./src/chain-scripts/true_positives.R \
