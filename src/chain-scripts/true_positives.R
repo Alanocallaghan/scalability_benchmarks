@@ -13,7 +13,6 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-
 set.seed(args[["seed"]])
 
 droplet_sce <- readRDS("data/ibarra-soria.rds")
@@ -21,7 +20,6 @@ droplet_sce <- readRDS("data/ibarra-soria.rds")
 # Presomitic mesoderm
 ind_presom <- colData(droplet_sce)[["Cell_type"]] == "PSM"
 ind_som <- colData(droplet_sce)[["Cell_type"]] == "SM"
-
 
 PSM_Data <- droplet_sce[, ind_presom]
 SM_Data <- droplet_sce[, ind_som]
@@ -59,25 +57,4 @@ out <- list(
   mcmc = list(sm = SM_MCMC, psm = PSM_MCMC)
 )
 
-dir.create(args[["output"]])
 saveRDS(out, paste0(args[["output"]], args[["data"]], ".rds"))
-
-
-# ref_file <- (df %>% filter(chains == 1, data == "zeisel") %>% pull(file))[[1]]
-
-# ref <- readRDS(ref_file)
-
-
-# d <- BASiCS_TestDE(
-#   fitc,
-#   ref,
-#   GroupLabel1 = "D&C",
-#   GroupLabel2 = "Reference"
-# )
-
-# g <- BASiCS_PlotDE(
-#   d@Results[[1]],
-#   Plots = c("MAPlot")
-# )
-
-# ggsave(g, file = "figs/cell_partitions.pdf", width = 6, height = 4)
