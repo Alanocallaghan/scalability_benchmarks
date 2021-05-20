@@ -54,7 +54,7 @@ rule all:
         ),
         "outputs/true-positives/reference/data-ibarra-soria.rds",
         expand(
-            "outputs/true-positives/divide/data-ibarra-soria_nsubsets_{nsubsets}-seed_{seed}.rds",
+            "outputs/true-positives/divide/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
             nsubsets = chains,
             seed = seeds
         )
