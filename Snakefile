@@ -52,9 +52,8 @@ rule all:
             "outputs/batchinfo/data-{dataset}/",
             dataset = data_batch
         ),
-        "outputs/true-positives/reference/data-ibarra-soria.rds",
         expand(
-            "outputs/true-positives/divide/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
+            "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
             nsubsets = chains,
             seed = seeds
         )
@@ -169,24 +168,6 @@ rule removing_divide:
 
 
 
-rule true_positives_ref:
-    # conda:
-    #     "conda.yaml"
-    resources: mem_mb=10000, runtime=5000
-    input:
-        "data/ibarra-soria.rds"
-    output:
-        "outputs/true-positives/reference/data-ibarra-soria.rds"
-    shell:
-        """
-        Rscript ./src/chain-scripts/true_positives.R \
-            --iterations {iterations} \
-            --nsubsets 1 \
-            --seed 42 \
-            --output {output}
-        """
-
-
 rule true_positives:
     # conda:
     #     "conda.yaml"
@@ -194,7 +175,7 @@ rule true_positives:
     input:
         "data/ibarra-soria.rds"
     output:
-        "outputs/true-positives/divide/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds"
+        "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds"
     shell:
         """
         Rscript ./src/chain-scripts/true_positives.R \
