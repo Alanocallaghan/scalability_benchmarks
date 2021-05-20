@@ -52,9 +52,9 @@ rule all:
             "outputs/batchinfo/data-{dataset}/",
             dataset = data_batch
         ),
-        "outputs/true-positives/reference/data-ibarra-soria/",
+        "outputs/true-positives/reference/data-ibarra-soria.rds",
         expand(
-            "outputs/true-positives/divide/data-ibarra-soria_nsubsets_{nsubsets}-seed_{seed}/",
+            "outputs/true-positives/divide/data-ibarra-soria_nsubsets_{nsubsets}-seed_{seed}.rds",
             nsubsets = chains,
             seed = seeds
         )
@@ -176,7 +176,7 @@ rule true_positives_ref:
     input:
         "data/ibarra-soria.rds"
     output:
-        directory("outputs/true-positives/reference/data-ibarra-soria/")
+        "outputs/true-positives/reference/data-ibarra-soria.rds"
     shell:
         """
         Rscript ./src/chain-scripts/true_positives.R \
@@ -194,7 +194,7 @@ rule true_positives:
     input:
         "data/ibarra-soria.rds"
     output:
-        directory("outputs/true-positives/divide/data-ibarra-soria_nsubsets_{nsubsets}-seed_{seed}/")
+        "outputs/true-positives/divide/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds"
     shell:
         """
         Rscript ./src/chain-scripts/true_positives.R \
