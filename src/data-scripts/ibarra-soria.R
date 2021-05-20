@@ -2,7 +2,6 @@ library("scran")
 library("scater")
 library("BASiCS")
 
-
 if (!file.exists("downloads/rawCounts.tsv")) {
   website <- "https://www.ebi.ac.uk/"
   folder <- "arrayexpress/files/E-MTAB-6153/"
@@ -15,7 +14,6 @@ if (!file.exists("downloads/rawCounts.tsv")) {
   file.remove("downloads/rawCounts.zip")
 }
 rawCounts <- read.delim("downloads/rawCounts.tsv", header = TRUE)
-
 
 if (!file.exists("downloads/cellAnnotation.tsv")) {
   website <- "https://www.ebi.ac.uk/"
@@ -30,7 +28,6 @@ if (!file.exists("downloads/cellAnnotation.tsv")) {
 
 cluster_labels <- read.table("downloads/cellAnnotation.tsv",
   sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-
 
 cluster_labels[["Cell_type"]] <- cluster_labels$cellType
 cluster_labels[["Cell_type"]] <- sub(
@@ -47,7 +44,6 @@ ind_som <- which(cluster_labels[["Cell_type"]] == "PSM" |
   cluster_labels[["Cell_type"]] == "SM")
 rawCounts <- rawCounts[, ind_som]
 cluster_labels <- cluster_labels[ind_som, ]
-
 
 droplet_sce <- SingleCellExperiment(
   assays = list(counts = as(as.matrix(rawCounts), "dgCMatrix"))
