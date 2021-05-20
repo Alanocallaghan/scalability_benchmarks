@@ -57,4 +57,4 @@ out <- list(
   mcmc = list(sm = SM_MCMC, psm = PSM_MCMC)
 )
 
-saveRDS(out, paste0(args[["output"]], args[["data"]], ".rds"))
+saveRDS(out, paste0(args[["output"]])
