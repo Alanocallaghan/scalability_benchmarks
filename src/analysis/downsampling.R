@@ -6,7 +6,7 @@ library("here")
 library("BASiCS")
 
 theme_set(theme_bw())
-source(here("scripts/analysis-scripts/functions.R"))
+source(here("src/analysis/functions.R"))
 
 ds_files <- list.files("outputs/downsampling/divide/", full.names = TRUE)
 dst <- file2triplets(ds_files)

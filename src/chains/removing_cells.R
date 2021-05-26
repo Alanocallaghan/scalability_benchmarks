@@ -15,7 +15,7 @@ parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
 
-source(here("src/chain-scripts/benchmark_code.R"))
+source(here("src/chains/benchmark_code.R"))
 
 
 data <- readRDS(here("data", paste0(args[["data"]], ".rds")))

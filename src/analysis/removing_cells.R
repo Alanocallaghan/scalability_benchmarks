@@ -6,7 +6,7 @@ library("here")
 library("BASiCS")
 
 theme_set(theme_bw())
-source(here("scripts/analysis-scripts/functions.R"))
+source(here("src/analysis/functions.R"))
 
 rm_files <- list.files("outputs/removing_cells/removing/", full.names = TRUE)
 rmt <- file2triplets(rm_files)

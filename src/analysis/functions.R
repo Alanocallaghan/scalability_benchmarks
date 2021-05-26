@@ -130,3 +130,11 @@ do_de <-function(df, ref_df, match_column, mc.cores = 2) {
   )
   df
 }
+
+jaccard <- function(a, b) {
+  a <- na.omit(a)
+  b <- na.omit(b)
+  intersection <- length(intersect(a, b))
+  union <- length(a) + length(b) - intersection
+  if (union == 0) 0 else intersection / union
+}

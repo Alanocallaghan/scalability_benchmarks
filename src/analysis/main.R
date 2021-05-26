@@ -7,10 +7,10 @@ library("BASiCS")
 library("coda")
 
 theme_set(theme_bw())
-source(here("scripts/analysis-scripts/functions.R"))
+source(here("src/analysis/functions.R"))
 
 
-source(here("scripts/analysis-scripts/data_comparison.R"))
+source(here("src/analysis/data_comparison.R"))
 
 
 # advi_files <- list.files("outputs/advi", full.names = TRUE)
@@ -20,7 +20,7 @@ source(here("scripts/analysis-scripts/data_comparison.R"))
 # advi_df <- read_triplets(advi_triplets)
 
 
-# source(here("scripts/analysis-scripts/elbo_plots.R"))
+# source(here("src/analysis/elbo_plots.R"))
 
 dc_files <- list.files("outputs/divide_and_conquer", full.names = TRUE)
 dc_df <- read_triplets(file2triplets(dc_files), combine = TRUE)
@@ -42,26 +42,27 @@ colnames(data_dims) <- c("nGenes", "nCells")
 data_dims[["data"]] <- datasets
 
 
-source(here("scripts/analysis-scripts/downsampling.R"))
-source(here("scripts/analysis-scripts/removing_cells.R"))
+source(here("src/analysis/downsampling.R"))
+source(here("src/analysis/removing_cells.R"))
 
+source(here("src/analysis/true_positives.R"))
 
 # file_df <- rbind(advi_df, dc_df)
 file_df <- dc_df
 df <- merge(file_df, data_dims)
 
-source(here("scripts/analysis-scripts/time_plot.R"))
+source(here("src/analysis/time_plot.R"))
 
 references <- df[which(df[["chains"]] == 1), ]
 references[["chain"]] <- lapply(references[["file"]], readRDS)
 
-source(here("scripts/analysis-scripts/de_on_table.R"))
-source(here("scripts/analysis-scripts/chain_plots.R"))
+source(here("src/analysis/de_on_table.R"))
+source(here("src/analysis/chain_plots.R"))
 
 
-source(here("scripts/analysis-scripts/ess.R"))
-source(here("scripts/analysis-scripts/hpd.R"))
+source(here("src/analysis/ess.R"))
+source(here("src/analysis/hpd.R"))
 
 
-source(here("scripts/analysis-scripts/batchinfo.R"))
-source(here("scripts/analysis-scripts/identifiability.R"))
+source(here("src/analysis/batchinfo.R"))
+source(here("src/analysis/identifiability.R"))
