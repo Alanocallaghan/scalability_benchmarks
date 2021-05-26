@@ -2,7 +2,8 @@ chains = [1, 2, 4, 8, 16, 32, 64]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
 data_batch = ["tung", "zeisel"]
-seeds = [14, 21, 28, 35, 42]
+# seeds = [14, 21, 28, 35, 42]
+seeds = [42]
 fractions = [x/10 for x in range(2, 11, 2)]
 iterations = 40
 
