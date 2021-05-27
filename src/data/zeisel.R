@@ -5,7 +5,6 @@ library("scater")
 library("BASiCS")
 library("here")
 
-options(stringsAsFactors = FALSE)
 
 data.dir <- "downloads"
 
@@ -144,7 +143,5 @@ Data <- newBASiCS_Data(
   SpikeInfo = SpikeInput.1
 )
 colnames(Data) <- colnames(input)
-saveRDS(Data, file = "data/zeisel.rds")
-# usethis::use_data(zeisel, overwrite = TRUE)
-# saveRDS(Data, "datasets/zeisel.rds")
+saveRDS(Data, file = "rdata/zeisel.rds")
 

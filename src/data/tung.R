@@ -2,8 +2,6 @@ library("scater")
 library("BASiCS")
 library("here")
 
-
-
 data.dir <- "downloads"
 tungfile <- file.path(data.dir, "tung_molecules-filter.txt")
 erccfile <- file.path(data.dir, "tung_ercc_conc.txt")
@@ -68,6 +66,4 @@ bd <- newBASiCS_Data(
   SpikeInfo = SpikeInput
 )
 colnames(bd) <- colnames(reads)
-saveRDS(bd, file = "data/tung.rds")
-# usethis::use_data(tung, overwrite = TRUE)
-# saveRDS(bd, "datasets/tung.rds")
+saveRDS(bd, file = "rdata/tung.rds")

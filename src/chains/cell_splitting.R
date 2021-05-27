@@ -5,7 +5,6 @@ suppressPackageStartupMessages({
   library("here")
   library("BASiCS")
 })
-options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-s", "--seed", type = "double")

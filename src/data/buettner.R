@@ -1,7 +1,6 @@
 library("scater")
 library("BASiCS")
 
-options(stringsAsFactors = FALSE)
 
 system("wget https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-2805/E-MTAB-2805.processed.1.zip -O E-MTAB-2805.zip")
 
@@ -74,5 +73,5 @@ sce <- newBASiCS_Data(
 colnames(sce) <- colnames(all)
 buettner <- sce
 # usethis::use_data(buettner, overwrite = TRUE)
-saveRDS(sce, "data/buettner.rds")
+saveRDS(sce, "rdata/buettner.rds")
 

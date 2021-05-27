@@ -3,10 +3,9 @@ suppressPackageStartupMessages({
   library("here")
   library("BASiCS")
 })
-options(stringsAsFactors=FALSE)
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
-parser$add_argument("-f", "--fraction", type = "double")
+parser$add_argument("-n", "--nsubsets", type = "double")
 parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
@@ -31,7 +30,7 @@ time_mcmc <- function(n, times = 1) {
             N = args[["iterations"]],
             Thin = max((args[["iterations"]] / 2) / 1000, 2),
             Burn = max(args[["iterations"]] / 2, 4),
-            WithSpikes = data != "pbmc",
+            WithSpikes = "spike-ins" %in% altExp(data),
             Regression = TRUE,
             PrintProgress = FALSE
           )
@@ -40,9 +39,6 @@ time_mcmc <- function(n, times = 1) {
     )[["elapsed"]]
   })
 }
-
-for (n in c(2, 4, 8, 16, 32)) {
-  cat(n, "chains\n")
-  time <- time_mcmc(n, times = 6)
-  saveRDS(time, paste0("outputs/time/", data, "_", n, ".rds"))
-}
+n <- args[["nsubsets"]]
+time <- time_mcmc(n, times = 6)
+saveRDS(time, paste0("outputs/time/", data, "_", n, ".rds"))

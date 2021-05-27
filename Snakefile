@@ -61,20 +61,35 @@ rule all:
 
 # rule plots: ## todo
 
-# rule advi:
-#     conda:
-#          "conda.yaml"
-#     output:
-#         "outputs/advi/data-{dataset}_seed-{seed}/"
-#     input:
-#         "data/{dataset}.rds"
-#     shell:
-#         """
-#         Rscript ./src/chain-scripts/advi.R \
-#             --data {wildcards.dataset} \
-#             --seed {wildcards.seed} \
-#             --output {output}
-#         """
+rule advi:
+    conda:
+         "conda.yaml"
+    output:
+        "outputs/advi/data-{dataset}_seed-{seed}/"
+    input:
+        "rdata/{dataset}.rds"
+    shell:
+        """
+        Rscript ./src/chain/advi.R \
+            --data {wildcards.dataset} \
+            --seed {wildcards.seed} \
+            --output {output}
+        """
+
+rule time:
+    # conda: "conda.yaml"
+    output:
+        expand(
+            "outputs/time/{dataset}_{n}.rds",
+            dataset = data
+            n = [2, 4, 8, 16, 32]
+        )
+    input:
+        "rdata/{dataset}.rds"
+    shell:
+        """
+        Rscript ./src/chain
+        """
 
 
 rule divide_and_conquer:
@@ -82,12 +97,12 @@ rule divide_and_conquer:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     output:
         directory("outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/")
     shell:
         """
-        Rscript ./src/chain-scripts/divide_and_conquer.R \
+        Rscript ./src/chain/divide_and_conquer.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --nsubsets {wildcards.nsubsets} \
@@ -101,12 +116,12 @@ rule downsampling_ref:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     output:
         directory("outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/")
     shell:
         """
-        Rscript ./src/chain-scripts/downsampling_reference.R \
+        Rscript ./src/chain/downsampling_reference.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
@@ -119,12 +134,12 @@ rule downsampling_divide:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     output:
         directory("outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/")
     shell:
         """
-        Rscript ./src/chain-scripts/downsampling_divide.R \
+        Rscript ./src/chain/downsampling_divide.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
@@ -138,12 +153,12 @@ rule removing_ref:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     output:
         directory("outputs/removing/reference/data-{dataset}_fraction-{fraction}/")
     shell:
         """
-        Rscript ./src/chain-scripts/removing_cells_ref.R \
+        Rscript ./src/chain/removing_cells_ref.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
@@ -155,12 +170,12 @@ rule removing_divide:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     output:
         directory("outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/")
     shell:
         """
-        Rscript ./src/chain-scripts/removing_cells.R \
+        Rscript ./src/chain/removing_cells.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
@@ -175,12 +190,12 @@ rule true_positives:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
-        "data/ibarra-soria.rds"
+        "rdata/ibarra-soria.rds"
     output:
         "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds"
     shell:
         """
-        Rscript ./src/chain-scripts/true_positives.R \
+        Rscript ./src/chain/true_positives.R \
             --iterations {iterations} \
             --nsubsets {wildcards.nsubsets} \
             --seed {wildcards.seed} \
@@ -193,12 +208,12 @@ rule batchinfo:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=3000
     input:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     output:
         directory("outputs/batchinfo/data-{dataset}/")
     shell:
         """
-        Rscript ./src/chain-scripts/batchinfo.R \
+        Rscript ./src/chain/batchinfo.R \
 	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --output {output}
@@ -210,12 +225,12 @@ rule cell:
     #     "conda.yaml"
     resources: mem_mb=10000, runtime=3000
     input:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     output:
         "outputs/cell_splitting/{dataset}.rds"
     shell:
         """
-        Rscript ./src/chain-scripts/batchinfo.R \
+        Rscript ./src/chain/batchinfo.R \
 	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --output {output}
@@ -228,9 +243,9 @@ rule data:
     resources:
         mem_mb=10000
     input:
-        "src/data-scripts/{dataset}.R"
+        "src/data/{dataset}.R"
     output:
-        "data/{dataset}.rds"
+        "rdata/{dataset}.rds"
     shell:
         """
         Rscript {input}
