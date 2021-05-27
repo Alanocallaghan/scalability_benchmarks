@@ -41,4 +41,4 @@ time_mcmc <- function(n, times = 1) {
 }
 n <- args[["nsubsets"]]
 time <- time_mcmc(n, times = 6)
-saveRDS(time, paste0("outputs/time/", data, "_", n, ".rds"))
+saveRDS(time, args[["output"]])
