@@ -27,7 +27,7 @@ rule plots: ## todo
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            data = data,
+            dataset = data,
             seed  = seeds
         ),
         expand(
