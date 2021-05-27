@@ -14,6 +14,10 @@ shell.prefix("source src/modules.sh; ")
 
 rule all:
     input:
+
+
+rule plots: ## todo
+    input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
             dataset = data,
@@ -21,11 +25,11 @@ rule all:
             by = by,
             seed = seeds
         ),
-        # expand(
-        #     "outputs/advi/data-{dataset}_seed-{seed}/",
-        #     data = data,
-        #     seed  = seeds
-        # ),
+        expand(
+            "outputs/advi/data-{dataset}_seed-{seed}/",
+            data = data,
+            seed  = seeds
+        ),
         expand(
             "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
             dataset = data,
@@ -57,9 +61,27 @@ rule all:
             nsubsets = chains,
             seed = seeds
         )
-
-
-# rule plots: ## todo
+    output:
+        "figs/diffexp_plot.pdf",
+        "figs/overlap_diff_genes.pdf",
+        "figs/libsize_density.pdf",
+        "figs/complexity_density.pdf",
+        "figs/expression_density.pdf",
+        "figs/dropout_density.pdf",
+        "figs/true-positives.pdf",
+        "figs/time_plot.pdf",
+        "figs/de_batch_tung.pdf",
+        "figs/de_batch_zeisel.pdf",
+        "figs/ess_batch.pdf",
+        "figs/removing_cells.pdf",
+        "figs/de_id_tung.pdf",
+        "figs/de_id_zeisel.pdf",
+        "figs/ess_id.pdf",
+        "figs/downsampling.pdf"
+    shell:
+        """
+        Rscript src/analysis/main.R
+        """
 
 rule advi:
     conda:
