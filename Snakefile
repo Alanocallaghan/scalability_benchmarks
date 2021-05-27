@@ -70,7 +70,7 @@ rule advi:
         "rdata/{dataset}.rds"
     shell:
         """
-        Rscript ./src/chain/advi.R \
+        Rscript ./src/chains/advi.R \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
             --output {output}
@@ -88,7 +88,11 @@ rule time:
         "rdata/{dataset}.rds"
     shell:
         """
-        Rscript ./src/chain
+        Rscript ./src/chains/timing.R \
+            --data {wildcards.dataset} \
+            --nsubsets {wildcards.n} \
+            --iterations {iterations} \
+            --output {output}
         """
 
 
@@ -102,7 +106,7 @@ rule divide_and_conquer:
         directory("outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/")
     shell:
         """
-        Rscript ./src/chain/divide_and_conquer.R \
+        Rscript ./src/chains/divide_and_conquer.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --nsubsets {wildcards.nsubsets} \
@@ -121,7 +125,7 @@ rule downsampling_ref:
         directory("outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/")
     shell:
         """
-        Rscript ./src/chain/downsampling_reference.R \
+        Rscript ./src/chains/downsampling_reference.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
@@ -139,7 +143,7 @@ rule downsampling_divide:
         directory("outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/")
     shell:
         """
-        Rscript ./src/chain/downsampling_divide.R \
+        Rscript ./src/chains/downsampling_divide.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
@@ -158,7 +162,7 @@ rule removing_ref:
         directory("outputs/removing/reference/data-{dataset}_fraction-{fraction}/")
     shell:
         """
-        Rscript ./src/chain/removing_cells_ref.R \
+        Rscript ./src/chains/removing_cells_ref.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --fraction {wildcards.fraction} \
@@ -175,7 +179,7 @@ rule removing_divide:
         directory("outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/")
     shell:
         """
-        Rscript ./src/chain/removing_cells.R \
+        Rscript ./src/chains/removing_cells.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
             --seed {wildcards.seed} \
@@ -195,7 +199,7 @@ rule true_positives:
         "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds"
     shell:
         """
-        Rscript ./src/chain/true_positives.R \
+        Rscript ./src/chains/true_positives.R \
             --iterations {iterations} \
             --nsubsets {wildcards.nsubsets} \
             --seed {wildcards.seed} \
@@ -213,7 +217,7 @@ rule batchinfo:
         directory("outputs/batchinfo/data-{dataset}/")
     shell:
         """
-        Rscript ./src/chain/batchinfo.R \
+        Rscript ./src/chains/batchinfo.R \
 	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --output {output}
@@ -230,7 +234,7 @@ rule cell:
         "outputs/cell_splitting/{dataset}.rds"
     shell:
         """
-        Rscript ./src/chain/batchinfo.R \
+        Rscript ./src/chains/batchinfo.R \
 	    --iterations {iterations} \
             --data {wildcards.dataset} \
             --output {output}
