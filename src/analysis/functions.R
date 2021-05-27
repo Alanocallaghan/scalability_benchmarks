@@ -49,10 +49,7 @@ parse_elbo <- function(c) {
   elbo
 }
 
-
-
-
-do_de <-function(df, ref_df, match_column, mc.cores = 2) {
+do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
   edr <- mclapply(
     seq_len(nrow(df)),
     function(i) {
@@ -60,7 +57,8 @@ do_de <-function(df, ref_df, match_column, mc.cores = 2) {
       if (isTRUE(df[[i, "chains"]] == 1)) {
         return(rep(list(NULL), 3))
       }
-      ind <- ref_df[[match_column]] == df[[i, match_column]]
+      ind <- ref_df[[match_column]] == df[[i, match_column]] &
+        ref_df[["data"]] == df[i, "data"]
       chain <- readRDS(df[[i, "file"]])
       if (length(chain) > 1) {
         suppressMessages(
@@ -105,7 +103,7 @@ do_de <-function(df, ref_df, match_column, mc.cores = 2) {
       lapply(
         de@Results,
         function(x) {
-          l <- DiffRes(x)[["GeneName"]]
+          l <- as.data.frame(x)[["GeneName"]]
           if (!length(l)) NULL else l
         }
       )

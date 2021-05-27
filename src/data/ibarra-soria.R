@@ -75,4 +75,4 @@ counts(droplet_sce) <- as.matrix(counts(droplet_sce))
 droplet_sce$BatchInfo <- as.character(round(droplet_sce$sample))
 colnames(droplet_sce) <- paste("Cell", seq_len(ncol(droplet_sce)))
 
-saveRDS(droplet_sce, "data/ibarra-soria.rds")
+saveRDS(droplet_sce, "rdata/ibarra-soria.rds")

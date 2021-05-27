@@ -15,4 +15,4 @@ sce <- sce[, sce$cell_type1 == "Astro"]
 
 
 sce <- sce[rowMeans(counts(sce)) > 0.1, ]
-saveRDS(sce, "data/chen.rds")
+saveRDS(sce, "rdata/chen.rds")

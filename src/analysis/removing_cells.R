@@ -1,4 +1,3 @@
-options(stringsAsFactors = FALSE)
 library("dplyr")
 library("ggplot2")
 library("ggbeeswarm")
@@ -8,16 +7,16 @@ library("BASiCS")
 theme_set(theme_bw())
 source(here("src/analysis/functions.R"))
 
-rm_files <- list.files("outputs/removing_cells/removing/", full.names = TRUE)
+rm_files <- list.files("outputs/removing/divide", full.names = TRUE)
 rmt <- file2triplets(rm_files)
 rmt <- rmt[as.logical(sapply(rmt, length))]
 rm_df <- read_triplets(rmt, combine = TRUE)
 
-rm_ref_files <- list.files("outputs/removing_cells/reference", full.names = TRUE)
+rm_ref_files <- list.files("outputs/removing/reference", full.names = TRUE)
 ref_df_rm <- read_triplets(file2triplets(rm_ref_files), combine = TRUE)
 ref_df_rm$chain <- lapply(ref_df_rm$file, readRDS)
 
-rm_df <- do_de(rm_df, ref_df = ref_df_rm, match_column = "proportion_retained", mc.cores = 8)
+rm_df <- do_de(rm_df, ref_df = ref_df_rm, match_column = "proportion_retained")
 
 mdf_rm <- reshape2::melt(
   rm_df,
