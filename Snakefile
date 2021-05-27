@@ -81,7 +81,7 @@ rule time:
     output:
         expand(
             "outputs/time/{dataset}_{n}.rds",
-            dataset = data
+            dataset = data,
             n = [2, 4, 8, 16, 32]
         )
     input:
