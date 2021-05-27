@@ -28,6 +28,8 @@ conda install r-argparse \
     r-viridis \
     snakemake \
     r-biocmanager \
-    r-devtools
+    r-devtools \
+    r-rstan
 
+## also need to devtools::install_github("Alanocallaghan/BASiCStan")
 

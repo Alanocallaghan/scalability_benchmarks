@@ -102,6 +102,7 @@ rule plots: ## todo
 rule advi:
     conda:
          "conda.yaml"
+    resources: mem_mb=20000
     output:
         "outputs/advi/data-{dataset}_seed-{seed}/"
     input:

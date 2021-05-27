@@ -17,5 +17,6 @@ if [ -f ~/miniconda3/etc/profile.d/conda.sh ]; then
 fi
 set +eu
 
+module load roslin/gcc/7.3.0
 #conda activate $(find .snakemake/conda/ -mindepth 1 -maxdepth 1 -type d)
 conda activate scalability
