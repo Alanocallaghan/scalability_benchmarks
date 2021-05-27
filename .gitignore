@@ -13,3 +13,4 @@ Rplots.pdf
 .snakemake
 cluster_logs
 *.rds
+rdata/
