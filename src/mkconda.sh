@@ -16,7 +16,7 @@
 # library("SingleCellExperiment")
 # library("viridis")
 
-mamba create -n scalability r-base=4.1.0 \
+mamba create -n temp r-base \
     r-argparse \
     bioconductor-basics \
     r-coda \

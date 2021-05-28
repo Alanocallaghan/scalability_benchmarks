@@ -105,7 +105,7 @@ rule advi:
          "conda.yaml"
     resources: mem_mb=20000
     output:
-        "outputs/advi/data-{dataset}_seed-{seed}/"
+        directory("outputs/advi/data-{dataset}_seed-{seed}/")
     input:
         "rdata/{dataset}.rds"
     shell:
