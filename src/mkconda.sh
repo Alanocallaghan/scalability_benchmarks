@@ -13,7 +13,7 @@
 # library("Seurat")
 # library("SingleCellExperiment")
 # library("viridis")
- 
+
 conda install r-argparse \
     bioconductor-basics \
     r-coda \
