@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # grep -rh "library(" | sed -e 's/^[ \t]*//' | sort | uniq
 # library("argparse")
 # library("BASiCS")
@@ -14,7 +16,8 @@
 # library("SingleCellExperiment")
 # library("viridis")
 
-conda install r-argparse \
+mamba create -n scalability r-base=4.1.0 \
+    r-argparse \
     bioconductor-basics \
     r-coda \
     r-dplyr \

@@ -24,9 +24,7 @@ time <- system.time(
     chain <- BASiCStan(
       data,
       WithSpikes = with_spikes,
-      tol_rel_obj = 1,
-      Regression = TRUE,
-      ReturnFit = FALSE
+      tol_rel_obj = 1
     )
   )
 )
