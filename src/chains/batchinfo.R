@@ -14,9 +14,6 @@ args <- parser$parse_args()
 
 data <- readRDS(paste0("data/", args[["data"]], ".rds"))
 
-N <- 20000
-Thin <- 10
-Burn <- 10000
 
 bi <- BASiCS_MCMC(
   data,
@@ -32,9 +29,9 @@ data@colData$BatchInfo <- 1
 
 non_bi <- BASiCS_MCMC(
   data,
-  N = N,
-  Thin = Thin,
-  Burn = Burn,
+  N = args[["iterations"]],
+  Thin = max((args[["iterations"]] / 2) / 1000, 2),
+  Burn = max(args[["iterations"]] / 2, 4),
   PrintProgress = FALSE,
   WithSpikes = FALSE,
   Regression = TRUE
