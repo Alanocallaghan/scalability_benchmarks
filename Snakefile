@@ -34,6 +34,7 @@ rule all:
 
 
 rule plots: ## todo
+    resources: mem_mb=50000, runtime=10000
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
