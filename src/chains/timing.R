@@ -16,29 +16,49 @@ data <- args[["data"]]
 # cat("Doing", data, "\n")
 sce <- readRDS(paste0("data/", data, ".rds"))
 time_mcmc <- function(n, times = 1) {
-  replicate(times, {
-    subsets <- BASiCS:::.generateSubsets(
-      sce,
-      NSubsets = n,
-      SubsetBy = "gene",
-      WithSpikes = data != "pbmc"
-    )
-    system.time(
-      suppressMessages(
-        capture.output(
-          BASiCS_MCMC(
-            subsets[[1]],
-            N = args[["iterations"]],
-            Thin = max((args[["iterations"]] / 2) / 1000, 2),
-            Burn = max(args[["iterations"]] / 2, 4),
-            WithSpikes = "spike-ins" %in% altExpNames(sce),
-            Regression = TRUE,
-            PrintProgress = FALSE
+  if (n == 1) {
+    replicate(times, {
+      system.time(
+        suppressMessages(
+          capture.output(
+            BASiCS_MCMC(
+              sce,
+              N = args[["iterations"]],
+              Thin = max((args[["iterations"]] / 2) / 1000, 2),
+              Burn = max(args[["iterations"]] / 2, 4),
+              WithSpikes = "spike-ins" %in% altExpNames(sce),
+              Regression = TRUE,
+              PrintProgress = FALSE
+            )
           )
         )
+      )[["elapsed"]]
+    })
+  } else {
+    replicate(times, {
+      subsets <- BASiCS:::.generateSubsets(
+        sce,
+        NSubsets = n,
+        SubsetBy = "gene",
+        WithSpikes = data != "pbmc"
       )
-    )[["elapsed"]]
-  })
+      system.time(
+        suppressMessages(
+          capture.output(
+            BASiCS_MCMC(
+              subsets[[1]],
+              N = args[["iterations"]],
+              Thin = max((args[["iterations"]] / 2) / 1000, 2),
+              Burn = max(args[["iterations"]] / 2, 4),
+              WithSpikes = "spike-ins" %in% altExpNames(sce),
+              Regression = TRUE,
+              PrintProgress = FALSE
+            )
+          )
+        )
+      )[["elapsed"]]
+    })
+  }
 }
 n <- args[["nsubsets"]]
 time <- time_mcmc(n, times = 6)
