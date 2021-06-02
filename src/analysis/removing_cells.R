@@ -33,11 +33,12 @@ mdf_rm$proportion_retained <- factor(
   levels = paste(sort(unique(rm_df$proportion_retained), decreasing = TRUE) * 100, "%")
 )
 
-ggplot(mdf_rm, aes(x = cells_retained, y = value, color = variable)) +
-  geom_quasirandom(dodge.width = 60, size = 0.4) +
+g <- ggplot(mdf_rm, aes(x = factor(round(cells_retained)), y = value, color = variable)) +
+  geom_quasirandom(dodge.width = 0.25, size = 0.4, groupOnX = TRUE) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
-  scale_x_reverse("Number of cells") +
+  # scale_x_reverse("Number of cells") +
   scale_y_continuous(label = scales::percent) +
-  labs(x = "nCells", y = "Portion of genes perturbed")
+  labs(x = "Number of cells", y = "Portion of genes perturbed") +
+  theme(axis.text.x = element_text(hjust = 1, angle = 45))
 
 ggsave("figs/removing_cells.pdf", width = 6, height = 4)

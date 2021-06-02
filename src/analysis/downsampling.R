@@ -25,18 +25,24 @@ mdf_ds$variable <- gsub("pDiffDisp", "delta", mdf_ds$variable)
 mdf_ds$variable <- gsub("pDiffResDisp", "epsilon", mdf_ds$variable)
 mdf_ds$variable <- factor(mdf_ds$variable, levels = c("mu", "delta", "epsilon"))
 
-libsize <- colSums(counts(readRDS(paste0("data/", ref_df_ds[[1, "data"]], ".rds"))))
+sce <- readRDS(paste0("data/", ref_df_ds[[1, "data"]], ".rds"))
+libsize <- colSums(counts(sce))
 mdf_ds$mean_libsize <- median(libsize) * mdf_ds$downsample_rate
 mdf_ds$downsample_rate_t <- factor(
   paste(mdf_ds$downsample_rate * 100, "%"),
   levels = paste(sort(unique(ds_df$downsample_rate), decreasing = TRUE) * 100, "%")
 )
 
-ggplot(mdf_ds, aes(x = round(mean_libsize), y = value, color = variable)) +
-  geom_quasirandom(dodge.width = 250, size = 0.25) +
+
+g <- ggplot(mdf_ds) +
+  aes(
+    x = factor(format(signif(mean_libsize, digits=3), big.mark=",")),
+    y = value,
+    color = variable
+  ) +
+  geom_quasirandom(dodge.width = 0.25, size = 0.25, groupOnX = TRUE) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
-  scale_x_reverse() +
-  scale_y_continuous(label = scales::percent) +
+  scale_y_continuous(label = scales::percent, limits = c(0, max(0.25, max(mdf_ds$value)))) +
   labs(x = "Expected median library size", y = "Portion of genes perturbed")
 
 ggsave("figs/downsampling.pdf", width = 6, height = 4)

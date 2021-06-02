@@ -128,7 +128,7 @@ ggsave(
 
 # df$chains <- factor(df$chains, levels = c(1, 2, 4, 8, 16, 32))
 
-# ggplot(
+# g <- ggplot(
 #   df,
 #   aes(
 #     x = chains,

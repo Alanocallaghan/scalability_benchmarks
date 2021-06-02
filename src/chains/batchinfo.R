@@ -41,13 +41,3 @@ dir <- args[["output"]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 saveRDS(bi, file.path(dir, "batch.rds"))
 saveRDS(non_bi, file.path(dir, "/nobatch.rds"))
-
-
-library(ggplot2)
-theme_set(theme_bw())
-x <- rgamma(10000, 1, 1)
-ggplot() +
-  aes(x) +
-  geom_histogram(boundary=0, bins=nclass.FD(x)) +
-  geom_vline(aes(xintercept = quantile(x)), col="blue", alpha = 0.7) +
-  geom_vline(aes(xintercept = seq(min(x), max(x), length.out=5)), col="red", alpha = 0.7)

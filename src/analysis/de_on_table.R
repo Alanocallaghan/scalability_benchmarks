@@ -44,7 +44,7 @@ advi_mdf <- mdf %>% filter(is.na(chains)) %>%
   summarize(value = median(value))
 
 
-ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
+g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   aes(
     x = factor(chains),
     y = value,
@@ -161,7 +161,7 @@ count_df <- all_overlap_df %>%
   summarise(count = n())
 
 ## Proportions because of differing number of genes
-ggplot(
+g <- ggplot(
   count_df,
     aes(
       x = n, 
@@ -205,7 +205,7 @@ ggsave(
 
 
 ## Original version with counts
-# ggplot(
+# g <- ggplot(
 #   all_overlap_df,
 #     aes(
 #       x = n, 
