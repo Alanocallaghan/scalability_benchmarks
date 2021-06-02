@@ -30,7 +30,7 @@ time_mcmc <- function(n, times = 1) {
             N = args[["iterations"]],
             Thin = max((args[["iterations"]] / 2) / 1000, 2),
             Burn = max(args[["iterations"]] / 2, 4),
-            WithSpikes = "spike-ins" %in% altExp(data),
+            WithSpikes = "spike-ins" %in% altExpNames(data),
             Regression = TRUE,
             PrintProgress = FALSE
           )
