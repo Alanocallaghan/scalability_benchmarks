@@ -125,6 +125,7 @@ rule advi:
 
 rule time:
     # conda: "conda.yaml"
+    resources: mem_mb=10000
     output:
         "outputs/time/{dataset}_{n}.rds"
     input:
