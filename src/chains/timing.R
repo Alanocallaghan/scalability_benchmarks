@@ -13,11 +13,12 @@ args <- parser$parse_args()
 
 dir.create("outputs/time/", recursive = TRUE, showWarnings = FALSE)
 data <- args[["data"]]
-cat("Doing", data, "\n")
+# cat("Doing", data, "\n")
+sce <- readRDS(paste0("data/", data, ".rds"))
 time_mcmc <- function(n, times = 1) {
   replicate(times, {
     subsets <- BASiCS:::.generateSubsets(
-      readRDS(paste0("data/", data, ".rds")),
+      sce,
       NSubsets = n,
       SubsetBy = "gene",
       WithSpikes = data != "pbmc"
@@ -30,7 +31,7 @@ time_mcmc <- function(n, times = 1) {
             N = args[["iterations"]],
             Thin = max((args[["iterations"]] / 2) / 1000, 2),
             Burn = max(args[["iterations"]] / 2, 4),
-            WithSpikes = "spike-ins" %in% altExpNames(data),
+            WithSpikes = "spike-ins" %in% altExpNames(sce),
             Regression = TRUE,
             PrintProgress = FALSE
           )
