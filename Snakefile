@@ -126,11 +126,7 @@ rule advi:
 rule time:
     # conda: "conda.yaml"
     output:
-        expand(
-            "outputs/time/{dataset}_{n}.rds",
-            dataset = data,
-            n = [2, 4, 8, 16, 32]
-        )
+        "outputs/time/{dataset}_{n}.rds"
     input:
         "rdata/{dataset}.rds"
     shell:
