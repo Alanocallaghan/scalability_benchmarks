@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # grep -rh "library(" | sed -e 's/^[ \t]*//' | sort | uniq
 # library("argparse")
 # library("BASiCS")
@@ -16,8 +14,7 @@
 # library("SingleCellExperiment")
 # library("viridis")
 
-mamba create -n temp r-base \
-    r-argparse \
+mamba create -n scalability r-argparse \
     bioconductor-basics \
     r-coda \
     r-dplyr \

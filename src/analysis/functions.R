@@ -50,7 +50,7 @@ parse_elbo <- function(c) {
 }
 
 do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
-  edr <- mclapply(
+  edr <- lapply(
     seq_len(nrow(df)),
     function(i) {
       cat(i, "/", nrow(df), "\n")
@@ -107,8 +107,9 @@ do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
           if (!length(l)) NULL else l
         }
       )
-    },
-    mc.cores = mc.cores
+    }
+    # ,
+    # mc.cores = mc.cores
   )
 
   edr_df <- do.call(rbind, edr)

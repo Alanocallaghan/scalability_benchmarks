@@ -62,7 +62,7 @@ ess_df_b[["param"]] <- factor(ess_df_b[["param"]],
   levels = c("mu", "delta", "epsilon")
 )
 
-ggplot(ess_df_b, aes(x = param, y = ess, color = type, fill = type)) + 
+g <- ggplot(ess_df_b, aes(x = param, y = ess, color = type, fill = type)) + 
   geom_violin(alpha = 0.5) +
   facet_wrap(~data) +
   scale_y_log10(name = "Effective sample size") +

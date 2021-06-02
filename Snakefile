@@ -1,4 +1,5 @@
 chains = [1, 2, 4, 8, 16, 32, 64]
+chains_timing = [1, 2, 4, 8, 16, 32, 64, 128]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
 data_spikes = ["buettner", "tung", "zeisel"]
@@ -77,6 +78,11 @@ rule plots: ## todo
             "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
             nsubsets = chains,
             seed = seeds
+        ),
+        expand(
+            "outputs/time/{dataset}_{n}.rds",
+            dataset = data,
+            n = chains_timing
         )
     output:
         "figs/diffexp_plot.pdf",

@@ -131,10 +131,10 @@ ppc_size <- get_size(ppc_datas)
 ppc_complexity <- get_complexity(ppc_datas)
 
 
-density_plot(base_means, ppc_means)
-density_plot(base_dropout, ppc_dropout)
-density_plot(base_size, ppc_size)
-density_plot(base_complexity, ppc_complexity)
+g <- density_plot(base_means, ppc_means)
+g <- density_plot(base_dropout, ppc_dropout)
+g <- density_plot(base_size, ppc_size)
+g <- density_plot(base_complexity, ppc_complexity)
 
 
 sapply(1:50, 
