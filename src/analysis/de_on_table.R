@@ -16,7 +16,7 @@ df <- do_de(df, ref_df = references, match_column = "data")
 sdf  <- df[, 
   c("data", "chains", "pDiffExp", "pDiffDisp", "pDiffResDisp")
 ]
-mdf <- melt(sdf, id.vars = c("data", "chains"))
+mdf <- reshape2::melt(sdf, id.vars = c("data", "chains"))
 mdf$chains <- as.numeric(mdf$chains)
 mdf$variable <- gsub("^pDiffExp$", "mu", mdf$variable)
 mdf$variable <- gsub("^pDiffDisp$", "delta", mdf$variable)
@@ -72,7 +72,7 @@ g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
       linetype = "ADVI"
     )
   ) +
-  scale_linetype_manual(name = NULL, labels = "Mean ADVI results", values = 2) +
+  scale_linetype_manual(name = NULL, labels = "Mean\nADVI results", values = 2) +
   facet_wrap(~data, nrow = 2, ncol = 2) +
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
@@ -90,22 +90,23 @@ ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
 md <- df %>% group_by(chains, data, by)
 
 
-summ <- function(x) {
+count_instances <- function(x) {
   union <- Reduce(union, x)
   counts <- sapply(
-      union, 
-      function(y) {
-        sum(sapply(x, function(z) y %in% z))
-      }
-    )
+    union, 
+    function(y) {
+      sum(sapply(x, function(z) y %in% z))
+    }
+  )
   list(setNames(counts, union))
 }
 
 
 mds <- md %>% dplyr::summarise(
-  mu = summ(DiffExp),
-  delta = summ(DiffDisp),
-  epsilon = summ(DiffResDisp)
+  .groups = "drop_last",
+  mu = count_instances(DiffExp),
+  delta = count_instances(DiffDisp),
+  epsilon = count_instances(DiffResDisp)
 )
 
 
@@ -113,7 +114,7 @@ mds <- md %>% dplyr::summarise(
 
 overlap_df <- function(mds, i, var) {
   o <- mds[[i, var]]
-  if (length(o) > 0 && !all(is.na(names(o)))) {
+  if (length(o) > 0 && !all(is.na(names(o))) && length(o)[[1]] > 0) {
     data.frame(
       by = mds[[i, "by"]],
       chains = mds[[i, "chains"]],
@@ -148,11 +149,22 @@ all_overlap_df$data <- sub(
   perl = TRUE
 )
 all_overlap_df$data <- gsub("Pbmc", "10X PBMC", all_overlap_df$data)
+if (nrow(all_overlap_df)) {
+  all_overlap_df$chains <- paste(all_overlap_df$chains, "chains")
+  levs <- c(paste(sort(as.numeric(unique(all_overlap_df$chains))), "chains"), "ADVI")
+} else {
+  levs <- c("2 chains", "ADVI")
+}
 all_overlap_df$chains <- factor(
-  paste(all_overlap_df$chains, "chains"),
-  levels = c(paste(sort(as.numeric(unique(all_overlap_df$chains))), "chains"), "ADVI")
+  all_overlap_df$chains,
+  levels = levs
+)
+all_overlap_df$data <- factor(all_overlap_df$data,
+  levels = unique(mdf$data)
 )
 all_overlap_df$chains[is.na(all_overlap_df$chains)] <- "ADVI"
+
+
 # all_overlap_df <- all_overlap_df[!is.na(all_overlap_df$chains), ]
 
 
@@ -191,6 +203,7 @@ g <- ggplot(
   facet_grid(
     rows = vars(data),
     cols = vars(chains),
+    drop = FALSE,
     scales = "free_y") +
   theme(
     legend.position = "bottom",
