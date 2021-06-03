@@ -13,7 +13,8 @@ time_df_dc[["seeds"]] <- seq(7, 42, length.out = 6)
 advi_time_df <- df %>% 
   dplyr::filter(by == "advi") %>%
   dplyr::group_by(data) %>% 
-  dplyr::summarize(
+  dplyr::summarise(
+    .groups = "drop_last",
     time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],
@@ -34,7 +35,8 @@ advi_time_df$data <- sub(
 time_df <- df %>% 
   dplyr::filter(by != "advi") %>%
   dplyr::group_by(data, chains) %>% 
-  dplyr::summarize(
+  dplyr::summarise(
+    .groups = "drop_last",
     time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],
@@ -67,7 +69,8 @@ time_df_merge$data <- sub(
 
 time_df <- time_df_merge %>% 
   dplyr::group_by(data, chains) %>% 
-  dplyr::summarize(
+  dplyr::summarise(
+    .groups = "drop_last",
     time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],

@@ -23,9 +23,7 @@ time <- system.time(
   elbo <- capture.output(
     chain <- BASiCStan(
       data,
-      WithSpikes = with_spikes,
-      tol_rel_obj = 1,
-      output_samples = 10
+      WithSpikes = with_spikes
     )
   )
 )

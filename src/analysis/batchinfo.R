@@ -1,15 +1,12 @@
 files_b <- list.files(
-  list.files(
-    list.files("outputs/batchinfo", full.names = TRUE),
-    full.names = TRUE
-    ),
+  list.files("outputs/batchinfo", full.names = TRUE),
   full.names = TRUE
 )
-
+  
 chains_b <- lapply(files_b, readRDS)
 desc_b <- data.frame(
-  data = gsub("outputs/\\w+/\\d/(\\w+)/.*$", "\\1", files_b),
-  type = gsub("outputs/\\w+/\\d/\\w+/(.*).rds$", "\\1", files_b)
+  data = gsub("outputs/batchinfo/data-(tung|zeisel)/(\\w+)\\.rds", "\\1", files_b),
+  type = gsub("outputs/batchinfo/data-(tung|zeisel)/(\\w+)\\.rds", "\\2", files_b)
 )
 
 

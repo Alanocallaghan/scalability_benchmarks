@@ -16,13 +16,13 @@ sourceme(here("src/analysis/functions.R"))
 
 sourceme(here("src/analysis/data_comparison.R"))
 
-# advi_files <- list.files("outputs/advi", full.names = TRUE)
-# advi_triplets <- file2triplets(advi_files)
-# advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))
-# advi_triplets <- lapply(advi_triplets, function(x) x[-3])
-# advi_df <- read_triplets(advi_triplets)
+advi_files <- list.files("outputs/advi", full.names = TRUE)
+advi_triplets <- file2triplets(advi_files)
+advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))
+advi_triplets <- lapply(advi_triplets, function(x) x[-3])
+advi_df <- read_triplets(advi_triplets)
 
-# source(here("src/analysis/elbo_plots.R"))
+source(here("src/analysis/elbo_plots.R"))
 
 dc_files <- list.files("outputs/divide_and_conquer", full.names = TRUE)
 dc_df <- read_triplets(file2triplets(dc_files), combine = TRUE)
@@ -48,8 +48,8 @@ sourceme(here("src/analysis/removing_cells.R"))
 
 sourceme(here("src/analysis/true_positives.R"))
 
-# file_df <- rbind(advi_df, dc_df)
-file_df <- dc_df
+file_df <- rbind(advi_df, dc_df)
+# file_df <- dc_df
 df <- merge(file_df, data_dims)
 
 sourceme(here("src/analysis/time_plot.R"))
@@ -64,4 +64,6 @@ sourceme(here("src/analysis/ess.R"))
 sourceme(here("src/analysis/hpd.R"))
 
 sourceme(here("src/analysis/batchinfo.R"))
-sourceme(here("src/analysis/identifiability.R"))
+
+## not doing this any more...
+## sourceme(here("src/analysis/identifiability.R"))
