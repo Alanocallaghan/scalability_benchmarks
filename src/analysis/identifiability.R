@@ -1,8 +1,5 @@
 files_id <- list.files(
-  list.files(
-    list.files("outputs/identifiable", full.names = TRUE),
-    full.names = TRUE
-    ),
+  list.files("outputs/identifiable", full.names = TRUE),
   full.names = TRUE
 )
 
