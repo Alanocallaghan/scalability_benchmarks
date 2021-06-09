@@ -251,6 +251,22 @@ rule true_positives:
         """
 
 
+rule true_positives_advi:
+    # conda:
+    #     "conda.yaml"
+    resources: mem_mb=20000, runtime=5000
+    input:
+        "rdata/ibarra-soria.rds"
+    output:
+        "outputs/true-positives/data-ibarra-soria_advi-{seed}.rds"
+    shell:
+        """
+        Rscript ./src/chains/true_positives_advi.R \
+            --seed {wildcards.seed} \
+            --output {output}
+        """
+
+
 rule batchinfo:
     # conda:
     #     "conda.yaml"
