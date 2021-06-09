@@ -65,5 +65,7 @@ sourceme(here("src/analysis/hpd.R"))
 
 sourceme(here("src/analysis/batchinfo.R"))
 
+sourceme(here("src/analysis/normalisation_comparison.R"))
+
 ## not doing this any more...
 ## sourceme(here("src/analysis/identifiability.R"))
