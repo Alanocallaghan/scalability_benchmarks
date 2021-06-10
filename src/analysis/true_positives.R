@@ -79,4 +79,4 @@ g <- ggplot(mdf) +
     scale_color_brewer(palette="Set1", name = "Parameter") +
     theme_bw()
 
-ggsave(file="figs/true-positives.pdf", width = 7, height = 7)
+ggsave(file="figs/true_positives.pdf", width = 7, height = 7)

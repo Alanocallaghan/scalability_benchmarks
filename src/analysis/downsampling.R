@@ -25,7 +25,8 @@ mdf_ds$variable <- gsub("pDiffDisp", "delta", mdf_ds$variable)
 mdf_ds$variable <- gsub("pDiffResDisp", "epsilon", mdf_ds$variable)
 mdf_ds$variable <- factor(mdf_ds$variable, levels = c("mu", "delta", "epsilon"))
 
-sce <- readRDS(paste0("data/", ref_df_ds[[1, "data"]], ".rds"))
+# ref_df_ds[[1, "data"]]
+sce <- readRDS(paste0("data/", "tung", ".rds"))
 libsize <- colSums(counts(sce))
 mdf_ds$mean_libsize <- median(libsize) * mdf_ds$downsample_rate
 mdf_ds$downsample_rate_t <- factor(
@@ -34,6 +35,8 @@ mdf_ds$downsample_rate_t <- factor(
 )
 
 
+mdf_rm <- mdf_rm[mdf_rm$data == "tung", ]
+
 g <- ggplot(mdf_ds) +
   aes(
     x = factor(format(signif(mean_libsize, digits=3), big.mark=",")),
@@ -41,6 +44,7 @@ g <- ggplot(mdf_ds) +
     color = variable
   ) +
   geom_quasirandom(dodge.width = 0.25, size = 0.25, groupOnX = TRUE) +
+  facet_wrap(~data) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   scale_y_continuous(label = scales::percent, limits = c(0, max(0.25, max(mdf_ds$value)))) +
   labs(x = "Expected median library size", y = "Portion of genes perturbed")
