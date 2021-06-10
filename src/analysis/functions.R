@@ -78,10 +78,10 @@ do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
       )
       chain@parameters <- BASiCS:::.reorder_params(
         chain@parameters,
-        GeneOrder = rownames(ref_df[[which(ind), "chain"]])
+        GeneOrder = rownames(ref_df[[which(ind)[[1]], "chain"]])
       )
       nsamples <- nrow(
-        ref_df[[which(ind), "chain"]]@parameters[["mu"]]
+        ref_df[[which(ind)[[1]], "chain"]]@parameters[["mu"]]
       )
       chain@parameters <- lapply(
         chain@parameters,
@@ -91,7 +91,7 @@ do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
       )
       suppressMessages(
         de <- BASiCS_TestDE(
-          ref_df[[which(ind), "chain"]],
+          ref_df[[which(ind)[[1]], "chain"]],
           chain,
           Plot = FALSE,
           PlotOffset = FALSE,
