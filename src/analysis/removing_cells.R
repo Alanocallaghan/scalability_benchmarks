@@ -33,11 +33,11 @@ mdf_rm$proportion_retained <- factor(
   levels = paste(sort(unique(rm_df$proportion_retained), decreasing = TRUE) * 100, "%")
 )
 
-mdf_rm <- mdf_rm[mdf_rm$data == "tung", ]
+mdf_rm_sub <- mdf_rm[mdf_rm$data == "chen", ]
 
 
-g <- ggplot(mdf_rm, aes(x = factor(round(cells_retained)), y = value, color = variable)) +
-  geom_quasirandom(dodge.width = 0.25, size = 0.5, groupOnX = TRUE) +
+g <- ggplot(mdf_rm_sub, aes(x = factor(round(cells_retained)), y = value, color = variable)) +
+  geom_quasirandom(dodge.width = 0.25, size = 0.7, groupOnX = TRUE) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   # scale_x_reverse("Number of cells") +
   # facet_wrap(~data) +

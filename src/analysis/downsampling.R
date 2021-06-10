@@ -43,8 +43,8 @@ g <- ggplot(mdf_ds) +
     y = value,
     color = variable
   ) +
-  geom_quasirandom(dodge.width = 0.25, size = 0.25, groupOnX = TRUE) +
-  facet_wrap(~data) +
+  geom_quasirandom(dodge.width = 0.25, size = 0.7, groupOnX = TRUE) +
+  # facet_wrap(~data) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   scale_y_continuous(label = scales::percent, limits = c(0, max(0.25, max(mdf_ds$value)))) +
   labs(x = "Expected median library size", y = "Portion of genes perturbed")
