@@ -33,10 +33,14 @@ mdf_rm$proportion_retained <- factor(
   levels = paste(sort(unique(rm_df$proportion_retained), decreasing = TRUE) * 100, "%")
 )
 
+mdf_rm <- mdf_rm[mdf_rm$data == "tung", ]
+
+
 g <- ggplot(mdf_rm, aes(x = factor(round(cells_retained)), y = value, color = variable)) +
-  geom_quasirandom(dodge.width = 0.25, size = 0.4, groupOnX = TRUE) +
+  geom_quasirandom(dodge.width = 0.25, size = 0.5, groupOnX = TRUE) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   # scale_x_reverse("Number of cells") +
+  # facet_wrap(~data) +
   scale_y_continuous(label = scales::percent) +
   labs(x = "Number of cells", y = "Portion of genes perturbed") +
   theme(axis.text.x = element_text(hjust = 1, angle = 45))
