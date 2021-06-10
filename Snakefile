@@ -125,7 +125,7 @@ rule advi:
 
 rule time:
     # conda: "conda.yaml"
-    resources: mem_mb=10000
+    resources: mem_mb=10000, runtime=10000
     output:
         "outputs/time/{dataset}_{n}.rds"
     input:
@@ -270,7 +270,7 @@ rule true_positives_advi:
 rule batchinfo:
     # conda:
     #     "conda.yaml"
-    resources: mem_mb=10000, runtime=3000
+    resources: mem_mb=20000, runtime=5000
     input:
         "rdata/{dataset}.rds"
     output:
