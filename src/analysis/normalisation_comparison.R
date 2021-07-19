@@ -60,4 +60,4 @@ g <- ggplot(df,
   scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
   theme(text = element_text(size = 18))
 
-ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
+ggsave(here("figs/norm_plot.pdf"), width = 12, height = 8)

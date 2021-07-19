@@ -35,9 +35,9 @@ mdf_ds$downsample_rate_t <- factor(
 )
 
 
-mdf_rm <- mdf_rm[mdf_rm$data == "tung", ]
+mdf_ds_sub <- mdf_ds[mdf_ds$data == "tung", ]
 
-g <- ggplot(mdf_ds) +
+g <- ggplot(mdf_ds_sub) +
   aes(
     x = factor(format(signif(mean_libsize, digits=3), big.mark=",")),
     y = value,

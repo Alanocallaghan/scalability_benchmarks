@@ -101,7 +101,8 @@ rule plots: ## todo
         "figs/de_id_tung.pdf",
         "figs/de_id_zeisel.pdf",
         "figs/ess_id.pdf",
-        "figs/downsampling.pdf"
+        "figs/downsampling.pdf",
+        "figs/norm_plot.pdf"
     shell:
         """
         Rscript src/analysis/main.R
