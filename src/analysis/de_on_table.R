@@ -4,7 +4,7 @@
 ##
 ###############################################################################
 
-df <- do_de(df, ref_df = references, match_column = "data")
+df <- do_de(df, ref_df = references, match_column = "data", data_dims)
 
 
 ###############################################################################
@@ -13,7 +13,7 @@ df <- do_de(df, ref_df = references, match_column = "data")
 ##
 ###############################################################################
 
-sdf  <- df[, 
+sdf  <- df[,
   c("data", "chains", "pDiffExp", "pDiffDisp", "pDiffResDisp")
 ]
 mdf <- reshape2::melt(sdf, id.vars = c("data", "chains"))
@@ -39,8 +39,9 @@ mdf$data <- sub(
 
 # mdf <- mdf %>% filter(variable %in% c("mu", "epsilon"))
 
-advi_mdf <- mdf %>% filter(is.na(chains)) %>% 
-  group_by(data, variable, chains) %>% 
+advi_mdf <- mdf %>%
+  filter(is.na(chains)) %>%
+  group_by(data, variable, chains) %>%
   summarize(value = median(value))
 
 
@@ -64,7 +65,7 @@ g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   # ) +
   # geom_violin() +
   geom_hline(
-    data = advi_mdf, 
+    data = advi_mdf,
     alpha = 0.5,
     aes(
       yintercept = value,
@@ -72,10 +73,17 @@ g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
       linetype = "ADVI"
     )
   ) +
-  scale_linetype_manual(name = NULL, labels = "Mean\nADVI results", values = 2) +
+  scale_linetype_manual(
+    name = NULL,
+    labels = "Mean\nADVI results",
+    values = 2
+  ) +
   facet_wrap(~data, nrow = 2, ncol = 2) +
   scale_x_discrete(name = "Partitions") +
-  scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
+  scale_y_continuous(
+    name = "Portion of genes perturbed",
+    labels = scales::percent
+  ) +
   theme(text = element_text(size = 18)) +
   scale_color_brewer(name = "Parameter", palette = "Set1")
 
@@ -93,7 +101,7 @@ md <- df %>% group_by(chains, data, by)
 count_instances <- function(x) {
   union <- Reduce(union, x)
   counts <- sapply(
-    union, 
+    union,
     function(y) {
       sum(sapply(x, function(z) y %in% z))
     }
@@ -121,11 +129,11 @@ overlap_df <- function(mds, i, var) {
       data = mds[[i, "data"]],
       var = var,
       n = o
-    )      
+    )
   } else {
     matrix(
-      nrow = 0, 
-      ncol = 5, 
+      nrow = 0,
+      ncol = 5,
       dimnames = list(NULL, c("by", "chains", "data", "var", "n"))
     )
   }
@@ -151,7 +159,11 @@ all_overlap_df$data <- sub(
 all_overlap_df$data <- gsub("Pbmc", "10X PBMC", all_overlap_df$data)
 if (nrow(all_overlap_df)) {
   all_overlap_df$chains <- paste(all_overlap_df$chains, "chains")
-  levs <- c(paste(sort(as.numeric(unique(all_overlap_df$chains))), "chains"), "ADVI")
+  levs <- c(
+    paste(
+      sort(as.numeric(unique(all_overlap_df$chains))), "chains"),
+      "ADVI"
+  )
 } else {
   levs <- c("2 chains", "ADVI")
 }
@@ -168,19 +180,19 @@ all_overlap_df$chains[is.na(all_overlap_df$chains)] <- "ADVI"
 # all_overlap_df <- all_overlap_df[!is.na(all_overlap_df$chains), ]
 
 
-count_df <- all_overlap_df %>% 
-  group_by(n, data, chains, var, nGenes) %>% 
+count_df <- all_overlap_df %>%
+  group_by(n, data, chains, var, nGenes) %>%
   summarise(count = n())
 
 ## Proportions because of differing number of genes
 g <- ggplot(
   count_df,
     aes(
-      x = n, 
-      fill = var, 
+      x = n,
+      fill = var,
       y = count / nGenes
     )
-  ) + 
+  ) +
   geom_bar(
     stat = "identity",
     position = position_dodge(preserve = "single")
@@ -221,12 +233,12 @@ ggsave(
 # g <- ggplot(
 #   all_overlap_df,
 #     aes(
-#       x = n, 
-#       fill = var, 
+#       x = n,
+#       fill = var,
 #       y = ..count..
 #     )
-#   ) + 
-#   geom_bar(position = position_dodge(preserve = "single")) + 
+#   ) +
+#   geom_bar(position = position_dodge(preserve = "single")) +
 #   labs(
 #     x = "Number of times gene was identified",
 #     y = "Frequency + 1"
