@@ -1,6 +1,6 @@
 read_triplets <- function(triplets, combine = FALSE) {
   rows <- lapply(
-    triplets, 
+    triplets,
     function(x) {
       row <- readRDS(x[[2]])
       row <- as.data.frame(row)
@@ -49,7 +49,14 @@ parse_elbo <- function(c) {
   elbo
 }
 
-do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
+do_de <- function(
+    df,
+    ref_df,
+    match_column,
+    data_dims,
+    mc.cores = options("mc.cores")
+  ) {
+
   edr <- lapply(
     seq_len(nrow(df)),
     function(i) {

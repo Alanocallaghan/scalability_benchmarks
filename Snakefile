@@ -22,7 +22,7 @@ rule all:
         "figs/complexity_density.pdf",
         "figs/expression_density.pdf",
         "figs/dropout_density.pdf",
-        "figs/true-positives.pdf",
+        "figs/true_positives.pdf",
         "figs/time_plot.pdf",
         "figs/de_batch_tung.pdf",
         "figs/de_batch_zeisel.pdf",
