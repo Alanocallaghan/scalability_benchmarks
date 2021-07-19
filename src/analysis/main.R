@@ -33,7 +33,7 @@ data_dims <- vapply(
   function(x) {
     suppressMessages(
       dim(
-        readRDS(paste0("data/", x, ".rds"))
+        readRDS(paste0("rdata/", x, ".rds"))
       )
     )
   },
