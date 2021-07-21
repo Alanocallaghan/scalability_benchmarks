@@ -32,4 +32,7 @@ mamba create -n scalability r-argparse \
     r-rstan
 
 ## also need to devtools::install_github("Alanocallaghan/BASiCStan")
+conda activate scalability
+Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan")'
+Rscript -e 'devtools::install_github("catavallejos/BASiCS", ref="hotfix")'
 

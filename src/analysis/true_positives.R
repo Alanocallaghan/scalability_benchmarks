@@ -1,6 +1,8 @@
 library("BASiCS")
 library("ggplot2")
 library("here")
+
+source(here("src/analysis/preamble.R"))
 source(here("src/analysis/functions.R"))
 
 files <- list.files(
