@@ -87,6 +87,7 @@ plot_all_hpds <- function(df, param) {
   ggsave(g, file = paste0("figs/hpd_width_", param, ".pdf"), width = 7, height = 6)
   invisible(g)
 }
+source(here("src/analysis/preamble.R"))
 
 plot_all_hpds(df, "mu")
 plot_all_hpds(df, "epsilon")

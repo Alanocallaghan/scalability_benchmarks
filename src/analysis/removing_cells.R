@@ -4,6 +4,8 @@ library("ggbeeswarm")
 library("here")
 library("BASiCS")
 
+source(here("src/analysis/preamble.R"))
+
 theme_set(theme_bw())
 source(here("src/analysis/functions.R"))
 

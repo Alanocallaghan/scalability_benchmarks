@@ -2,7 +2,6 @@ get_ess <- function(chain, param) {
   effectiveSize(as.mcmc(chain@parameters[[param]]))
 }
 
-
 plot_all_ess <- function(df, param) {
   ess_all_list <- lapply(seq_len(nrow(df)),
     function(i) {
@@ -63,6 +62,7 @@ plot_all_ess <- function(df, param) {
   ggsave(g, file = paste0("figs/ess_", param, ".pdf"), width = 7, height = 6)
   invisible(g)
 }
+source(here("src/analysis/preamble.R"))
 
 plot_all_ess(df, "mu")
 plot_all_ess(df, "epsilon")
