@@ -1,6 +1,6 @@
 read_triplets <- function(triplets, combine = FALSE) {
   rows <- lapply(
-    triplets, 
+    triplets,
     function(x) {
       row <- readRDS(x[[2]])
       row <- as.data.frame(row)
@@ -49,7 +49,14 @@ parse_elbo <- function(c) {
   elbo
 }
 
-do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
+do_de <- function(
+    df,
+    ref_df,
+    match_column,
+    data_dims,
+    mc.cores = options("mc.cores")
+  ) {
+
   edr <- lapply(
     seq_len(nrow(df)),
     function(i) {
@@ -78,10 +85,10 @@ do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
       )
       chain@parameters <- BASiCS:::.reorder_params(
         chain@parameters,
-        GeneOrder = rownames(ref_df[[which(ind), "chain"]])
+        GeneOrder = rownames(ref_df[[which(ind)[[1]], "chain"]])
       )
       nsamples <- nrow(
-        ref_df[[which(ind), "chain"]]@parameters[["mu"]]
+        ref_df[[which(ind)[[1]], "chain"]]@parameters[["mu"]]
       )
       chain@parameters <- lapply(
         chain@parameters,
@@ -91,7 +98,7 @@ do_de <-function(df, ref_df, match_column, mc.cores = options("mc.cores")) {
       )
       suppressMessages(
         de <- BASiCS_TestDE(
-          ref_df[[which(ind), "chain"]],
+          ref_df[[which(ind)[[1]], "chain"]],
           chain,
           Plot = FALSE,
           PlotOffset = FALSE,
@@ -136,4 +143,310 @@ jaccard <- function(a, b) {
   intersection <- length(intersect(a, b))
   union <- length(a) + length(b) - intersection
   if (union == 0) 0 else intersection / union
+}
+
+sourceme <- function(x) {
+  cat("Running", x, "\n")
+  source(x)
+}
+
+do_fit_plot <- function(i, maxdf, references) {
+  cat(i, "/", nrow(maxdf), "\n")
+  maxdf <- maxdf[i, ]
+  c <- readRDS(maxdf[["file"]][[1]])
+  b <- maxdf[["by"]]
+  if (is.list(c)) {  
+    suppressMessages(
+      c <- BASiCS:::.combine_subposteriors(
+        c,
+        SubsetBy = "gene"
+      )
+    )
+  }
+  d <- maxdf[["data"]]
+  rc <- references[[which(references$data == d)[[1]], "chain"]]
+  l2 <- if (b == "advi") "ADVI" else "Divide and conquer"
+  c <- BASiCS:::.offset_correct(rc, c)
+  g1 <- BASiCS_ShowFit(rc) 
+  g2 <- BASiCS_ShowFit(c) 
+  ggsave(g1, 
+    file = here(paste0("figs/fit/", d, "_ref", ".pdf")),
+    width = 4,
+    height = 3
+  )
+  ggsave(g2,
+    file = here(paste0("figs/fit/", d, "_", b, ".pdf")), 
+    width = 4,
+    height = 3
+  )
+  cowplot::plot_grid(
+    g1 + ggtitle("Reference"),
+    g2 + ggtitle(l2)
+  )
+}
+
+do_de_plot <- function(i, maxdf, references) {
+  cat(i, "/", nrow(maxdf), "\n")
+  maxdf <- maxdf[i, ]
+  d <- maxdf[["data"]]
+  b <- maxdf[["by"]]
+  rc <- references[[which(references$data == d)[[1]], "chain"]]
+  c <- readRDS(maxdf[["file"]][[1]])
+  if (is.list(c)) {  
+    suppressMessages(
+      c <- BASiCS:::.combine_subposteriors(
+        c,
+        GeneOrder = rownames(rc),
+        CellOrder = colnames(rc),
+        SubsetBy = "gene"
+      )
+    )
+  }
+  l2 <- if (b == "advi") "ADVI" else "D & C"
+  de <- BASiCS_TestDE(rc, c,
+    GroupLabel1 = "Ref",
+    GroupLabel2 = l2,
+    Plot = FALSE,
+    PlotOffset = FALSE,
+    EFDR_M = NULL,
+    EFDR_D = NULL,
+    EFDR_R = NULL
+  )
+  g <- BASiCS_PlotDE(de@Results[[1]],
+    Plots = c("MA", "Volcano"),
+    Mu = de@Results$Mean@Table$MeanOverall
+  )
+  ggsave(g, file = here(paste0("figs/de/mu_", d, "_", b, ".pdf")), width = 9, height = 5)
+  g <- BASiCS_PlotDE(
+    de@Results[[3]],
+    Plots = c("MA", "Volcano"),
+    Mu = de@Results$Mean@Table$MeanOverall
+  )
+  ggsave(g, file = here(paste0("figs/de/epsilon_", d, "_", b, ".pdf")), width = 9, height = 5)
+  g
+}
+
+plot_hpd_interval <- function(
+    chain1,
+    xname,
+    chain2,
+    yname,
+    param,
+    type = c("ma", "std"),
+    log = FALSE,
+    ...
+  ) {
+
+  x <- extract_hpd_interval(chain1, param)
+  y <- extract_hpd_interval(chain2, param)
+
+  df <- data.frame(
+    x,
+    y
+  )
+
+  type <- match.arg(type)
+  if (type == "ma") {
+    if (log) {
+      df[] <- lapply(df, log10)
+    }
+    fun <- param_plot_ma
+    mu_df <- data.frame(
+      colMeans(chain1@parameters[["mu"]]),
+      colMeans(chain2@parameters[["mu"]])
+    )
+    mus <- rowMeans(mu_df)
+  } else {
+    fun <- param_plot_std
+    mus <- NULL
+  }
+
+  colnames(df) <- c(xname, yname)
+  g <- fun(
+    df,
+    xname = xname,
+    yname = yname,
+    title = paste(
+      if (type == "ma") "MA plot" else "Scatter plot",
+      "of HPD interval\nof", param, "parameter in",
+      yname, "vs", xname, "MCMC"
+    ),
+    log = log && type =="std",
+    mus = mus,
+    ...
+  )
+
+  # ggMarginal(g)
+  g
+}
+
+param_plot_ma <- function(
+    df,
+    xname,
+    yname,
+    mus,
+    ...
+  ) {
+
+  x <- df[[xname]]
+  y <- df[[yname]]
+
+  df <- data.frame(
+    M = y - x,
+    mu = mus
+  )
+  m <- max(abs(df$M))
+  ylim <- c(-m, m)
+
+  g <- param_plot(df, "mu", "M", ...) +
+    # geom_hline(yintercept = 0, lty = "twodash", col = "grey70", na.rm = TRUE) +
+    ylim(ylim) +
+    scale_x_log10()
+  g
+}
+
+param_plot <- function(
+    df,
+    xname,
+    yname,
+    title,
+    log = FALSE,
+    bins = 100,
+    ...
+  ) {
+
+  g <- ggplot(
+    df,
+    mapping = aes_string(
+      x = paste_aes(xname),
+      y = paste_aes(yname)
+    )
+  ) +
+    # geom_point(
+    #   alpha = 0.01, na.rm = TRUE) +
+    # stat_density2d(
+    #     aes(
+    #       fill = sqrt(..density..)),
+    #       geom = "tile",
+    #       contour = FALSE,
+    #       n = 256
+    #   )  +
+    scale_fill_viridis(direction = 1, name = "Density") +
+    geom_hex(aes(fill = ..density..), bins = bins, na.rm = TRUE) +
+    guides(fill = FALSE) +
+    xlab(xname) +
+    ylab(yname) +
+    ggtitle(title)
+  if (log) {
+    g <- g +
+      scale_x_log10() +
+      scale_y_log10()
+  }
+  g
+}
+
+extract_hpd_interval <- function(chain, param) {
+  summ <- BASiCS::Summary(chain)
+  abs(summ@parameters[[param]][, 3] - summ@parameters[[param]][, 2])
+}
+
+do_hpd_plots <- function(i, maxdf, references) {
+  cat(i, "/", nrow(maxdf), "\n")
+  maxdf <- maxdf[i, ]
+  d <- maxdf[["data"]]
+  b <- maxdf[["by"]]
+  rc <- references[[which(references$data == d)[[1]], "chain"]]
+  c <- readRDS(maxdf[["file"]][[1]])
+  if (is.list(c)) {  
+    suppressMessages(
+      c <- BASiCS:::.combine_subposteriors(
+        c,
+        GeneOrder = rownames(rc),
+        CellOrder = colnames(rc),
+        SubsetBy = "gene"
+      )
+    )
+  }
+  c <- BASiCS:::.offset_correct(rc, c)
+  l2 <- if (b == "advi") "ADVI" else "D & C"
+  l3 <- paste0("log2(", l2, " HPD interval width / Reference HPD interval width)")
+  l <- list(
+    plot_hpd_interval(
+      rc,
+      "Reference",
+      c,
+      l2,
+      "mu",
+      type = "ma",
+      log = FALSE,
+      bins = 50
+    ) + 
+      labs(
+        title = NULL,
+        x = bquote(mu[i]),
+        y = l3
+      ) +
+      geom_hline(aes(yintercept = 0)),
+    plot_hpd_interval(
+      rc,
+      "Reference",
+      c,
+      l2,
+      "epsilon",
+      type = "ma",
+      log = FALSE,
+      bins = 50
+    ) +
+      labs(
+        title = NULL,
+        x = bquote(mu[i]),
+        y = l3
+      ) +
+      geom_hline(aes(yintercept = 0))
+  )
+  ggsave(l[[1]], file = here(paste0("figs/hpd/mu_", b, "_", d, ".pdf")), width = 7, height = 5)
+  ggsave(l[[2]], file = here(paste0("figs/hpd/epsilon_", b, "_", d, ".pdf")), width = 7, height = 5)
+  l
+}
+
+do_ess_plot <- function(i, maxdf, references) {
+  cat(i, "/", nrow(maxdf), "\n")
+  maxdf <- maxdf[i, ]
+  d <- maxdf[["data"]]
+  b <- maxdf[["by"]]
+  rc <- references[[which(references$data == d)[[1]], "chain"]]
+  c <- readRDS(maxdf[["file"]][[1]])
+  if (is.list(c)) {  
+    suppressMessages(
+      c <- BASiCS:::.combine_subposteriors(
+        c,
+        GeneOrder = rownames(rc),
+        CellOrder = colnames(rc),
+        SubsetBy = "gene"
+      )
+    )
+  }
+  c <- BASiCS:::.offset_correct(rc, c)
+
+  ess <- effectiveSize(as.mcmc(c@parameters[["epsilon"]]))
+
+  df <- data.frame(
+    x = colMedians(rc@parameters[["mu"]]),
+    y = colMedians(rc@parameters[["epsilon"]] - c@parameters[["epsilon"]]),
+    color = ess
+  )
+  df <- df[order(df$color, decreasing = TRUE), ]
+  ggplot(df, aes(x = x, y = y, color = color)) + 
+    geom_point(alpha = 0.75) +
+    scale_x_log10() +
+    labs(x = bquote(mu[i]), y = bquote(epsilon[i]^Ref - epsilon[i]^Scalable)) +
+    scale_color_viridis(
+      name = bquote('Effective sample size'~epsilon[i]),
+      trans = "log10"
+    )
+  ggsave(file = here(paste0("figs/ess/", b, "_", d, ".pdf")), width = 5, height = 4)
+}
+
+paste_aes <- function(...) {
+  paste0("`", ..., "`")
 }

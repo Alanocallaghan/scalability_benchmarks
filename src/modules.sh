@@ -8,6 +8,7 @@ if [ -f "/etc/profile.d/modules.sh" ]; then
 
     export C_INCLUDE_PATH=/exports/igmm/software/pkg/el7/apps/hdf5/1.8.13/include
 
+    module load roslin/gcc/7.3.0
 
 fi
 
@@ -17,6 +18,5 @@ if [ -f ~/miniconda3/etc/profile.d/conda.sh ]; then
 fi
 set +eu
 
-module load roslin/gcc/7.3.0
 #conda activate $(find .snakemake/conda/ -mindepth 1 -maxdepth 1 -type d)
 conda activate scalability

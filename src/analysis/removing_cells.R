@@ -4,6 +4,8 @@ library("ggbeeswarm")
 library("here")
 library("BASiCS")
 
+source(here("src/analysis/preamble.R"))
+
 theme_set(theme_bw())
 source(here("src/analysis/functions.R"))
 
@@ -16,7 +18,12 @@ rm_ref_files <- list.files("outputs/removing/reference", full.names = TRUE)
 ref_df_rm <- read_triplets(file2triplets(rm_ref_files), combine = TRUE)
 ref_df_rm$chain <- lapply(ref_df_rm$file, readRDS)
 
-rm_df <- do_de(rm_df, ref_df = ref_df_rm, match_column = "proportion_retained")
+rm_df <- do_de(
+  rm_df,
+  ref_df = ref_df_rm,
+  match_column = "proportion_retained",
+  data_dims
+)
 
 mdf_rm <- reshape2::melt(
   rm_df,
@@ -30,13 +37,21 @@ mdf_rm$cells_retained <- mdf_rm$proportion_retained * mdf_rm$nCells
 
 mdf_rm$proportion_retained <- factor(
   paste(mdf_rm$proportion_retained * 100, "%"),
-  levels = paste(sort(unique(rm_df$proportion_retained), decreasing = TRUE) * 100, "%")
+  levels = paste(
+    sort(unique(rm_df$proportion_retained), decreasing = TRUE) * 100,
+    "%"
+  )
 )
 
-g <- ggplot(mdf_rm, aes(x = factor(round(cells_retained)), y = value, color = variable)) +
-  geom_quasirandom(dodge.width = 0.25, size = 0.4, groupOnX = TRUE) +
+mdf_rm_sub <- mdf_rm[mdf_rm$data == "chen", ]
+
+
+g <- ggplot(mdf_rm_sub) +
+  aes(x = factor(round(cells_retained)), y = value, color = variable) +
+  geom_quasirandom(dodge.width = 0.25, size = 0.7, groupOnX = TRUE) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   # scale_x_reverse("Number of cells") +
+  # facet_wrap(~data) +
   scale_y_continuous(label = scales::percent) +
   labs(x = "Number of cells", y = "Portion of genes perturbed") +
   theme(axis.text.x = element_text(hjust = 1, angle = 45))
