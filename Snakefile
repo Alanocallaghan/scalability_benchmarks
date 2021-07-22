@@ -22,15 +22,15 @@ rule all:
         "figs/complexity_density.pdf",
         "figs/expression_density.pdf",
         "figs/dropout_density.pdf",
-        "figs/true-positives.pdf",
+        "figs/true_positives.pdf",
         "figs/time_plot.pdf",
         "figs/de_batch_tung.pdf",
         "figs/de_batch_zeisel.pdf",
         "figs/ess_batch.pdf",
         "figs/removing_cells.pdf",
-        "figs/de_id_tung.pdf",
-        "figs/de_id_zeisel.pdf",
-        "figs/ess_id.pdf",
+        # "figs/de_id_tung.pdf",
+        # "figs/de_id_zeisel.pdf",
+        # "figs/ess_id.pdf",
         "figs/downsampling.pdf"
 
 
@@ -88,23 +88,147 @@ rule plots: ## todo
     output:
         "figs/diffexp_plot.pdf",
         "figs/overlap_diff_genes.pdf",
-        "figs/libsize_density.pdf",
-        "figs/complexity_density.pdf",
-        "figs/expression_density.pdf",
-        "figs/dropout_density.pdf",
-        "figs/true-positives.pdf",
-        "figs/time_plot.pdf",
-        "figs/de_batch_tung.pdf",
-        "figs/de_batch_zeisel.pdf",
-        "figs/ess_batch.pdf",
-        "figs/removing_cells.pdf",
-        "figs/de_id_tung.pdf",
-        "figs/de_id_zeisel.pdf",
-        "figs/ess_id.pdf",
-        "figs/downsampling.pdf"
+        "figs/norm_plot.pdf"
     shell:
         """
         Rscript src/analysis/main.R
+        """
+
+# rule identifiability_plot:
+#     input: 
+#     output:
+#         "figs/de_id_tung.pdf",
+#         "figs/de_id_zeisel.pdf",
+#         "figs/ess_id.pdf"
+#     shell:
+#         """
+#         Rscript src/analysis/identifiability.R
+#         """
+
+rule batchinfo_plot:
+    input:
+        expand(
+            "outputs/batchinfo/data-{dataset}/",
+            dataset = data_batch
+        )
+    output:
+        "figs/de_batch_tung.pdf",
+        "figs/de_batch_zeisel.pdf",
+        "figs/ess_batch.pdf"
+    shell:
+        """
+        Rscript src/analysis/batchinfo.R
+        """
+
+rule true_positive_plot:
+    input:
+        expand(
+            "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
+            nsubsets = chains,
+            seed = seeds
+        )
+    output: 
+        "figs/true_positives.pdf"
+    shell:
+        """
+        Rscript src/analysis/true_positives.R
+        """
+
+rule hpd_ess_plot:
+    input:
+        expand(
+            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            dataset = data,
+            nsubsets = chains,
+            by = by,
+            seed = seeds
+        )
+    output: 
+        expand(
+            "figs/{metric}_{parameter}.pdf",
+            metric = ["hpd", "ess"],
+            parameter = ["mu", "epsilon"]
+        )
+    shell:
+        """
+        Rscript src/hpd.R
+        Rscript src/ess.R
+        """
+
+rule removing_cells_plot:
+    input:
+        expand(
+            "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
+            dataset = data,
+            fraction = fractions
+        ),
+        expand(
+            "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+            dataset = data,
+            seed = seeds,
+            fraction = fractions
+        )
+    output:
+        "figs/removing_cells.pdf"
+    shell:
+        """
+        Rscript src/analysis/removing_cells.R
+        """
+
+rule downsampling_plot:
+    input:
+        expand(
+            "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
+            dataset = data,
+            seed = seeds,
+            fraction = fractions
+        ),
+        expand(
+            "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
+            dataset = data,
+            fraction = fractions
+        )
+    output: 
+        "figs/downsampling.pdf"
+    shell: 
+        """
+        Rscript src/analysis/downsampling.R
+        """
+
+
+rule time_plot:
+    input:
+        expand(
+            "outputs/advi/data-{dataset}_seed-{seed}/",
+            dataset = data_spikes,
+            seed  = seeds
+        ),
+        expand(
+            "outputs/time/{dataset}_{n}.rds",
+            dataset = data,
+            n = chains_timing
+        )
+    output:
+        "figs/time_plot.pdf"
+    shell:
+        """
+        Rscript src/analysis/time_plot.R
+        """
+
+rule data_comparison:
+    input:
+        expand(
+            "rdata/{data}.rds",
+            data = data
+        )
+    output:
+        "figs/dropout_density.pdf",
+        "figs/expression_density.pdf",
+        "figs/complexity_density.pdf",
+        "figs/libsize_density.pdf"
+    shell:
+        """
+        Rscript src/analysis/data_comparison.R
         """
 
 rule advi:

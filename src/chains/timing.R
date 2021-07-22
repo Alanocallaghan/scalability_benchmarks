@@ -62,5 +62,5 @@ time_mcmc <- function(n, times = 1) {
   }
 }
 n <- args[["nsubsets"]]
-time <- time_mcmc(n, times = 6)
+time <- time_mcmc(n, times = if (n == 1) 2 else 6)
 saveRDS(time, args[["output"]])

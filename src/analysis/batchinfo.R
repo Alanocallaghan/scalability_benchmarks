@@ -1,3 +1,7 @@
+library("here")
+
+source(here("src/analysis/preamble.R"))
+
 files_b <- list.files(
   list.files("outputs/batchinfo", full.names = TRUE),
   full.names = TRUE
@@ -29,8 +33,8 @@ bde2 <- BASiCS_TestDE(
   EFDR_D = NULL,
   EFDR_R = NULL
 )
-g1 <- BASiCS_PlotDE(bde1, Plots = c("MAPlot", "VolcanoPlot"))
-g2 <- BASiCS_PlotDE(bde2, Plots = c("MAPlot", "VolcanoPlot"))
+g1 <- BASiCS_PlotDE(bde1, Plots = c("MA", "Volcano"))
+g2 <- BASiCS_PlotDE(bde2, Plots = c("MA", "Volcano"))
 ggsave(g1, file = "figs/de_batch_tung.pdf", width = 12, height = 10)
 ggsave(g2, file = "figs/de_batch_zeisel.pdf", width = 12, height = 10)
 

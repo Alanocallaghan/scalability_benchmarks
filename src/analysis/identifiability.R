@@ -60,8 +60,6 @@ ess_df_id[["param"]] <- factor(ess_df_id[["param"]],
   levels = c("mu", "delta", "epsilon")
 )
 
-
-
 ggplot(ess_df_id, aes(x = param, y = ess, color = type, fill = type)) + 
   geom_violin(alpha = 0.5) +
   facet_wrap(~data) +
