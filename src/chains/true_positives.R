@@ -12,6 +12,8 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
+# print(dput(args))
+# stop()
 set.seed(args[["seed"]])
 
 droplet_sce <- readRDS("data/ibarra-soria.rds")
@@ -48,6 +50,8 @@ SM_MCMC <- BASiCS_MCMC(
   Thin = max((args[["iterations"]] / 2) / 1000, 2),
   Burn = max(args[["iterations"]] / 2, 4)
 )
+
+
 
 test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC)
 

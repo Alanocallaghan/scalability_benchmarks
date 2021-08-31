@@ -28,10 +28,15 @@ rule all:
         "figs/de_batch_zeisel.pdf",
         "figs/ess_batch.pdf",
         "figs/removing_cells.pdf",
+        "figs/downsampling.pdf",
+        "figs/elbo/tung.pdf",
+        "figs/elbo/buettner.pdf",
+        "figs/elbo/zeisel.pdf",
+        "figs/elbo/chen.pdf"
+        
         # "figs/de_id_tung.pdf",
         # "figs/de_id_zeisel.pdf",
         # "figs/ess_id.pdf",
-        "figs/downsampling.pdf"
 
 
 rule plots: ## todo
@@ -156,6 +161,7 @@ rule hpd_ess_plot:
         """
 
 rule removing_cells_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
@@ -249,7 +255,7 @@ rule advi:
 
 rule time:
     # conda: "conda.yaml"
-    resources: mem_mb=20000, runtime=100000
+    resources: mem_mb=15000, runtime=10000
     output:
         "outputs/time/{dataset}_{n}.rds"
     input:
@@ -426,8 +432,6 @@ rule cell:
 
 
 rule data:
-    # conda:
-    #     "conda.yaml"
     resources:
         mem_mb=10000
     input:
@@ -439,3 +443,16 @@ rule data:
         Rscript {input}
         """
 
+rule elbo_plots:
+    input:
+        expand(
+            "outputs/advi/data-{dataset}_seed-{seed}/",
+            seed = seeds,
+            allow_missing = True
+        )
+    output:
+        "figs/elbo/{dataset}.pdf"
+    shell:
+        """
+        Rscript src/analysis/elbo_plots.R
+        """

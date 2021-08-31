@@ -90,8 +90,9 @@ do_de <- function(
       nsamples <- nrow(
         ref_df[[which(ind)[[1]], "chain"]]@parameters[["mu"]]
       )
-      chain@parameters <- lapply(
-        chain@parameters,
+      params <- setdiff(names(chain@parameters), "RBFLocations")
+      chain@parameters[params] <- lapply(
+        chain@parameters[params],
         function(x) {
           x[seq_len(nsamples), ]
         }

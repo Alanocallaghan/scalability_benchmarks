@@ -21,16 +21,14 @@ time_mcmc <- function(n, times = 1) {
     replicate(times, {
       system.time(
         suppressMessages(
-          capture.output(
-            BASiCS_MCMC(
-              sce,
-              N = args[["iterations"]],
-              Thin = max((args[["iterations"]] / 2) / 1000, 2),
-              Burn = max(args[["iterations"]] / 2, 4),
-              WithSpikes = spikes,
-              Regression = TRUE,
-              PrintProgress = FALSE
-            )
+          BASiCS_MCMC(
+            sce,
+            N = args[["iterations"]],
+            Thin = max((args[["iterations"]] / 2) / 1000, 2),
+            Burn = max(args[["iterations"]] / 2, 4),
+            WithSpikes = spikes,
+            Regression = TRUE,
+            PrintProgress = TRUE
           )
         )
       )[["elapsed"]]
@@ -45,16 +43,14 @@ time_mcmc <- function(n, times = 1) {
       )
       system.time(
         suppressMessages(
-          capture.output(
-            BASiCS_MCMC(
-              subsets[[1]],
-              N = args[["iterations"]],
-              Thin = max((args[["iterations"]] / 2) / 1000, 2),
-              Burn = max(args[["iterations"]] / 2, 4),
-              WithSpikes = spikes,
-              Regression = TRUE,
-              PrintProgress = FALSE
-            )
+          BASiCS_MCMC(
+            subsets[[1]],
+            N = args[["iterations"]],
+            Thin = max((args[["iterations"]] / 2) / 1000, 2),
+            Burn = max(args[["iterations"]] / 2, 4),
+            WithSpikes = spikes,
+            Regression = TRUE,
+            PrintProgress = TRUE
           )
         )
       )[["elapsed"]]
