@@ -1,7 +1,26 @@
+suppressPackageStartupMessages({
+  library("dplyr")
+  library("ggplot2")
+  library("ggbeeswarm")
+  library("here")
+  library("BASiCS")
+  library("coda")
+  library("viridis")
+})
+
+source(here("src/analysis/functions.R"))
+theme_set(theme_bw())
+
+
 dir.create("figs/elbo", recursive = TRUE, showWarnings = FALSE)
 
-parsed_elbos <- lapply(advi_elbo, parse_elbo)
+advi_files <- list.files("outputs/advi", full.names = TRUE)
+advi_triplets <- file2triplets(advi_files)
+advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))
+advi_triplets <- lapply(advi_triplets, function(x) x[-3])
+advi_df <- read_triplets(advi_triplets)
 
+parsed_elbos <- lapply(advi_elbo, parse_elbo)
 
 elbo_df <- as.data.frame(advi_df)
 elbo_df$elbos <- parsed_elbos

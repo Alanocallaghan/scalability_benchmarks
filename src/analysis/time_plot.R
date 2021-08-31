@@ -3,24 +3,18 @@ source(here("src/analysis/preamble.R"))
 
 time_files <- list.files(here("outputs/time/"), full.names = TRUE)
 
-time_df_dc <- data.frame(
-  data = gsub(".*/(\\w+)_(\\d+).rds", "\\1", time_files),
-  chains = gsub(".*/(\\w+)_(\\d+).rds", "\\2", time_files)
-)
-time_df_dc <- time_df_dc[rep(seq_len(nrow(time_df_dc)), each = 6), ]
-time_df_dc[["seeds"]] <- seq(7, 42, length.out = 6)
-## because n = 2 when data = "zeisel"
-time_df_dc <- time_df_dc %>%
-  filter(
-    data %in% c("buettner", "chen", "tung") |
-      (!(data == "zeisel" & chains == 1 & seeds %in% c(21, 28, 35, 42)))
-  )
-time_df_dc[["times"]] <- do.call(c,
+time_data <- do.call(c,
   sapply(time_files,
   function(x) {
     # print(x)
     readRDS(x)
   })
+)
+time_df_dc <- data.frame(
+  data = gsub(".*//(\\w+)_.*", "\\1", names(time_data)),
+  chains = gsub(".*//\\w+_(\\d+).rds\\d+", "\\1", names(time_data)),
+  time = time_data,
+  row.names = NULL
 )
 
 
@@ -73,7 +67,7 @@ advi_time_df$data <- sub(
 
 time_df_merge <- merge(time_df_dc, data_dims, all = TRUE)
 time_df_merge <- time_df_merge[, 
-  c("data", "chains", "seeds", "times", "nGenes", "nCells")
+  c("data", "chains", "time", "nGenes", "nCells")
 ]
 time_df_merge <- time_df_merge %>%
   group_by(data) %>%
@@ -99,7 +93,7 @@ time_df <- time_df_merge %>%
   dplyr::group_by(data, chains) %>% 
   dplyr::summarise(
     .groups = "drop_last",
-    time = median(times),
+    time = median(time),
     nGenes = nGenes[[1]],
     nCells = nCells[[1]],
   )
