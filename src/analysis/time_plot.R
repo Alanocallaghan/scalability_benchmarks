@@ -8,31 +8,36 @@ time_df_dc <- data.frame(
   chains = gsub(".*/(\\w+)_(\\d+).rds", "\\2", time_files)
 )
 time_df_dc <- time_df_dc[rep(seq_len(nrow(time_df_dc)), each = 6), ]
-time_df_dc[["times"]] <- as.vector(
+time_df_dc[["seeds"]] <- seq(7, 42, length.out = 6)
+## because n = 2 when data = "zeisel"
+time_df_dc <- time_df_dc %>%
+  filter(
+    data %in% c("buettner", "chen", "tung") |
+      (!(data == "zeisel" & chains == 1 & seeds %in% c(21, 28, 35, 42)))
+  )
+time_df_dc[["times"]] <- do.call(c,
   sapply(time_files,
   function(x) {
-    print(x)
+    # print(x)
     readRDS(x)
   })
 )
-time_df_dc[["seeds"]] <- seq(7, 42, length.out = 6)
-
 
 
 advi_time_files <- list.files(
-  time_files,
+  "outputs/advi",
   recursive = TRUE,
-  pattern="time.rds",
+  pattern = "time.rds",
   full.names = TRUE
 )
                                                                          
 advi_time_df <- data.frame(
   data = gsub(
-    ".*//data-(\\w+)_seed-(\\d+)/time.rds", "\\1",
+    ".*/data-(\\w+)_seed-(\\d+)/time.rds", "\\1",
     advi_time_files
   ),
   seed = gsub(
-    ".*//data-(\\w+)_seed-(\\d+)/time.rds", "\\2",
+    ".*/data-(\\w+)_seed-(\\d+)/time.rds", "\\2",
     advi_time_files
   ),
   file = advi_time_files
@@ -42,10 +47,11 @@ advi_time_df$time <- sapply(advi_time_df$file,
     readRDS(x)[["elapsed"]]
   }
 )
+
 advi_time_df <- merge(advi_time_df, data_dims)
 
-advi_time_df <- advi_time_df %>% 
-  dplyr::group_by(data) %>% 
+advi_time_df <- advi_time_df %>%
+  dplyr::group_by(data) %>%
   dplyr::summarise(
     .groups = "drop_last",
     time = median(time),
@@ -69,7 +75,7 @@ time_df_merge <- merge(time_df_dc, data_dims, all = TRUE)
 time_df_merge <- time_df_merge[, 
   c("data", "chains", "seeds", "times", "nGenes", "nCells")
 ]
-time_df_merge <- time_df_merge %>% 
+time_df_merge <- time_df_merge %>%
   group_by(data) %>%
   mutate(
     nGenes = mean(nGenes, na.rm = TRUE),
@@ -87,6 +93,8 @@ time_df_merge$data <- sub(
   time_df_merge$data
 )
 
+
+
 time_df <- time_df_merge %>% 
   dplyr::group_by(data, chains) %>% 
   dplyr::summarise(
@@ -98,7 +106,7 @@ time_df <- time_df_merge %>%
 
 
 g <- ggplot(
-  time_df, 
+  time_df,
   aes(
     x = as.numeric(chains),
     y = time / 60,
