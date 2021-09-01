@@ -31,8 +31,7 @@ rule all:
         "figs/downsampling.pdf",
         "figs/elbo/tung.pdf",
         "figs/elbo/buettner.pdf",
-        "figs/elbo/zeisel.pdf",
-        "figs/elbo/chen.pdf"
+        "figs/elbo/zeisel.pdf"
         
         # "figs/de_id_tung.pdf",
         # "figs/de_id_zeisel.pdf",
