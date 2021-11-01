@@ -102,7 +102,7 @@ Zeisel.meta <- Zeisel.meta[!(libsize_drop | feature_drop), ]
 
 
 bio <- input[!grepl("ERCC", rownames(input)), , drop = FALSE]
-ind_expressed <- rowMeans(bio) >= 1 & rowMeans(bio != 0) > 0.5
+ind_expressed <- rowMeans(bio) >= 5 & rowMeans(bio != 0) > 0.5
 
 
 ind_expressed_ercc <- c(
@@ -144,4 +144,3 @@ Data <- newBASiCS_Data(
 )
 colnames(Data) <- colnames(input)
 saveRDS(Data, file = "rdata/zeisel.rds")
-

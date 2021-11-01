@@ -1,6 +1,5 @@
 library("scran")
 library("scater")
-library("BASiCS")
 
 if (!file.exists("downloads/rawCounts.tsv")) {
   website <- "https://www.ebi.ac.uk/"
