@@ -32,7 +32,11 @@ rule all:
         "figs/elbo/tung.pdf",
         "figs/elbo/buettner.pdf",
         "figs/elbo/zeisel.pdf",
-        "figs/elbo/chen.pdf"
+        "figs/elbo/chen.pdf",
+        "figs/hpd_mu.pdf",
+        "figs/hpd_epsilon.pdf",
+        "figs/ess_mu.pdf",
+        "figs/ess_epsilon.pdf"
         
         # "figs/de_id_tung.pdf",
         # "figs/de_id_zeisel.pdf",
@@ -93,7 +97,10 @@ rule plots: ## todo
     output:
         "figs/diffexp_plot.pdf",
         "figs/overlap_diff_genes.pdf",
-        "figs/norm_plot.pdf"
+        "figs/norm_plot.pdf",
+        "figs/hpd_mu.pdf",
+        "figs/hpd_epsilon.pdf",
+        "rdata/main_done.RData"
     shell:
         """
         Rscript src/analysis/main.R
@@ -139,26 +146,26 @@ rule true_positive_plot:
         Rscript src/analysis/true_positives.R
         """
 
-rule hpd_ess_plot:
-    input:
-        expand(
-            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
-            dataset = data,
-            nsubsets = chains,
-            by = by,
-            seed = seeds
-        )
-    output: 
-        expand(
-            "figs/{metric}_{parameter}.pdf",
-            metric = ["hpd", "ess"],
-            parameter = ["mu", "epsilon"]
-        )
-    shell:
-        """
-        Rscript src/hpd.R
-        Rscript src/ess.R
-        """
+# rule hpd_ess_plot:
+#     input:
+#         expand(
+#             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+#             dataset = data,
+#             nsubsets = chains,
+#             by = by,
+#             seed = seeds
+#         )
+#     output: 
+#         expand(
+#             "figs/{metric}_{parameter}.pdf",
+#             metric = ["hpd", "ess"],
+#             parameter = ["mu", "epsilon"]
+#         )
+#     shell:
+#         """
+#         Rscript src/analysis/hpd.R
+#         Rscript src/analysis/ess.R
+#         """
 
 rule removing_cells_plot:
     resources: mem_mb=20000
