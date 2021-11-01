@@ -128,7 +128,7 @@ g <- ggplot(
   scale_x_continuous(
     name = "Partitions",
     trans = "log2",
-    breaks = c(1, 2, 4, 8, 16, 32)
+    breaks = c(1, 2, 4, 8, 16, 32, 64, 128)
   ) +
   scale_y_continuous(name = "Time (mins)", trans = "log10") +
   scale_color_brewer(name = "Data", palette = "Set2") +
