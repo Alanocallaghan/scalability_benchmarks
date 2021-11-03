@@ -1,6 +1,5 @@
 library("SingleCellExperiment")
 library("BASiCS")
-library("Scalability")
 
 
 BASiCS_Draw <- function(
