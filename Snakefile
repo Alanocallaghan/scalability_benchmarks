@@ -55,7 +55,7 @@ rule plots: ## todo
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data_spikes,
+            dataset = data,
             seed  = seeds
         ),
         expand(
