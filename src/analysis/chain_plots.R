@@ -51,13 +51,13 @@ hpd_plots <- lapply(
 )
 
 ## Posterior variance plots
-maxdfadvim <- df %>% filter(is.na(chains)) %>% 
-  group_by(data) %>% 
+maxdfadvim <- df %>% filter(is.na(chains)) %>%
+  group_by(data) %>%
   top_n(n = 1, wt = nDiffExp) %>%
   distinct(data, .keep_all = TRUE)
 
-maxdfadvie <- df %>% filter(is.na(chains)) %>% 
-  group_by(data) %>% 
+maxdfadvie <- df %>% filter(is.na(chains)) %>%
+  group_by(data) %>%
   top_n(n = 1, wt = nDiffResDisp) %>%
   distinct(data, .keep_all = TRUE)
 

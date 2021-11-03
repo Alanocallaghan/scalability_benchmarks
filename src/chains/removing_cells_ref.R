@@ -7,7 +7,7 @@ suppressPackageStartupMessages({
 })
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
-parser$add_argument("-f", "--fraction", type="double")
+parser$add_argument("-f", "--fraction", type = "double")
 parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 

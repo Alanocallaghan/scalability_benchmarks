@@ -36,7 +36,8 @@ rule all:
         "figs/hpd_mu.pdf",
         "figs/hpd_epsilon.pdf",
         "figs/ess_mu.pdf",
-        "figs/ess_epsilon.pdf"
+        "figs/ess_epsilon.pdf",
+        "figs/fixnu-comparison.pdf"
         
         # "figs/de_id_tung.pdf",
         # "figs/de_id_zeisel.pdf",
@@ -55,28 +56,28 @@ rule plots: ## todo
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data_spikes,
+            dataset = data,
             seed  = seeds
         ),
         expand(
             "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = data,
+            dataset = "zeisel",
             seed = seeds,
             fraction = fractions
         ),
         expand(
             "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = data,
+            dataset = "zeisel",
             fraction = fractions
         ),
         expand(
             "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = data,
+            dataset = "zeisel",
             fraction = fractions
         ),
         expand(
             "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = data,
+            dataset = "zeisel",
             seed = seeds,
             fraction = fractions
         ),
@@ -421,19 +422,45 @@ rule batchinfo:
         """
 
 
-rule cell:
-    # conda:
-    #     "conda.yaml"
+# rule cell:
+#     # conda:
+#     #     "conda.yaml"
+#     resources: mem_mb=10000, runtime=3000
+#     input:
+#         "rdata/{dataset}.rds"
+#     output:
+#         "outputs/cell_splitting/{dataset}.rds"
+#     shell:
+#         """
+#         Rscript ./src/chains/batchinfo.R \
+# 	        --iterations {iterations} \
+#             --data {wildcards.dataset} \
+#             --output {output}
+#         """
+
+
+rule plot_fixnu:
     resources: mem_mb=10000, runtime=3000
     input:
-        "rdata/{dataset}.rds"
+        "outputs/fix_nu/"
     output:
-        "outputs/cell_splitting/{dataset}.rds"
+        "figs/fixnu-comparison.pdf"
     shell:
         """
-        Rscript ./src/chains/batchinfo.R \
-	    --iterations {iterations} \
-            --data {wildcards.dataset} \
+        Rscript ./src/analysis/plot_fix_nu.R -i {input}
+        """
+
+
+rule fixnu:
+    resources: mem_mb=10000, runtime=3000
+    input:
+        "rdata/chen.rds"
+    output:
+        directory("outputs/fix_nu/")
+    shell:
+        """
+        Rscript ./src/chains/fix_nu.R \
+	        --iterations {iterations} \
             --output {output}
         """
 
