@@ -132,12 +132,20 @@ g <- ggplot(
   ) +
   scale_y_continuous(name = "Time (mins)", trans = "log10") +
   scale_color_brewer(name = "Data", palette = "Set2") +
-  scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
+  scale_linetype_discrete(
+    name = "Method", limits = c("Divide and\nconquer", "ADVI")
+  )
+  #  +
+  # guides(colour = guide_legend(nrow = 2, byrow = TRUE)) +
+  # theme(
+  #   legend.position = "bottom",
+  #   legend.box = "vertical"
+  # )
 
 ggsave(
   file = here("figs/time_plot.pdf"),
   width = 7,
-  height = 7
+  height = 6
 )
 
 

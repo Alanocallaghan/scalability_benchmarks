@@ -8,9 +8,6 @@ advi_elbo <- lapply(advi_triplets, function(x) readRDS(x[[3]]))
 advi_triplets <- lapply(advi_triplets, function(x) x[-3])
 advi_df <- read_triplets(advi_triplets)
 
-
-
-
 dc_files <- list.files("outputs/divide_and_conquer", full.names = TRUE)
 dc_df <- read_triplets(file2triplets(dc_files), combine = TRUE)
 
@@ -27,5 +24,11 @@ sourceme(here("src/analysis/chain_plots.R"))
 
 sourceme(here("src/analysis/normalisation_comparison.R"))
 
+sourceme(here("src/analysis/ess.R"))
+sourceme(here("src/analysis/hpd.R"))
+
+
 ## not doing this any more...
 ## sourceme(here("src/analysis/identifiability.R"))
+
+save.image("rdata/main_done.RData")

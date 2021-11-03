@@ -171,12 +171,12 @@ do_fit_plot <- function(i, maxdf, references) {
   g1 <- BASiCS_ShowFit(rc) 
   g2 <- BASiCS_ShowFit(c) 
   ggsave(g1, 
-    file = here(paste0("figs/fit/", d, "_ref", ".pdf")),
+    file = here(sprintf("figs/fit/%s_ref.pdf", d)),
     width = 4,
     height = 3
   )
   ggsave(g2,
-    file = here(paste0("figs/fit/", d, "_", b, ".pdf")), 
+    file = here(sprintf("figs/fit/%s_%s.pdf", d, b)),
     width = 4,
     height = 3
   )
@@ -192,38 +192,52 @@ do_de_plot <- function(i, maxdf, references) {
   d <- maxdf[["data"]]
   b <- maxdf[["by"]]
   rc <- references[[which(references$data == d)[[1]], "chain"]]
-  c <- readRDS(maxdf[["file"]][[1]])
-  if (is.list(c)) {  
+  cc <- readRDS(maxdf[["file"]][[1]])
+  if (is.list(cc)) {
     suppressMessages(
-      c <- BASiCS:::.combine_subposteriors(
-        c,
+      cc <- BASiCS:::.combine_subposteriors(
+        cc,
         GeneOrder = rownames(rc),
         CellOrder = colnames(rc),
         SubsetBy = "gene"
       )
     )
   }
+  cc@parameters <- BASiCS:::.reorder_params(
+    cc@parameters,
+    GeneOrder = rownames(rc)
+  )
+
   l2 <- if (b == "advi") "ADVI" else "D & C"
-  de <- BASiCS_TestDE(rc, c,
-    GroupLabel1 = "Ref",
-    GroupLabel2 = l2,
-    Plot = FALSE,
-    PlotOffset = FALSE,
-    EFDR_M = NULL,
-    EFDR_D = NULL,
-    EFDR_R = NULL
+  suppressMessages(
+    de <- BASiCS_TestDE(
+      rc, cc,
+      GroupLabel1 = "Ref",
+      GroupLabel2 = l2,
+      Plot = FALSE,
+      PlotOffset = FALSE,
+      EFDR_M = NULL,
+      EFDR_D = NULL,
+      EFDR_R = NULL
+    )
   )
   g <- BASiCS_PlotDE(de@Results[[1]],
     Plots = c("MA", "Volcano"),
     Mu = de@Results$Mean@Table$MeanOverall
   )
-  ggsave(g, file = here(paste0("figs/de/mu_", d, "_", b, ".pdf")), width = 9, height = 5)
+  ggsave(g,
+    file = here(sprintf("figs/de/mu_%s_%s.pdf", d, b)),
+    width = 9, height = 5
+  )
   g <- BASiCS_PlotDE(
     de@Results[[3]],
     Plots = c("MA", "Volcano"),
     Mu = de@Results$Mean@Table$MeanOverall
   )
-  ggsave(g, file = here(paste0("figs/de/epsilon_", d, "_", b, ".pdf")), width = 9, height = 5)
+  ggsave(g,
+    file = here(sprintf("figs/de/epsilon_%s_%s.pdf", d, b)),
+    width = 9, height = 5
+  )
   g
 }
 
@@ -272,7 +286,7 @@ plot_hpd_interval <- function(
       "of HPD interval\nof", param, "parameter in",
       yname, "vs", xname, "MCMC"
     ),
-    log = log && type =="std",
+    log = log && type == "std",
     mus = mus,
     ...
   )
@@ -334,7 +348,7 @@ param_plot <- function(
     #   )  +
     scale_fill_viridis(direction = 1, name = "Density") +
     geom_hex(aes(fill = ..density..), bins = bins, na.rm = TRUE) +
-    guides(fill = FALSE) +
+    guides(fill = "none") +
     xlab(xname) +
     ylab(yname) +
     ggtitle(title)
@@ -370,7 +384,10 @@ do_hpd_plots <- function(i, maxdf, references) {
   }
   c <- BASiCS:::.offset_correct(rc, c)
   l2 <- if (b == "advi") "ADVI" else "D & C"
-  l3 <- paste0("log2(", l2, " HPD interval width / Reference HPD interval width)")
+  l3 <- sprintf(
+    "log2(%s HPD interval width / Reference HPD interval width)",
+    l2
+  )
   l <- list(
     plot_hpd_interval(
       rc,
@@ -405,8 +422,14 @@ do_hpd_plots <- function(i, maxdf, references) {
       ) +
       geom_hline(aes(yintercept = 0))
   )
-  ggsave(l[[1]], file = here(paste0("figs/hpd/mu_", b, "_", d, ".pdf")), width = 7, height = 5)
-  ggsave(l[[2]], file = here(paste0("figs/hpd/epsilon_", b, "_", d, ".pdf")), width = 7, height = 5)
+  ggsave(l[[1]],
+    file = here(sprintf("figs/hpd/mu_%s_%s.pdf", b, d)),
+    width = 7, height = 5
+  )
+  ggsave(l[[2]],
+    file = here(sprintf("figs/hpd/epsilon_%s_%s.pdf", b, d)),
+    width = 7, height = 5
+  )
   l
 }
 
@@ -445,7 +468,10 @@ do_ess_plot <- function(i, maxdf, references) {
       name = bquote('Effective sample size'~epsilon[i]),
       trans = "log10"
     )
-  ggsave(file = here(paste0("figs/ess/", b, "_", d, ".pdf")), width = 5, height = 4)
+  ggsave(
+    file = here(sprintf("figs/ess/%s_%s.pdf", b, d)),
+    width = 5, height = 4
+  )
 }
 
 paste_aes <- function(...) {
