@@ -54,7 +54,7 @@ plots <- lapply(unique(elbo_df$data),
       scale_y_log10() +
       # ggtitle(D) +
       labs(x = "Iteration")
-    ggsave(g, file = here(paste0("figs/elbo/", d, ".pdf")), width = 7, height = 7)
+    ggsave(g, file = sprintf("figs/elbo/%s.pdf", d), width = 4, height = 4)
     g
   }
 )

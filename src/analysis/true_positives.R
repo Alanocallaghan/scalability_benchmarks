@@ -75,10 +75,13 @@ mdf$variable <- plyr::revalue(
 )
 g <- ggplot(mdf) +
     aes(nsubsets, y = value, colour = variable) +
-    geom_quasirandom(dodge.width = 0.3, size = 0.8, width = 0.05, groupOnX = TRUE) +
+    geom_quasirandom(
+        dodge.width = 0.3, size = 0.8, width = 0.05, groupOnX = TRUE
+    ) +
     labs(x = "Number of subsets", y = "Jaccard Index") +
     ylim(0, 1) +
-    scale_color_brewer(palette="Set1", name = "Parameter") +
+    scale_color_brewer(palette = "Set1", name = "Parameter") +
+    theme(legend.position = "bottom") +
     theme_bw()
 
-ggsave(file="figs/true_positives.pdf", width = 7, height = 7)
+ggsave(file = "figs/true_positives.pdf", width = 5, height = 5)

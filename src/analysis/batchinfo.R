@@ -13,7 +13,6 @@ desc_b <- data.frame(
   type = gsub("outputs/batchinfo/data-(tung|zeisel)/(\\w+)\\.rds", "\\2", files_b)
 )
 
-
 bde1 <- BASiCS_TestDE(
   chains_b[[1]],
   chains_b[[2]],
@@ -23,6 +22,7 @@ bde1 <- BASiCS_TestDE(
   EFDR_D = NULL,
   EFDR_R = NULL
 )
+BASiCS_PlotDE(bde1, Plots = c("MA", "Volcano"))
 
 bde2 <- BASiCS_TestDE(
   chains_b[[3]],
@@ -33,13 +33,16 @@ bde2 <- BASiCS_TestDE(
   EFDR_D = NULL,
   EFDR_R = NULL
 )
+ed <- chains_b[[4]]@parameters$epsilon - chains_b[[3]]@parameters$epsilon
+hist(chains_b[[3]]@parameters$epsilon[, 3327], breaks = "FD")
+hist(chains_b[[4]]@parameters$epsilon[, 3327], breaks = "FD")
 g1 <- BASiCS_PlotDE(bde1, Plots = c("MA", "Volcano"))
 g2 <- BASiCS_PlotDE(bde2, Plots = c("MA", "Volcano"))
 ggsave(g1, file = "figs/de_batch_tung.pdf", width = 12, height = 10)
 ggsave(g2, file = "figs/de_batch_zeisel.pdf", width = 12, height = 10)
 
 
-ess_b <- lapply(c("mu", "delta", "epsilon"), 
+ess_b <- lapply(c("mu", "delta", "epsilon"),
   function(param) {
     lapply(seq_along(chains_b),
       function(i) {
