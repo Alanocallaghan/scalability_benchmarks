@@ -59,5 +59,6 @@ out <- list(
   test = test,
   mcmc = list(sm = SM_MCMC, psm = PSM_MCMC)
 )
+dir.create("outputs/true-positives/", showWarnings = FALSE)
 
 saveRDS(out, args[["output"]])

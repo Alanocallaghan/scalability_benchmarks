@@ -34,10 +34,11 @@ rule all:
         "figs/elbo/zeisel.pdf",
         "figs/elbo/chen.pdf",
         "figs/hpd_mu.pdf",
-        "figs/hpd_epsilon.pdf",
-        "figs/ess_mu.pdf",
-        "figs/ess_epsilon.pdf",
-        "figs/fixnu-comparison.pdf"
+        "figs/hpd_epsilon.pdf"
+        # ,
+        # "figs/ess_mu.pdf",
+        # "figs/ess_epsilon.pdf",
+        # "figs/fixnu-comparison.pdf"
         
         # "figs/de_id_tung.pdf",
         # "figs/de_id_zeisel.pdf",
