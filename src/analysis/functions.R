@@ -221,13 +221,22 @@ do_de_plot <- function(i, maxdf, references) {
       EFDR_R = NULL
     )
   )
-  g <- BASiCS_PlotDE(de@Results[[1]],
-    Plots = c("MA", "Volcano"),
+  g1 <- BASiCS_PlotDE(de@Results[[1]],
+    Plots = "MA",
     Mu = de@Results$Mean@Table$MeanOverall
   )
-  ggsave(g,
+  g2 <- BASiCS_PlotDE(de@Results[[1]],
+    Plots = "Volcano",
+    Mu = de@Results$Mean@Table$MeanOverall
+  ) + theme(legend.position = "bottom")
+  gg2 <- ggplotGrob(g2)
+  legend <- gg$grobs[[grep("guide-box", gg$layout$name)]]
+  t <- theme(legend.position = "none")
+  together <- cowplot::plot_grid(g1 + t, g2 + t, labels = "AUTO")
+  all <- cowplot::plot_grid(together, legend, nrow = 2, rel_height = 0.9, 0.1)
+  ggsave(all,
     file = here(sprintf("figs/de/mu_%s_%s.pdf", d, b)),
-    width = 9, height = 5
+    width = 6, height = 5
   )
   g <- BASiCS_PlotDE(
     de@Results[[3]],
@@ -236,7 +245,7 @@ do_de_plot <- function(i, maxdf, references) {
   )
   ggsave(g,
     file = here(sprintf("figs/de/epsilon_%s_%s.pdf", d, b)),
-    width = 9, height = 5
+    width = 6, height = 5
   )
   g
 }
