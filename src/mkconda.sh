@@ -12,6 +12,7 @@
 # library("scater")
 # library("scran")
 # library("SingleCellExperiment")
+module load roslin/gcc/7.3.0
 
 mamba create -n scalability \
     r-base=4.1.1 \
@@ -26,17 +27,18 @@ mamba create -n scalability \
     r-biocmanager \
     r-devtools \
     r-rstan \
-    r-ggpointdensity
+    r-ggpointdensity \
+    r-rcpparmadillo
     # bioconductor-basics \
-    # bioconductor-edgeR \
     # bioconductor-scater \
     # bioconductor-scran \
     # bioconductor-singlecellexperiment \
 
 
 ## also need to devtools::install_github some stuff
+
 conda activate scalability
-Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "edgeR", "scater", "scran", "SingleCellExperiment"), version=3.14)'
+Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "scater", "scran", "SingleCellExperiment"), version=3.14)'
 
 Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan")'
 Rscript -e 'devtools::install_github("catavallejos/BASiCS")'

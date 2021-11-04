@@ -1,11 +1,10 @@
 #!/usr/bin/env Rscript
 
-suppressPackageStartupMessages({
-  library("argparse")
-  library("here")
-  library("BASiCS")
-  library("BASiCStan")
-})
+library("argparse")
+library("here")
+library("BASiCS")
+library("BASiCStan")
+
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
 parser$add_argument("-s", "--seed", type = "double")
