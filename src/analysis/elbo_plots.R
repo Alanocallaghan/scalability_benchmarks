@@ -44,7 +44,7 @@ elbo_df$Data <- sub(
   "10x PBMC",
   elbo_df$Data
 )
-plots <- lapply(unique(elbo_df$data), 
+plots <- lapply(unique(elbo_df$data),
   function(d) {
     df <- elbo_df[elbo_df$data == d, ]
     D <- df$Data[[1]]
