@@ -1,6 +1,5 @@
 
 ## compare correlation and hpd width
-
 calc_norm_factors <- function(chain) {
     params <- chain@parameters
     if (is.null(params$phi)) {
@@ -9,8 +8,6 @@ calc_norm_factors <- function(chain) {
         params$nu * params$phi
     }
 }
-
-
 
 # dr <- df[df$data == "chen" & df$chains == 1, ]
 # dd <- df[df$data == "chen" & df$chains == 4, ]
@@ -42,11 +39,10 @@ cors <- lapply(seq_len(nrow(df)),
 df_norm <- df
 cor_df <- do.call(rbind, cors)
 df_norm <- cbind(df_norm, cor_df)
-df_norm <- df_norm[df_norm$chains != 1 & df_norm$by != "advi", ]
+df_norm <- df_norm[df_norm$chains != 1, ]
 
 # sdf <- df %>% filter(!is.na(chains))
 # advi_sdf <- sdf %>% filter(is.na(chains)) 
-
 
 g <- ggplot(
         df_norm,
@@ -77,7 +73,79 @@ g <- ggplot(
     ) +
     theme(text = element_text(size = 18))
 
-ggsave(here("figs/norm_plot_chen.pdf"), width = 5, height = 5)
+ggsave(here("figs/norm_plot.pdf"), width = 5, height = 5)
+
+
+df_norm
+g <- ggplot(
+        df_norm,
+        aes(
+            x = factor(chains),
+        )
+    ) +
+    geom_quasirandom(
+        mapping = aes(colour = "95% HPD interval (lower)", y = cor_lower),
+        groupOnX = TRUE,
+        dodge.width = 0.5,
+        # position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
+        size = 0.5
+    ) +
+    geom_quasirandom(
+        mapping = aes(colour = "95% HPD interval (upper)", y = cor_upper),
+        groupOnX = TRUE,
+        dodge.width = 0.5,
+        # position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
+        size = 0.5
+    ) +
+    # geom_point(
+    #     position = position_jitterdodge(
+    #         jitter.width = 0.1,
+    #         jitter.height = 0
+    #     ),
+    #     size = 0.5
+    # ) +
+    # geom_violin() +
+    facet_wrap(~data, nrow = 2, ncol = 2) +
+    scale_x_discrete(name = "Partitions") +
+    scale_y_continuous(name = "Pearson correlation") +
+    theme(text = element_text(size = 18))
+
+ggsave(here("figs/norm_plot_hpd.pdf"), width = 5, height = 5)
+
+
+
+## comparing scran and BASiCS
+library("ggplot2")
+library("viridis")
+library("ggpointdensity")
+fit <- readRDS("outputs/divide_and_conquer/data-chen_nsubsets-1_seed-14_by-gene/chains.rds")
+sce <- readRDS("rdata/chen.rds")
+sf <- calculateSumFactors(sce)
+bf <- colMedians(fit@parameters$nu)
+r <- range(c(sf, bf))
+chen_sf_scran <- data.frame(scran = sf, BASiCS = bf)
+g <- ggplot(chen_sf_scran) +
+    aes(scran, BASiCS) +
+    # geom_point() +
+    geom_pointdensity() +
+    scale_x_log10(limits = r) +
+    scale_y_log10(limits = r) +
+    scale_colour_viridis(name = "Number of neighbours") +
+    labs(x = "scran size factors", y = "BASiCS size factors") +
+    annotate("text", x = 3.1, y = 1.2,
+        hjust = 0,
+        label = sprintf(
+            "Peason's rho: %0.03f", cor(chen_sf_scran[[1]], chen_sf_scran[[2]])
+        )
+    ) +
+    theme_bw() +
+    theme(
+        # panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()
+    ) +
+    theme(legend.position = "bottom")
+
+ggsave("figs/chen_scran_basics.pdf", width = 4.5, height = 4)
 
 
 
@@ -132,31 +200,3 @@ ggsave(here("figs/norm_plot_chen.pdf"), width = 5, height = 5)
 
 # ggsave(here("figs/norm_plot.pdf"), width = 12, height = 8)
 
-
-library("ggplot2")
-fit <- readRDS("outputs/divide_and_conquer/data-chen_nsubsets-1_seed-14_by-gene/chains.rds")
-sce <- readRDS("rdata/chen.rds")
-sf <- calculateSumFactors(sce)
-chen_sf_scran <- data.frame(scran = sf, BASiCS = colMedians(fit@parameters$nu))
-g <- ggplot(chen_sf_scran) +
-    aes(scran, BASiCS) +
-    geom_point() +
-    # geom_pointdensity() +
-    scale_x_log10() +
-    scale_y_log10() +
-    # scale_colour_viridis(name = "Density") +
-    labs(x = "scran size factors", y = "BASiCS size factors") +
-    annotate("text", x = 3.1, y = 1.2,
-        hjust = 0,
-        label = sprintf(
-            "Peason's rho: %0.03f", cor(chen_sf_scran[[1]], chen_sf_scran[[2]])
-        )
-    ) +
-    theme_bw() +
-    theme(
-        # panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()
-    )
-    # + theme(legend.position = "bottom")
-
-ggsave("figs/chen_scran_basics.pdf", width = 4.5, height = 4)
