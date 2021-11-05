@@ -134,7 +134,8 @@ g <- ggplot(
   scale_color_brewer(name = "Data", palette = "Set2") +
   scale_linetype_discrete(
     name = "Method", limits = c("Divide and\nconquer", "ADVI")
-  )
+  ) +
+  theme(panel.grid.minor = element_blank())
   #  +
   # guides(colour = guide_legend(nrow = 2, byrow = TRUE)) +
   # theme(
