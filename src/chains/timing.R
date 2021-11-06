@@ -28,7 +28,7 @@ time_mcmc <- function(n, times = 1) {
             Burn = max(args[["iterations"]] / 2, 4),
             WithSpikes = spikes,
             Regression = TRUE,
-            PrintProgress = TRUE
+            PrintProgress = FALSE
           )
         )
       )[["elapsed"]]
@@ -50,7 +50,7 @@ time_mcmc <- function(n, times = 1) {
             Burn = max(args[["iterations"]] / 2, 4),
             WithSpikes = spikes,
             Regression = TRUE,
-            PrintProgress = TRUE
+            PrintProgress = FALSE
           )
         )
       )[["elapsed"]]
@@ -58,5 +58,5 @@ time_mcmc <- function(n, times = 1) {
   }
 }
 n <- args[["nsubsets"]]
-time <- time_mcmc(n, times = if (n == 1) 2 else 6)
+time <- time_mcmc(n, times = 2)
 saveRDS(time, args[["output"]])
