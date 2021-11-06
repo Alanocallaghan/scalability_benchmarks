@@ -24,9 +24,9 @@ rule all:
         "figs/dropout_density.pdf",
         "figs/true_positives.pdf",
         "figs/time_plot.pdf",
-        "figs/de_batch_tung.pdf",
-        "figs/de_batch_zeisel.pdf",
-        "figs/ess_batch.pdf",
+        # "figs/de_batch_tung.pdf",
+        # "figs/de_batch_zeisel.pdf",
+        # "figs/ess_batch.pdf",
         "figs/removing_cells.pdf",
         "figs/downsampling.pdf",
         "figs/elbo/tung.pdf",
@@ -82,10 +82,10 @@ rule plots: ## todo
             seed = seeds,
             fraction = fractions
         ),
-        expand(
-            "outputs/batchinfo/data-{dataset}/",
-            dataset = data_batch
-        ),
+        # expand(
+        #     "outputs/batchinfo/data-{dataset}/",
+        #     dataset = data_batch
+        # ),
         expand(
             "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
             nsubsets = chains,
