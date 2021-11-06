@@ -5,7 +5,6 @@ library("scater")
 library("BASiCS")
 library("here")
 
-
 data.dir <- "downloads"
 
 dir.create(here(data.dir), showWarnings = FALSE, recursive = TRUE)
@@ -13,25 +12,24 @@ countsfile <- file.path(data.dir, "zeisel_counts.txt")
 spikesfile <- file.path(data.dir, "zeisel_spikes.txt")
 erccfile <- file.path(data.dir, "ercc_conc.txt")
 
-system(
-  paste(
-    "wget https://storage.googleapis.com/linnarsson-lab-www-blobs/blobs/cortex/expression_mRNA_17-Aug-2014.txt",
-    "-O", countsfile
+if (!file.exists(countsfile)) {
+  download.file(
+    "https://storage.googleapis.com/linnarsson-lab-www-blobs/blobs/cortex/expression_mRNA_17-Aug-2014.txt",
+    destfile = countsfile
   )
-)
-system(
-  paste(
-    "wget https://storage.googleapis.com/linnarsson-lab-www-blobs/blobs/cortex/expression_spikes_17-Aug-2014.txt",
-    "-O", spikesfile
+}
+if (!file.exists(spikesfile)) {
+  download.file(
+    "https://storage.googleapis.com/linnarsson-lab-www-blobs/blobs/cortex/expression_spikes_17-Aug-2014.txt",
+    destfile = spikesfile
   )
-)
-system(
-  paste(
+}
+if (!file.exists(erccfile)) {
+  download.file(
     "wget https://assets.thermofisher.com/TFS-Assets/LSG/manuals/cms_095046.txt",
-    "-O", erccfile
+    destfile = erccfile
   )
-)
-
+}
 
 Zeisel <- read.delim(
   countsfile,
@@ -84,7 +82,6 @@ ERCC <- Zeisel.ERCC[, colnames(CA1)]
 
 input <- rbind(CA1, ERCC)
 
-
 libsize_drop <- isOutlier(
   colSums(input),
   nmads = 3,
@@ -100,17 +97,14 @@ feature_drop <- isOutlier(
 input <- input[, !(libsize_drop | feature_drop)]
 Zeisel.meta <- Zeisel.meta[!(libsize_drop | feature_drop), ]
 
-
 bio <- input[!grepl("ERCC", rownames(input)), , drop = FALSE]
-ind_expressed <- rowMeans(bio) >= 5 & rowMeans(bio != 0) > 0.5
-
+ind_expressed <- rowMeans(bio) >= 10 & rowMeans(bio != 0) > 0.5
 
 ind_expressed_ercc <- c(
   which(ind_expressed),
   grep("ERCC", rownames(input))
 )
 input <- input[ind_expressed_ercc, ]
-
 
 ERCC.conc <- read.table(
   erccfile,
