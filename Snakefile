@@ -1,5 +1,5 @@
 chains = [1, 2, 4, 8, 16, 32, 64]
-chains_timing = [1, 2, 4, 8, 16, 32, 64, 128]
+chains_timing = [2, 4, 8, 16, 32, 64, 128]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
 data_spikes = ["buettner", "tung", "zeisel"]
@@ -141,6 +141,12 @@ rule true_positive_plot:
             nsubsets = chains,
             seed = seeds
         )
+        # ,
+        # dc = expand(
+        # advi = expand(
+        #     "data-ibarra-soria_advi-{seed}.rds",
+        #     seed = seeds
+        # )
     output: 
         "figs/true_positives.pdf"
     shell:
