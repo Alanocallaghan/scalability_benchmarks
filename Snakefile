@@ -9,8 +9,6 @@ seeds = [14, 21, 28, 35, 42]
 fractions = [x/10 for x in range(2, 11, 2)]
 iterations = 40000
 
-# configfile: "config/snakemake_config.yaml"
-# conda: config["conda"]
 
 shell.prefix("source src/modules.sh; ")
 
@@ -35,7 +33,8 @@ rule all:
         "figs/elbo/chen.pdf",
         "figs/hpd_mu.pdf",
         "figs/fixnu-comparison.pdf",
-        "figs/hpd_epsilon.pdf"
+        "figs/hpd_epsilon.pdf",
+        "tables/data-summary.tex"
         # ,
         # "figs/ess_mu.pdf",
         # "figs/ess_epsilon.pdf",
@@ -252,9 +251,23 @@ rule data_comparison:
         Rscript src/analysis/data_comparison.R
         """
 
+
+rule data_summary:
+    resources: mem_mb=20000
+    output:
+        "tables/data-summary.tex"
+    input:
+        "rdata/zeisel.rds",
+        "rdata/chen.rds",
+        "rdata/buettner.rds",
+        "rdata/ibarra-soria.rds",
+        "rdata/tung.rds"
+    shell:
+        """
+        Rscript ./src/analysis/data_summary.R
+        """
+
 rule advi:
-    conda:
-         "conda.yaml"
     resources: mem_mb=20000
     output:
         directory("outputs/advi/data-{dataset}_seed-{seed}/")
@@ -269,7 +282,6 @@ rule advi:
         """
 
 rule time:
-    # conda: "conda.yaml"
     resources: mem_mb=15000, runtime=10000
     output:
         "outputs/time/{dataset}_{n}.rds"
@@ -286,8 +298,6 @@ rule time:
 
 
 rule divide_and_conquer:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
         "rdata/{dataset}.rds"
@@ -305,8 +315,6 @@ rule divide_and_conquer:
         """
 
 rule downsampling_ref:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
         "rdata/{dataset}.rds"
@@ -323,8 +331,6 @@ rule downsampling_ref:
 
 
 rule downsampling_divide:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
         "rdata/{dataset}.rds"
@@ -342,8 +348,6 @@ rule downsampling_divide:
 
 
 rule removing_ref:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
         "rdata/{dataset}.rds"
@@ -359,8 +363,6 @@ rule removing_ref:
         """
 
 rule removing_divide:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
         "rdata/{dataset}.rds"
@@ -379,8 +381,6 @@ rule removing_divide:
 
 
 rule true_positives:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=10000, runtime=5000
     input:
         "rdata/ibarra-soria.rds"
@@ -397,8 +397,6 @@ rule true_positives:
 
 
 rule true_positives_advi:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=20000, runtime=5000
     input:
         "rdata/ibarra-soria.rds"
@@ -413,8 +411,6 @@ rule true_positives_advi:
 
 
 rule batchinfo:
-    # conda:
-    #     "conda.yaml"
     resources: mem_mb=20000, runtime=5000
     input:
         "rdata/{dataset}.rds"
@@ -430,8 +426,6 @@ rule batchinfo:
 
 
 # rule cell:
-#     # conda:
-#     #     "conda.yaml"
 #     resources: mem_mb=10000, runtime=3000
 #     input:
 #         "rdata/{dataset}.rds"
