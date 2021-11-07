@@ -115,7 +115,9 @@ plot_hpd_diff <- function(summary_var, summary_fix, param = "mu", ord) {
         ylab(sprintf("Difference in posterior quantities (%s)", param)) +
         theme(
             axis.ticks.x = element_blank(),
-            axis.text.x = element_blank()
+            axis.text.x = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank()
         )
 
         # +
@@ -133,4 +135,4 @@ d2 <- plot_hpd_diff(summary_var, summary_fix, "delta", ord)
 d3 <- plot_hpd_diff(summary_var, summary_fix, "epsilon", ord)
 
 dop <- plot_grid(d1, d2, d3, labels = "AUTO", nrow = 1)
-ggsave("figs/fixnu-comparison-diff.pdf", width = 9, height = 3.5)
+ggsave("figs/fixnu-comparison-diff.pdf", width = 9, height = 3.7)
