@@ -2,6 +2,7 @@ chains = [1, 2, 4, 8, 16, 32, 64]
 chains_timing = [2, 4, 8, 16, 32, 64, 128]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
+data_all = ["buettner", "chen", "tung", "zeisel", "ibarra-soria"]
 data_spikes = ["buettner", "tung", "zeisel"]
 data_batch = ["tung", "zeisel"]
 seeds = [14, 21, 28, 35, 42]
@@ -92,7 +93,7 @@ rule plots: ## todo
         ),
         expand(
             "outputs/time/{dataset}_{n}.rds",
-            dataset = data,
+            dataset = data_all,
             n = chains_timing
         )
     output:
