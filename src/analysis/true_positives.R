@@ -26,14 +26,17 @@ pos_metadata$test <- lapply(seq_along(files),
 params <- c("Mean", "Disp", "ResDisp")
 pg <- paste0(params, "Gene")
 pos_metadata[, pg] <- NA
-pos_metadata[, pg] <- lapply(pos_metadata[, pg], function(x) rep(list(), length(x)))
+pos_metadata[, pg] <- lapply(
+    pos_metadata[, pg],
+    function(x) rep(list(), length(x))
+)
 
 for (i in 1:nrow(pos_metadata)) {
     cat(i, "/", nrow(pos_metadata), "\n")
     df <- lapply(
         params,
         function(x) {
-            out <- as.data.frame(pos_metadata$test[[i]], Parameter=x)$GeneName
+            out <- as.data.frame(pos_metadata$test[[i]], Parameter = x)$GeneName
             if (length(out)) {
                 out
             } else {
@@ -61,9 +64,12 @@ for (i in 1:nrow(pos_metadata_test)) {
 }
 
 jd <- pos_metadata_test[, c("nsubsets", jp)]
-mdf <- reshape2::melt(jd, id.var="nsubsets")
+mdf <- reshape2::melt(jd, id.var = "nsubsets")
 mdf$variable <- gsub("Jaccard", "", mdf$variable)
-mdf$nsubsets <- factor(mdf$nsubsets, levels = sort(unique(as.numeric(mdf$nsubsets))))
+mdf$nsubsets <- factor(
+    mdf$nsubsets,
+    levels = sort(unique(as.numeric(mdf$nsubsets)))
+)
 
 mdf$variable <- plyr::revalue(
     mdf$variable,
