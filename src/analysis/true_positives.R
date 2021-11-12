@@ -10,17 +10,29 @@ files <- list.files(
     pattern = ".*.rds",
     full.names = TRUE
 )
+files_advi <- files[grepl("advi", files)]
+files <- files[!grepl("advi", files)]
+# todo: advi bit
 
 pos_metadata <- data.frame(
-    data = gsub(".*data-(\\w+-\\w+).*", "\\1", files),
+    data = "ibarra-soria",
     nsubsets = gsub(".*nsubsets-(\\d+).*", "\\1", files),
-    seed = gsub(".*seed-(\\d+).*", "\\1", files)
+    seed = gsub(".*seed-(\\d+).*", "\\1", files),
+    file = files
 )
 
-pos_metadata$test <- lapply(seq_along(files),
+pos_metadata_advi <- data.frame(
+    data = "ibarra-soria",
+    nsubsets = 0,
+    seed = gsub(".*-(\\d+).rds", "\\1", files_advi),
+    file = files_advi
+)
+pos_metadata <- rbind(pos_metadata, pos_metadata_advi)
+
+pos_metadata$test <- lapply(seq_along(pos_metadata$file),
     function(i) {
-        cat(i, "/", length(files), "\n")
-        readRDS(files[[i]])$test
+        cat(i, "/", nrow(pos_metadata), "\n")
+        readRDS(pos_metadata$file[[i]])$test
     }
 )
 params <- c("Mean", "Disp", "ResDisp")
@@ -49,7 +61,7 @@ for (i in 1:nrow(pos_metadata)) {
     }
 }
 
-ref <- pos_metadata[pos_metadata$nsubsets == 1, ]
+ref <- pos_metadata[which(pos_metadata$nsubsets == 1), ]
 pos_metadata_test <- pos_metadata[pos_metadata$nsubsets != 1, ]
 jp <- paste0(params, "Jaccard")
 pos_metadata_test[, jp] <- NA
@@ -64,25 +76,41 @@ for (i in 1:nrow(pos_metadata_test)) {
 }
 
 jd <- pos_metadata_test[, c("nsubsets", jp)]
-mdf <- reshape2::melt(jd, id.var = "nsubsets")
-mdf$variable <- gsub("Jaccard", "", mdf$variable)
-mdf$nsubsets <- factor(
-    mdf$nsubsets,
-    levels = sort(unique(as.numeric(mdf$nsubsets)))
+mdf_tp <- reshape2::melt(jd, id.var = "nsubsets")
+mdf_tp$variable <- gsub("Jaccard", "", mdf_tp$variable)
+mdf_tp$nsubsets <- factor(
+    mdf_tp$nsubsets,
+    levels = sort(unique(as.numeric(mdf_tp$nsubsets)))
 )
 
-mdf$variable <- plyr::revalue(
-    mdf$variable,
+mdf_tp$variable <- plyr::revalue(
+    mdf_tp$variable,
     replace = c(
         "Mean" = "mu",
         "Disp" = "delta",
         "ResDisp" = "epsilon"
     )
 )
-g <- ggplot(mdf) +
-    aes(nsubsets, y = value, colour = variable) +
+mdf_tp$variable <- factor(
+    mdf_tp$variable,
+    levels = c("mu", "delta", "epsilon")
+)
+mdf_tp_advi <- mdf_tp %>%
+    filter(nsubsets == 0) %>%
+    group_by(variable) %>%
+    summarise(value = mean(value))
+mdf_tp <- mdf_tp[mdf_tp$nsubsets != 0, ]
+
+g <- ggplot() +
     geom_quasirandom(
+        data = mdf_tp,
+        aes(nsubsets, y = value, colour = variable),
         dodge.width = 0.3, size = 0.8, width = 0.1, groupOnX = TRUE
+    ) +
+    geom_hline(
+        data = mdf_tp_advi,
+        linetype = "dashed",
+        aes(colour = variable, yintercept = value)
     ) +
     labs(x = "Number of partitions", y = "Jaccard Index") +
     ylim(0, 1) +

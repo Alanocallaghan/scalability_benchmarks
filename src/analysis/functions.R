@@ -243,7 +243,7 @@ do_de_plot <- function(i, maxdf, references) {
   )
   ggsave(all,
     file = here(sprintf("figs/de/mu_%s_%s.pdf", d, b)),
-    width = 7.5, height = 4
+    width = 8, height = 3
   )
   g1 <- BASiCS_PlotDE(de@Results[[3]],
     Plots = "MA",
@@ -272,7 +272,7 @@ do_de_plot <- function(i, maxdf, references) {
   # )
   ggsave(all,
     file = here(sprintf("figs/de/epsilon_%s_%s.pdf", d, b)),
-    width = 7.5, height = 4
+    width = 8, height = 3
   )
   g
 }
@@ -501,4 +501,110 @@ do_ess_plot <- function(i, maxdf, references) {
 
 paste_aes <- function(...) {
   paste0("`", ..., "`")
+}
+
+
+plot_hpds <- function(
+      summary1,
+      summary2,
+      param = "mu",
+      ord,
+      scalename = "Normalisation    ",
+      labels = c("Inferred", "Fixed")
+    ) {
+
+    df1 <- as.data.frame(summary1@parameters[[param]])
+    df2 <- as.data.frame(summary2@parameters[[param]])
+    # ord <- order(df1$median)
+    df1 <- df1[ord, ]
+    df2 <- df2[ord, ]
+    df1$index <- 1:nrow(df1)
+    df2$index <- 1:nrow(df2)
+
+    if (param %in% c("mu", "delta")) {
+        scale <- scale_y_log10(name = param)
+    } else {
+        scale <- scale_y_continuous(name = param)
+    }
+
+    ggplot() +
+        geom_line(
+            data = df1,
+            alpha = 0.6,
+            aes(x = index, y = median, colour = labels[[1]])
+        ) +
+        geom_line(
+            data = df2,
+            alpha = 0.6,
+            aes(x = index, y = median, colour = labels[[2]])
+        ) +
+        geom_ribbon(
+            data = df1,
+            alpha = 0.4,
+            aes(x = index, ymin = lower, ymax = upper, fill = labels[[1]])
+        ) +
+        geom_ribbon(
+            data = df2,
+            alpha = 0.4,
+            aes(x = index, ymin = lower, ymax = upper, fill = labels[[2]])
+        ) +
+        scale +
+        xlab("Gene") +
+        guides(colour = "none") +
+        theme(legend.position = "bottom") +
+        theme(
+            axis.ticks.x = element_blank(),
+            axis.text.x = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank()
+        ) +
+        scale_colour_manual(
+            name = scalename,
+            values = setNames(c("firebrick", "dodgerblue"), labels),
+            aesthetics = c("fill", "colour")
+        )
+}
+
+
+plot_hpd_diff <- function(summary_ref, summary_dc, param = "mu", ord,
+      ylab = sprintf("Difference in posterior quantities\n(%s)", param)) {
+    df_var <- as.data.frame(summary_ref@parameters[[param]])
+    df_fix <- as.data.frame(summary_dc@parameters[[param]])
+    # ord <- order(df_var$median)
+    df_var <- df_var[ord, ]
+    df_fix <- df_fix[ord, ]
+    df_diff <- df_var - df_fix
+    df_diff$index <- 1:nrow(df_var)
+
+    ggplot() +
+        geom_ribbon(
+            data = df_diff,
+            colour = "darkgoldenrod",
+            alpha = 0.5,
+            aes(x = index, ymin = lower, ymax = upper)
+        ) +
+        geom_line(
+            data = df_diff,
+            alpha = 0.8,
+            aes(x = index, y = median)
+        ) +
+        labs(
+          x = "Gene",
+          y = ylab
+        ) +
+        theme(
+            axis.ticks.x = element_blank(),
+            axis.text.x = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank()
+        )
+
+        # +
+        # guides(colour = "none") +
+        # theme(legend.position = "bottom") +
+        # scale_colour_manual(
+        #     name = "Normalisation    ",
+        #     values = c("firebrick", "dodgerblue"),
+        #     aesthetics = c("fill", "colour")
+        # )
 }

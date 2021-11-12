@@ -12,9 +12,12 @@
 # library("scater")
 # library("scran")
 # library("SingleCellExperiment")
-module load roslin/gcc/7.3.0
 
-mamba create -n scalability \
+if [ -f "/etc/profile.d/modules.sh" ]; then
+    module load roslin/gcc/7.3.0
+fi
+
+mamba create -y -n scalability \
     r-base=4.1.1 \
     r-argparse \
     r-coda \
