@@ -4,7 +4,8 @@
 ##
 ###############################################################################
 
-df <- do_de(df, ref_df = references, match_column = "data", data_dims)
+df <- do_de(df, ref_df = references, match_column = "data", data_dims,
+  mc.cores = 2)
 
 
 ###############################################################################
@@ -82,7 +83,8 @@ g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(
     name = "Portion of genes perturbed",
-    labels = scales::percent
+    labels = scales::percent,
+    limits = c(0, 1)
   ) +
   theme(text = element_text(size = 18)) +
   scale_color_brewer(name = "Parameter", palette = "Set1")
