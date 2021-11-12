@@ -67,7 +67,9 @@ plot_hpds <- function(summary_var, summary_fix, param = "mu", ord) {
         theme(legend.position = "bottom") +
         theme(
             axis.ticks.x = element_blank(),
-            axis.text.x = element_blank()
+            axis.text.x = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank()
         ) +
         scale_colour_manual(
             name = "Normalisation    ",

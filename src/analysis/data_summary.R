@@ -29,5 +29,6 @@ out <- xtable(
 )
 print(out,
     include.rownames = FALSE,
+    hline.after = 0,
     file = "tables/data-summary.tex"
 )
