@@ -9,12 +9,17 @@ source(here("src/analysis/preamble.R"))
 theme_set(theme_bw())
 source(here("src/analysis/functions.R"))
 
+
 rm_files <- list.files("outputs/removing/divide", full.names = TRUE)
+rm_files <- rm_files[grep("chen", rm_files)]
+rm_ref_files <- list.files("outputs/removing/reference", full.names = TRUE)
+rm_ref_files <- rm_ref_files[grep("chen", rm_ref_files)]
+
+
 rmt <- file2triplets(rm_files)
 rmt <- rmt[as.logical(sapply(rmt, length))]
 rm_df <- read_triplets(rmt, combine = TRUE)
 
-rm_ref_files <- list.files("outputs/removing/reference", full.names = TRUE)
 ref_df_rm <- read_triplets(file2triplets(rm_ref_files), combine = TRUE)
 ref_df_rm$chain <- lapply(ref_df_rm$file, readRDS)
 
@@ -43,7 +48,10 @@ mdf_rm$proportion_retained <- factor(
   )
 )
 
-mdf_rm_sub <- mdf_rm[mdf_rm$data == "zeisel", ]
+# stop()
+
+# mdf_rm_sub <- mdf_rm[mdf_rm$data == "zeisel", ]
+mdf_rm_sub <- mdf_rm[mdf_rm$data == "chen", ]
 
 
 g <- ggplot(mdf_rm_sub) +

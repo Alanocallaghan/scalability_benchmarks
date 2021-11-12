@@ -82,12 +82,13 @@ mdf$variable <- plyr::revalue(
 g <- ggplot(mdf) +
     aes(nsubsets, y = value, colour = variable) +
     geom_quasirandom(
-        dodge.width = 0.3, size = 0.8, width = 0.05, groupOnX = TRUE
+        dodge.width = 0.3, size = 0.8, width = 0.1, groupOnX = TRUE
     ) +
-    labs(x = "Number of subsets", y = "Jaccard Index") +
+    labs(x = "Number of partitions", y = "Jaccard Index") +
     ylim(0, 1) +
     scale_color_brewer(palette = "Set1", name = "Parameter") +
     theme(legend.position = "bottom") +
+    theme(panel.grid.minor = element_blank()) +
     theme_bw()
 
-ggsave(file = "figs/true_positives.pdf", width = 5, height = 5)
+ggsave(file = "figs/true_positives.pdf", width = 5, height = 4)

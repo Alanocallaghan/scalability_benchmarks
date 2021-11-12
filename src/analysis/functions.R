@@ -18,10 +18,10 @@ file2triplets <- function(files) {
 }
 
 ## Convergence first
-parse_elbo <- function(c) {
-  c <- gsub("Chain 1:\\s+", "", c)
-  normal <- grep("Drawing", c)
-  abnormal <- grep("Informational", c)
+parse_elbo <- function(x) {
+  x <- gsub("Chain 1:\\s+", "", x)
+  normal <- grep("Drawing", x)
+  abnormal <- grep("Informational", x)
   if (!length(normal)) {
     stop("Something is deeply wrong here")
   }
@@ -29,7 +29,7 @@ parse_elbo <- function(c) {
   if (length(abnormal)) {
     ind_end <- abnormal - 1
   }
-  elbo <- c[(grep("Begin stochastic", c) + 1):ind_end]
+  elbo <- x[(grep("Begin stochastic", x) + 1):ind_end]
   ## This ain't quite right
   elbo <- gsub("MAY BE DIVERGING... INSPECT ELBO", "", elbo, fixed = TRUE)
   elbo[-c(1, grep("CONVERGED", elbo))] <- paste(
@@ -57,7 +57,8 @@ do_de <- function(
     mc.cores = options("mc.cores")
   ) {
 
-  edr <- lapply(
+  # edr <- parallel::mclapply(
+  edr <- parallel::mclapply(
     seq_len(nrow(df)),
     function(i) {
       cat(i, "/", nrow(df), "\n")
@@ -105,7 +106,8 @@ do_de <- function(
           PlotOffset = FALSE,
           EFDR_M = NULL,
           EFDR_D = NULL,
-          EFDR_R = NULL
+          EFDR_R = NULL,
+          MinESS = NA
         )
       )
       lapply(
@@ -115,9 +117,7 @@ do_de <- function(
           if (!length(l)) NULL else l
         }
       )
-    }
-    # ,
-    # mc.cores = mc.cores
+    }, mc.cores = mc.cores
   )
 
   edr_df <- do.call(rbind, edr)
@@ -154,12 +154,12 @@ sourceme <- function(x) {
 do_fit_plot <- function(i, maxdf, references) {
   cat(i, "/", nrow(maxdf), "\n")
   maxdf <- maxdf[i, ]
-  c <- readRDS(maxdf[["file"]][[1]])
+  cc <- readRDS(maxdf[["file"]][[1]])
   b <- maxdf[["by"]]
-  if (is.list(c)) {  
+  if (is.list(cc)) {  
     suppressMessages(
-      c <- BASiCS:::.combine_subposteriors(
-        c,
+      cc <- BASiCS:::.combine_subposteriors(
+        cc,
         SubsetBy = "gene"
       )
     )
@@ -167,10 +167,10 @@ do_fit_plot <- function(i, maxdf, references) {
   d <- maxdf[["data"]]
   rc <- references[[which(references$data == d)[[1]], "chain"]]
   l2 <- if (b == "advi") "ADVI" else "Divide and conquer"
-  c <- BASiCS:::.offset_correct(rc, c)
-  g1 <- BASiCS_ShowFit(rc) 
-  g2 <- BASiCS_ShowFit(c) 
-  ggsave(g1, 
+  cc <- BASiCS:::.offset_correct(cc, rc)
+  g1 <- BASiCS_ShowFit(rc)
+  g2 <- BASiCS_ShowFit(cc)
+  ggsave(g1,
     file = here(sprintf("figs/fit/%s_ref.pdf", d)),
     width = 4,
     height = 3
@@ -208,49 +208,76 @@ do_de_plot <- function(i, maxdf, references) {
     GeneOrder = rownames(rc)
   )
 
-  l2 <- if (b == "advi") "ADVI" else "D & C"
+  l2 <- if (b == "advi") "ADVI" else "divide & conquer"
   suppressMessages(
     de <- BASiCS_TestDE(
       rc, cc,
-      GroupLabel1 = "Ref",
+      GroupLabel1 = "reference",
       GroupLabel2 = l2,
       Plot = FALSE,
       PlotOffset = FALSE,
       EFDR_M = NULL,
       EFDR_D = NULL,
-      EFDR_R = NULL
+      EFDR_R = NULL,
+      MinESS = NA
     )
   )
   g1 <- BASiCS_PlotDE(de@Results[[1]],
     Plots = "MA",
     Mu = de@Results$Mean@Table$MeanOverall
-  )
+  ) +
+    theme(legend.position = "bottom") +
+    ylab("log2(fold change)\nreference vs divide and conquer")
   g2 <- BASiCS_PlotDE(de@Results[[1]],
     Plots = "Volcano",
     Mu = de@Results$Mean@Table$MeanOverall
-  ) + theme(legend.position = "bottom")
-  gg2 <- ggplotGrob(g2)
+  ) +
+    xlab("log2(fold change)\nreference vs divide and conquer") +
+    theme(legend.position = "bottom")
+  gg <- ggplotGrob(g2)
   legend <- gg$grobs[[grep("guide-box", gg$layout$name)]]
   t <- theme(legend.position = "none")
-  together <- cowplot::plot_grid(g1 + t, g2 + t, labels = "AUTO")
-  all <- cowplot::plot_grid(together, legend, nrow = 2, rel_height = 0.9, 0.1)
+  together <- cowplot::plot_grid(g1 + t, g2 + t, labels = "AUTO", align = "h")
+  all <- cowplot::plot_grid(
+    together, legend, nrow = 2, rel_heights = c(0.85, 0.15)
+  )
   ggsave(all,
     file = here(sprintf("figs/de/mu_%s_%s.pdf", d, b)),
-    width = 6, height = 5
+    width = 7.5, height = 4
   )
-  g <- BASiCS_PlotDE(
-    de@Results[[3]],
-    Plots = c("MA", "Volcano"),
+  g1 <- BASiCS_PlotDE(de@Results[[3]],
+    Plots = "MA",
     Mu = de@Results$Mean@Table$MeanOverall
+  ) +
+    theme(legend.position = "bottom") +
+    ylab("Difference\nreference vs divide and conquer")
+  g2 <- BASiCS_PlotDE(de@Results[[3]],
+    Plots = "Volcano",
+    Mu = de@Results$Mean@Table$MeanOverall
+  ) +
+    theme(legend.position = "bottom") +
+    xlab("Difference\nreference vs divide and conquer")
+  gg <- ggplotGrob(g2)
+  legend <- gg$grobs[[grep("guide-box", gg$layout$name)]]
+  t <- theme(legend.position = "none")
+  together <- cowplot::plot_grid(g1 + t, g2 + t, labels = "AUTO", align = "h")
+  all <- cowplot::plot_grid(
+    together, legend, nrow = 2,
+    rel_heights = c(0.85, 0.15)
   )
-  ggsave(g,
+  # g <- BASiCS_PlotDE(
+  #   de@Results[[3]],
+  #   Plots = c("MA", "Volcano"),
+  #   Mu = de@Results$Mean@Table$MeanOverall
+  # )
+  ggsave(all,
     file = here(sprintf("figs/de/epsilon_%s_%s.pdf", d, b)),
-    width = 6, height = 5
+    width = 7.5, height = 4
   )
   g
 }
 
-plot_hpd_interval <- function(
+plot_hpd_interval_width <- function(
     chain1,
     xname,
     chain2,
@@ -261,9 +288,8 @@ plot_hpd_interval <- function(
     ...
   ) {
 
-  x <- extract_hpd_interval(chain1, param)
-  y <- extract_hpd_interval(chain2, param)
-
+  x <- extract_hpd_interval_width(chain1, param)
+  y <- extract_hpd_interval_width(chain2, param)
   df <- data.frame(
     x,
     y
@@ -347,14 +373,8 @@ param_plot <- function(
     )
   ) +
     # geom_point(
-    #   alpha = 0.01, na.rm = TRUE) +
-    # stat_density2d(
-    #     aes(
-    #       fill = sqrt(..density..)),
-    #       geom = "tile",
-    #       contour = FALSE,
-    #       n = 256
-    #   )  +
+    #   alpha = 0.1, na.rm = TRUE
+    # ) +
     scale_fill_viridis(direction = 1, name = "Density") +
     geom_hex(aes(fill = ..density..), bins = bins, na.rm = TRUE) +
     guides(fill = "none") +
@@ -369,7 +389,7 @@ param_plot <- function(
   g
 }
 
-extract_hpd_interval <- function(chain, param) {
+extract_hpd_interval_width <- function(chain, param) {
   summ <- BASiCS::Summary(chain)
   abs(summ@parameters[[param]][, 3] - summ@parameters[[param]][, 2])
 }
@@ -380,44 +400,41 @@ do_hpd_plots <- function(i, maxdf, references) {
   d <- maxdf[["data"]]
   b <- maxdf[["by"]]
   rc <- references[[which(references$data == d)[[1]], "chain"]]
-  c <- readRDS(maxdf[["file"]][[1]])
-  if (is.list(c)) {  
+  cc <- readRDS(maxdf[["file"]][[1]])
+  if (is.list(cc)) {
     suppressMessages(
-      c <- BASiCS:::.combine_subposteriors(
-        c,
+      cc <- BASiCS:::.combine_subposteriors(
+        cc,
         GeneOrder = rownames(rc),
         CellOrder = colnames(rc),
         SubsetBy = "gene"
       )
     )
   }
-  c <- BASiCS:::.offset_correct(rc, c)
+  cc <- BASiCS:::.offset_correct(cc, rc)
   l2 <- if (b == "advi") "ADVI" else "D & C"
-  l3 <- sprintf(
-    "log2(%s HPD interval width / Reference HPD interval width)",
-    l2
-  )
+  l3 <- "log2(HPD interval width ratio)"
   l <- list(
-    plot_hpd_interval(
+    plot_hpd_interval_width(
       rc,
       "Reference",
-      c,
+      cc,
       l2,
       "mu",
       type = "ma",
       log = FALSE,
       bins = 50
-    ) + 
+    ) +
       labs(
         title = NULL,
         x = bquote(mu[i]),
         y = l3
       ) +
       geom_hline(aes(yintercept = 0)),
-    plot_hpd_interval(
+    plot_hpd_interval_width(
       rc,
       "Reference",
-      c,
+      cc,
       l2,
       "epsilon",
       type = "ma",
@@ -448,24 +465,23 @@ do_ess_plot <- function(i, maxdf, references) {
   d <- maxdf[["data"]]
   b <- maxdf[["by"]]
   rc <- references[[which(references$data == d)[[1]], "chain"]]
-  c <- readRDS(maxdf[["file"]][[1]])
-  if (is.list(c)) {  
+  cc <- readRDS(maxdf[["file"]][[1]])
+  if (is.list(cc)) {
     suppressMessages(
-      c <- BASiCS:::.combine_subposteriors(
-        c,
+      cc <- BASiCS:::.combine_subposteriors(
+        cc,
         GeneOrder = rownames(rc),
         CellOrder = colnames(rc),
         SubsetBy = "gene"
       )
     )
   }
-  c <- BASiCS:::.offset_correct(rc, c)
-
-  ess <- effectiveSize(as.mcmc(c@parameters[["epsilon"]]))
+  cc <- BASiCS:::.offset_correct(cc, rc)
+  ess <- BASiCS_EffectiveSize(cc, "epsilon")
 
   df <- data.frame(
     x = colMedians(rc@parameters[["mu"]]),
-    y = colMedians(rc@parameters[["epsilon"]] - c@parameters[["epsilon"]]),
+    y = colMedians(rc@parameters[["epsilon"]] - cc@parameters[["epsilon"]]),
     color = ess
   )
   df <- df[order(df$color, decreasing = TRUE), ]

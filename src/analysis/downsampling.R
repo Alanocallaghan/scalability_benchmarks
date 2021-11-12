@@ -40,7 +40,7 @@ mdf_ds$downsample_rate_t <- factor(
 )
 
 
-mdf_ds_sub <- mdf_ds[mdf_ds$data == "tung", ]
+mdf_ds_sub <- mdf_ds[mdf_ds$data == "chen", ]
 
 g <- ggplot(mdf_ds_sub) +
   aes(
@@ -53,7 +53,7 @@ g <- ggplot(mdf_ds_sub) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   scale_y_continuous(
     label = scales::percent,
-    limits = c(0, max(0.25, max(mdf_ds$value)))
+    limits = c(0, max(0.25, max(mdf_ds_sub$value)))
   ) +
   theme(legend.position = "bottom") +
   labs(x = "Expected median library size", y = "Portion of genes perturbed")

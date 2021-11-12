@@ -11,7 +11,6 @@ advi_df <- read_triplets(advi_triplets)
 dc_files <- list.files("outputs/divide_and_conquer", full.names = TRUE)
 dc_df <- read_triplets(file2triplets(dc_files), combine = TRUE)
 
-
 file_df <- rbind(advi_df, dc_df)
 # file_df <- dc_df
 df <- merge(file_df, data_dims)
@@ -24,7 +23,7 @@ sourceme(here("src/analysis/chain_plots.R"))
 
 sourceme(here("src/analysis/normalisation_comparison.R"))
 
-sourceme(here("src/analysis/ess.R"))
+# sourceme(here("src/analysis/ess.R"))
 sourceme(here("src/analysis/hpd.R"))
 
 
