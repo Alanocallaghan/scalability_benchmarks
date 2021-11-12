@@ -10,7 +10,7 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-sce <- readRDS("data/chen.rds")
+sce <- readRDS("rdata/chen.rds")
 
 fit_fix <- BASiCS_MCMC(
   sce,

@@ -136,17 +136,15 @@ rule batchinfo_plot:
 
 rule true_positive_plot:
     input:
-        expand(
+        dc = expand(
             "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
             nsubsets = chains,
             seed = seeds
+        ),
+        advi = expand(
+            "outputs/true-positives/data-ibarra-soria_advi-{seed}.rds",
+            seed = seeds
         )
-        # ,
-        # dc = expand(
-        # advi = expand(
-        #     "data-ibarra-soria_advi-{seed}.rds",
-        #     seed = seeds
-        # )
     output: 
         "figs/true_positives.pdf"
     shell:

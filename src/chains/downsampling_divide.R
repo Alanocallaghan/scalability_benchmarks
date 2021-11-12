@@ -15,7 +15,7 @@ args <- parser$parse_args()
 
 source(here("src/chains/benchmark_code.R"))
 
-data <- readRDS(here("data", paste0(args[["data"]], ".rds")))
+data <- readRDS(here("rdata", paste0(args[["data"]], ".rds")))
 dir <- args[["output"]]
 dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 

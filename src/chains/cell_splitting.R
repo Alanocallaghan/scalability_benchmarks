@@ -17,7 +17,7 @@ args <- parser$parse_args()
 theme_set(theme_bw())
 
 fit <- BASiCS_MCMC(
-  readRDS("data/zeisel.rds"),
+  readRDS("rdata/zeisel.rds"),
   SubsetBy = "cell",
   NSubsets = 32,
   PrintProgress = FALSE,

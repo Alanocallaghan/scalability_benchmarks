@@ -12,7 +12,7 @@ parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
 
-data <- readRDS(paste0("data/", args[["data"]], ".rds"))
+data <- readRDS(paste0("rdata/", args[["data"]], ".rds"))
 
 
 bi <- BASiCS_MCMC(
