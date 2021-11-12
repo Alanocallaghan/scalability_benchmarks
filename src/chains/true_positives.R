@@ -16,7 +16,7 @@ args <- parser$parse_args()
 # stop()
 set.seed(args[["seed"]])
 
-droplet_sce <- readRDS("data/ibarra-soria.rds")
+droplet_sce <- readRDS("rdata/ibarra-soria.rds")
 
 # Presomitic mesoderm
 ind_presom <- colData(droplet_sce)[["Cell_type"]] == "PSM"

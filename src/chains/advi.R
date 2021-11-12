@@ -13,7 +13,7 @@ args <- parser$parse_args()
 
 
 set.seed(args[["seed"]])
-data <- readRDS(here("data", paste0(args[["data"]], ".rds")))
+data <- readRDS(here("rdata", paste0(args[["data"]], ".rds")))
 dir <- args[["output"]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 
