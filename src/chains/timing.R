@@ -14,7 +14,7 @@ args <- parser$parse_args()
 dir.create("outputs/time/", recursive = TRUE, showWarnings = FALSE)
 data <- args[["data"]]
 # cat("Doing", data, "\n")
-sce <- readRDS(paste0("data/", data, ".rds"))
+sce <- readRDS(paste0("rdata/", data, ".rds"))
 spikes <- "spike-ins" %in% altExpNames(sce)
 time_mcmc <- function(n, times = 1) {
   if (n == 1) {
