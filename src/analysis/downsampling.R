@@ -26,19 +26,20 @@ mdf_ds$variable <- gsub("pDiffExp", "mu", mdf_ds$variable)
 mdf_ds$variable <- gsub("pDiffDisp", "delta", mdf_ds$variable)
 mdf_ds$variable <- gsub("pDiffResDisp", "epsilon", mdf_ds$variable)
 mdf_ds$variable <- factor(mdf_ds$variable, levels = c("mu", "delta", "epsilon"))
+mdf_ds <- merge(mdf_ds, data_dims)
+
 
 # ref_df_ds[[1, "data"]]
-sce <- readRDS(paste0("data/", "tung", ".rds"))
-libsize <- colSums(counts(sce))
-mdf_ds$mean_libsize <- median(libsize) * mdf_ds$downsample_rate
+# sce <- readRDS(paste0("rdata/", "tung", ".rds"))
+# libsize <- colSums(counts(sce))
+mdf_ds$mean_libsize <- mdf_ds$libsize * mdf_ds$downsample_rate
 mdf_ds$downsample_rate_t <- factor(
   paste(mdf_ds$downsample_rate * 100, "%"),
-  levels = paste(
+  levels = paste0(
     sort(unique(ds_df$downsample_rate), decreasing = TRUE) * 100,
     "%"
   )
 )
-
 
 mdf_ds_sub <- mdf_ds[mdf_ds$data == "chen", ]
 

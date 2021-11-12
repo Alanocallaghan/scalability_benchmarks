@@ -7,15 +7,24 @@ time_data <- do.call(c,
   sapply(time_files,
   function(x) {
     # print(x)
-    readRDS(x)
-  })
+    mean(readRDS(x))
+  },
+  simplify = FALSE)
 )
 time_df_dc <- data.frame(
-  data = gsub(".*//(\\w+)_.*", "\\1", names(time_data)),
-  chains = gsub(".*//\\w+_(\\d+).rds\\d+", "\\1", names(time_data)),
+  data = gsub(
+    ".*(chen|buettner|zeisel|tung|ibarra-soria).*",
+    "\\1",
+    names(time_data)
+  ),
+  chains = gsub(
+    ".*(chen|buettner|zeisel|tung|ibarra-soria)_(\\d+).rds", "\\2",
+    names(time_data)
+  ),
   time = time_data,
   row.names = NULL
 )
+time_df_dc <- time_df_dc[time_df_dc$data != "ibarra-soria", ]
 
 
 advi_time_files <- list.files(
@@ -24,7 +33,7 @@ advi_time_files <- list.files(
   pattern = "time.rds",
   full.names = TRUE
 )
-                                                                         
+                                                                 
 advi_time_df <- data.frame(
   data = gsub(
     ".*/data-(\\w+)_seed-(\\d+)/time.rds", "\\1",
@@ -54,14 +63,9 @@ advi_time_df <- advi_time_df %>%
   )
 
 advi_time_df$data <- sub(
-  "([[:alpha:]])", "\\U\\1",
+  "([\\w])([\\w]+)", "\\U\\1\\L\\2",
   advi_time_df$data,
   perl = TRUE
-)
-advi_time_df$data <- sub(
-  "Pbmc",
-  "10x PBMC",
-  advi_time_df$data
 )
 
 
@@ -77,16 +81,10 @@ time_df_merge <- time_df_merge %>%
   )
 
 time_df_merge$data <- sub(
-  "([[:alpha:]])", "\\U\\1",
+  "([\\w])([\\w]+)", "\\U\\1\\L\\2",
   time_df_merge$data,
   perl = TRUE
 )
-time_df_merge$data <- sub(
-  "Pbmc",
-  "10x PBMC",
-  time_df_merge$data
-)
-
 
 
 time_df <- time_df_merge %>% 

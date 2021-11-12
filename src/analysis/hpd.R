@@ -6,7 +6,7 @@ get_normalised_hpd_width <- function(chain, param) {
 }
 
 plot_all_hpds <- function(df, param) {
-  hpds_all <- mclapply(
+  hpds_all <- parallel::mclapply(
     seq_len(nrow(df)),
     function(i) {
       cat(i, "/", nrow(df), "\n")
@@ -67,7 +67,7 @@ plot_all_hpds <- function(df, param) {
 
 
   hpdf_nr[["data"]] <- sub(
-    "([[:alpha:]])", "\\U\\1",
+    "([\\w])([\\w]+)", "\\U\\1\\L\\2",
     hpdf_nr[["data"]],
     perl = TRUE
   )

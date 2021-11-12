@@ -26,3 +26,9 @@ data_dims <- vapply(
 data_dims <- as.data.frame(t(data_dims))
 colnames(data_dims) <- c("nGenes", "nCells")
 data_dims[["data"]] <- datasets
+data_dims[["libsize"]] <- vapply(datasets,
+  function(x) {
+    mean(colSums(counts(readRDS(paste0("rdata/", x, ".rds")))))
+  },
+  numeric(1)
+)

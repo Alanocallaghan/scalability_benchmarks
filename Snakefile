@@ -35,7 +35,11 @@ rule all:
         "figs/hpd_mu.pdf",
         "figs/fixnu-comparison.pdf",
         "figs/hpd_epsilon.pdf",
-        "tables/data-summary.tex"
+        "tables/data-summary.tex",
+        expand(
+            "figs/hpd/{dataset}",
+            dataset = data
+        )
         # ,
         # "figs/ess_mu.pdf",
         # "figs/ess_epsilon.pdf",
@@ -172,6 +176,21 @@ rule true_positive_plot:
 #         Rscript src/analysis/hpd.R
 #         Rscript src/analysis/ess.R
 #         """
+
+rule hpd_comparison_plot:
+    resources: mem_mb=20000
+    input:
+        reference = "outputs/divide_and_conquer/data-{dataset}_nsubsets-16_seed-14_by-gene/chains.rds",
+        divide = "outputs/divide_and_conquer/data-{dataset}_nsubsets-1_seed-14_by-gene/chains.rds",
+        advi = "outputs/advi/data-{dataset}_seed-14/chain.rds"
+    output:
+        directory("figs/hpd/{dataset}")
+    shell:
+        """
+        Rscript src/analysis/hpd_comparison.R \
+            -d {wildcards.dataset} \
+            -o {output}
+        """
 
 rule removing_cells_plot:
     resources: mem_mb=20000

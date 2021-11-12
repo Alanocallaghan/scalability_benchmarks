@@ -27,15 +27,11 @@ mdf$variable <- factor(
   levels = c("mu", "delta", "epsilon")
 )
 
+
 mdf$data <- sub(
-  "([[:alpha:]])", "\\U\\1",
+  "([\\w])([\\w]+)", "\\U\\1\\L\\2",
   mdf$data,
   perl = TRUE
-)
-mdf$data <- sub(
-  "Pbmc",
-  "10x PBMC",
-  mdf$data
 )
 
 # mdf <- mdf %>% filter(variable %in% c("mu", "epsilon"))
@@ -83,8 +79,7 @@ g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(
     name = "Portion of genes perturbed",
-    labels = scales::percent,
-    limits = c(0, 1)
+    labels = scales::percent
   ) +
   theme(text = element_text(size = 18)) +
   scale_color_brewer(name = "Parameter", palette = "Set1")
