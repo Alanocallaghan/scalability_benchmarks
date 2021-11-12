@@ -15,6 +15,9 @@ dir.create("outputs/time/", recursive = TRUE, showWarnings = FALSE)
 data <- args[["data"]]
 # cat("Doing", data, "\n")
 sce <- readRDS(paste0("rdata/", data, ".rds"))
+if (data == "ibarra-soria") {
+  sce <- sce[, sce$Cell_type == "PSM"]
+}
 spikes <- "spike-ins" %in% altExpNames(sce)
 time_mcmc <- function(n, times = 1) {
   if (n == 1) {

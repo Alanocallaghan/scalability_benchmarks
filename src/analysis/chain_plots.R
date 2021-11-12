@@ -6,14 +6,15 @@ dir.create("figs/de", showWarnings = FALSE, recursive = TRUE)
 
 
 ## Mean-variance curves and DE plots for worst for each data
-maxdfm <- df %>% filter(!is.na(chains)) %>% 
-  group_by(data) %>% 
+maxdfm <- df %>%
+  filter(!is.na(chains)) %>%
+  group_by(data) %>%
   top_n(n = 1, wt = nDiffExp) %>%
   distinct(data, .keep_all = TRUE)
 
-
-maxdfe <- df %>% filter(!is.na(chains)) %>% 
-  group_by(data) %>% 
+maxdfe <- df %>%
+  filter(!is.na(chains)) %>%
+  group_by(data) %>%
   top_n(n = 1, wt = nDiffResDisp) %>%
   distinct(data, .keep_all = TRUE)
 
@@ -66,7 +67,7 @@ cat("Fit ADVI\n")
 fit_plots_advi <- lapply(
   seq_len(nrow(maxdfadvie)),
   do_fit_plot,
-  maxdf = maxdfadvie, 
+  maxdf = maxdfadvie,
   references = references
 )
 
