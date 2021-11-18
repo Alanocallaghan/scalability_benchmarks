@@ -1,8 +1,8 @@
 library("here")
 
-get_normalised_hpd_width <- function(chain, param) {
+get_hpd_width <- function(chain, param) {
   hpd <- HPDinterval(as.mcmc(chain@parameters[[param]]))
-  (hpd[, "upper"] - hpd[, "lower"]) / rowMeans(hpd)
+  (hpd[, "upper"] - hpd[, "lower"])
 }
 
 plot_all_hpds <- function(df, param) {
@@ -25,9 +25,9 @@ plot_all_hpds <- function(df, param) {
         seed = df[[i, "seed"]],
         by = df[[i, "by"]],
         feature = colnames(chain@parameters[[param]]),
-        hpd = get_normalised_hpd_width(chain, param)
+        hpd = get_hpd_width(chain, param)
       )
-    }, mc.cores = 1
+    }, mc.cores = 4
   )
 
   hpdf_all <- bind_rows(hpds_all)
@@ -43,62 +43,48 @@ plot_all_hpds <- function(df, param) {
     group_by(data, chains, seed, by) %>% 
     arrange(feature, .by_group = TRUE)
 
-  hpdf_ref <- hpdf_ordered[
-    which(hpdf_ordered$chains == 1 & !is.na(hpdf_ordered$chains)),
-  ]
-  hpdf_nr <- hpdf_ordered[
-    which(hpdf_ordered$chains != 1 | is.na(hpdf_ordered$chains)),
-  ]
-
-  hpdf_nr <- as.data.frame(hpdf_nr)
-  hpdf_ref <- as.data.frame(hpdf_ref)
-
-  for (dataset in unique(hpdf_ref[["data"]])) {
-    ind_nr <- hpdf_nr[["data"]] == dataset
-    ind_r <- hpdf_ref[["data"]] == dataset
-    d1 <- hpdf_nr[ind_nr, ]
-    d2 <- hpdf_ref[ind_r, ]
-    stopifnot(all(d1$data == d2$data))
-    stopifnot(all(d1$feature == d2$feature))
-    # stopifnot(all(hpdf_nr[ind_nr, "data"] == hpdf_ref[ind_r, "data"]))
-    # stopifnot(all(hpdf_nr[ind_nr, "feature"] == hpdf_ref[ind_r, "feature"]))
-    hpdf_nr[ind_nr, "hpd"] <- hpdf_nr[ind_nr, "hpd"] - hpdf_ref[ind_r, "hpd"]
-  }
-
-
-  hpdf_nr[["data"]] <- sub(
+  hpdf_ordered[["data"]] <- sub(
     "([\\w])([\\w]+)", "\\U\\1\\L\\2",
-    hpdf_nr[["data"]],
+    hpdf_ordered[["data"]],
     perl = TRUE
   )
-  hpdf_nr[["data"]] <- sub(
-    "Pbmc",
-    "10x PBMC",
-    hpdf_nr[["data"]]
-  )
 
-
-  g <- ggplot(hpdf_nr, aes(y = hpd, x = chains, color = by, fill = by)) + 
+  g <- ggplot(hpdf_ordered, aes(y = hpd, x = chains, color = by, fill = by)) +
     geom_violin(alpha = 0.2) +
     geom_boxplot(alpha = 0.2, width = 0.1, outlier.colour = NA) +
-    facet_wrap(~data, scales = "free_x") +
-    # scale_fill_brewer(
-    #   name = "Inference method",
-    #   palette = "Dark2",
-    #   aesthetics = c("fill", "color")
-    # ) +
+    facet_wrap(~data, scales = "free_y") +
+    scale_fill_brewer(
+      name = "Inference method",
+      palette = "Dark2",
+      aesthetics = c("fill", "color")
+    ) +
+    theme(
+      legend.position = "bottom",
+      panel.grid = element_blank()
+    ) +
+    scale_y_log10() +
     labs(
       x = "Partitions",
-      y = "Normalised HPD width relative to AMWG normalised HPD width"
+      y = "HPD interval width"
     )
 
-  ggsave(g,
-    file = sprintf("figs/hpd_width_%s.pdf", param),
-    width = 7, height = 6
-  )
   invisible(g)
 }
+
 source(here("src/analysis/preamble.R"))
 
-plot_all_hpds(df, "mu")
-plot_all_hpds(df, "epsilon")
+g1 <- plot_all_hpds(df, "mu")
+ggsave(g1,
+  file = "figs/hpd_width_mu.pdf",
+  width = 6, height = 5
+)
+g2 <- plot_all_hpds(df, "delta")
+ggsave(g2,
+  file = "figs/hpd_width_delta.pdf",
+  width = 6, height = 5
+)
+g3 <- plot_all_hpds(df, "epsilon")
+ggsave(g3,
+  file = "figs/hpd_width_epsilon.pdf",
+  width = 6, height = 5
+)

@@ -13,7 +13,7 @@ parser <- ArgumentParser()
 parser$add_argument("-i", "--input")
 args <- parser$parse_args()
 
-if (is.null(args[["input"]]) {
+if (is.null(args[["input"]])) {
     args[["input"]] <- "outputs/fix_nu"
 }
 source("src/analysis/functions.R")
@@ -33,14 +33,8 @@ g1 <- plot_hpds(summary_var, summary_fix, "mu", ord)
 g2 <- plot_hpds(summary_var, summary_fix, "delta", ord)
 g3 <- plot_hpds(summary_var, summary_fix, "epsilon", ord)
 
-gg <- ggplotGrob(g1)
-legend <- gg$grobs[[grep("guide-box", gg$layout$name)]]
-
-t <- theme(legend.position = "none")
-
-top <- plot_grid(g1 + t, g2 + t, g3 + t, labels = "AUTO", nrow = 1)
-combined <- plot_grid(top, legend, nrow = 2, rel_heights = c(0.9, 0.1))
-ggsave("figs/fixnu-comparison.pdf", width = 9, height = 4)
+combined <- plot_with_legend_below(g1, g2, g3)
+ggsave("figs/fixnu-comparison.pdf", width = 8, height = 3)
 
 
 d1 <- plot_hpd_diff(summary_var, summary_fix, "mu", ord)
@@ -48,4 +42,4 @@ d2 <- plot_hpd_diff(summary_var, summary_fix, "delta", ord)
 d3 <- plot_hpd_diff(summary_var, summary_fix, "epsilon", ord)
 
 dop <- plot_grid(d1, d2, d3, labels = "AUTO", nrow = 1)
-ggsave("figs/fixnu-comparison-diff.pdf", width = 9, height = 3.7)
+ggsave("figs/fixnu-comparison-diff.pdf", width = 8, height = 3)

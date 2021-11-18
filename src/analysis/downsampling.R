@@ -57,6 +57,9 @@ g <- ggplot(mdf_ds_sub) +
     limits = c(0, max(0.25, max(mdf_ds_sub$value)))
   ) +
   theme(legend.position = "bottom") +
-  labs(x = "Expected median library size", y = "Portion of genes perturbed")
+  labs(
+    x = "Expected median library size",
+    y = "Portion of genes differentially expressed"
+  )
 
 ggsave("figs/downsampling.pdf", width = 5, height = 4)

@@ -196,7 +196,6 @@ ggsave("figs/chen_scran_basics.pdf", width = 4.5, height = 4)
 #   # geom_violin() +
 #   facet_wrap(~data, nrow = 2, ncol = 2) +
 #   scale_x_discrete(name = "Partitions") +
-#   scale_y_continuous(name = "Portion of genes perturbed", labels = scales::percent) +
 #   theme(text = element_text(size = 18))
 
 # ggsave(here("figs/norm_plot.pdf"), width = 12, height = 8)

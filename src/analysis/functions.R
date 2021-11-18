@@ -234,14 +234,8 @@ do_de_plot <- function(i, maxdf, references) {
   ) +
     xlab("log2(fold change)\nreference vs divide and conquer") +
     theme(legend.position = "bottom")
-  gg <- ggplotGrob(g2)
-  legend <- gg$grobs[[grep("guide-box", gg$layout$name)]]
-  t <- theme(legend.position = "none")
-  together <- cowplot::plot_grid(g1 + t, g2 + t, labels = "AUTO", align = "h")
-  all <- cowplot::plot_grid(
-    together, legend, nrow = 2, rel_heights = c(0.85, 0.15)
-  )
-  ggsave(all,
+  all <- plot_with_legend_below(g1, g2)
+  ggsave(
     file = here(sprintf("figs/de/mu_%s_%s.pdf", d, b)),
     width = 8, height = 3
   )
@@ -257,19 +251,7 @@ do_de_plot <- function(i, maxdf, references) {
   ) +
     theme(legend.position = "bottom") +
     xlab("Difference\nreference vs divide and conquer")
-  gg <- ggplotGrob(g2)
-  legend <- gg$grobs[[grep("guide-box", gg$layout$name)]]
-  t <- theme(legend.position = "none")
-  together <- cowplot::plot_grid(g1 + t, g2 + t, labels = "AUTO", align = "h")
-  all <- cowplot::plot_grid(
-    together, legend, nrow = 2,
-    rel_heights = c(0.85, 0.15)
-  )
-  # g <- BASiCS_PlotDE(
-  #   de@Results[[3]],
-  #   Plots = c("MA", "Volcano"),
-  #   Mu = de@Results$Mean@Table$MeanOverall
-  # )
+  all <- plot_with_legend_below(g1, g2)
   ggsave(all,
     file = here(sprintf("figs/de/epsilon_%s_%s.pdf", d, b)),
     width = 8, height = 3
@@ -528,14 +510,16 @@ plot_hpds <- function(
     }
 
     ggplot() +
-        geom_line(
+        geom_point(
             data = df1,
             alpha = 0.6,
+            size = 0.5,
             aes(x = index, y = median, colour = labels[[1]])
         ) +
-        geom_line(
+        geom_point(
             data = df2,
             alpha = 0.6,
+            size = 0.5,
             aes(x = index, y = median, colour = labels[[2]])
         ) +
         geom_ribbon(
@@ -555,8 +539,7 @@ plot_hpds <- function(
         theme(
             axis.ticks.x = element_blank(),
             axis.text.x = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank()
+            panel.grid = element_blank()
         ) +
         scale_colour_manual(
             name = scalename,
@@ -575,7 +558,12 @@ plot_hpd_diff <- function(summary_ref, summary_dc, param = "mu", ord,
     df_fix <- df_fix[ord, ]
     df_diff <- df_var - df_fix
     df_diff$index <- 1:nrow(df_var)
-
+    r <- range(c(df_diff$lower, df_diff$upper))
+    if (max(abs(r)) > 20) {
+      lims <- c(-10, 10)
+    } else {
+      lims <- r
+    }
     ggplot() +
         geom_ribbon(
             data = df_diff,
@@ -583,20 +571,21 @@ plot_hpd_diff <- function(summary_ref, summary_dc, param = "mu", ord,
             alpha = 0.5,
             aes(x = index, ymin = lower, ymax = upper)
         ) +
-        geom_line(
+        geom_point(
             data = df_diff,
             alpha = 0.8,
+            size = 0.5,
             aes(x = index, y = median)
         ) +
         labs(
           x = "Gene",
           y = ylab
         ) +
+        coord_cartesian(ylim = lims) +
         theme(
             axis.ticks.x = element_blank(),
             axis.text.x = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank()
+            panel.grid = element_blank()
         )
 
         # +
@@ -607,4 +596,27 @@ plot_hpd_diff <- function(summary_ref, summary_dc, param = "mu", ord,
         #     values = c("firebrick", "dodgerblue"),
         #     aesthetics = c("fill", "colour")
         # )
+}
+
+plot_with_legend_below <- function(
+    ...,
+    rel_heights = c(0.85, 0.15),
+    nrow = 1,
+    labels = "AUTO",
+    align = "h"
+  ) {
+  legends <- lapply(list(...), cowplot::get_legend)
+  # if (!all(sapply(legends, function(x) identical(x$grobs, legends[[1]]$grobs)))) {
+  #   stop("Different legends shouldn't be merged!")
+  # }
+  t <- theme(legend.position = "none")
+  together <- cowplot::plot_grid(
+    plotlist = lapply(list(...), function(x) x + t),
+    labels = labels,
+    nrow = nrow,
+    align = align
+  )
+  cowplot::plot_grid(
+    together, legends[[1]], nrow = 2, rel_heights = rel_heights
+  )
 }

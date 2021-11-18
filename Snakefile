@@ -33,7 +33,7 @@ rule all:
         "figs/elbo/zeisel.pdf",
         "figs/elbo/chen.pdf",
         "figs/hpd_mu.pdf",
-        "figs/fixnu-comparison.pdf",
+        "figs/fixnu-chen.pdf",
         "figs/hpd_epsilon.pdf",
         "tables/data-summary.tex",
         expand(
@@ -156,33 +156,12 @@ rule true_positive_plot:
         Rscript src/analysis/true_positives.R
         """
 
-# rule hpd_ess_plot:
-#     input:
-#         expand(
-#             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
-#             dataset = data,
-#             nsubsets = chains,
-#             by = by,
-#             seed = seeds
-#         )
-#     output: 
-#         expand(
-#             "figs/{metric}_{parameter}.pdf",
-#             metric = ["hpd", "ess"],
-#             parameter = ["mu", "epsilon"]
-#         )
-#     shell:
-#         """
-#         Rscript src/analysis/hpd.R
-#         Rscript src/analysis/ess.R
-#         """
-
 rule hpd_comparison_plot:
     resources: mem_mb=20000
     input:
-        reference = "outputs/divide_and_conquer/data-{dataset}_nsubsets-16_seed-14_by-gene/chains.rds",
-        divide = "outputs/divide_and_conquer/data-{dataset}_nsubsets-1_seed-14_by-gene/chains.rds",
-        advi = "outputs/advi/data-{dataset}_seed-14/chain.rds"
+        reference = "outputs/divide_and_conquer/data-{dataset}_nsubsets-16_seed-14_by-gene/",
+        divide = "outputs/divide_and_conquer/data-{dataset}_nsubsets-1_seed-14_by-gene/",
+        advi = "outputs/advi/data-{dataset}_seed-14/"
     output:
         directory("figs/hpd/{dataset}")
     shell:
@@ -463,7 +442,12 @@ rule plot_fixnu:
     input:
         "outputs/fix_nu/"
     output:
-        "figs/fixnu-comparison.pdf"
+        "figs/fixnu-chen.pdf",
+        "figs/fixnu-diff-chen.pdf",
+        "figs/fixnu-ibarra-presom.pdf",
+        "figs/fixnu-diff-ibarra-presom.pdf",
+        "figs/fixnu-ibarra-som.pdf",
+        "figs/fixnu-diff-ibarra-som.pdf"
     shell:
         """
         Rscript ./src/analysis/plot_fix_nu.R -i {input}
@@ -473,7 +457,8 @@ rule plot_fixnu:
 rule fixnu:
     resources: mem_mb=10000, runtime=3000
     input:
-        "rdata/chen.rds"
+        "rdata/chen.rds",
+        "rdata/ibarra-soria.rds"
     output:
         directory("outputs/fix_nu/")
     shell:

@@ -14,35 +14,35 @@ df <- do_de(df, ref_df = references, match_column = "data", data_dims,
 ##
 ###############################################################################
 
-sdf  <- df[,
+sdf_de  <- df[,
   c("data", "chains", "pDiffExp", "pDiffDisp", "pDiffResDisp")
 ]
-mdf <- reshape2::melt(sdf, id.vars = c("data", "chains"))
-mdf$chains <- as.numeric(mdf$chains)
-mdf$variable <- gsub("^pDiffExp$", "mu", mdf$variable)
-mdf$variable <- gsub("^pDiffDisp$", "delta", mdf$variable)
-mdf$variable <- gsub("^pDiffResDisp$", "epsilon", mdf$variable)
-mdf$variable <- factor(
-  mdf$variable,
+mdf_de <- reshape2::melt(sdf_de, id.vars = c("data", "chains"))
+mdf_de$chains <- as.numeric(mdf_de$chains)
+mdf_de$variable <- gsub("^pDiffExp$", "mu", mdf_de$variable)
+mdf_de$variable <- gsub("^pDiffDisp$", "delta", mdf_de$variable)
+mdf_de$variable <- gsub("^pDiffResDisp$", "epsilon", mdf_de$variable)
+mdf_de$variable <- factor(
+  mdf_de$variable,
   levels = c("mu", "delta", "epsilon")
 )
 
 
-mdf$data <- sub(
+mdf_de$data <- sub(
   "([\\w])([\\w]+)", "\\U\\1\\L\\2",
-  mdf$data,
+  mdf_de$data,
   perl = TRUE
 )
 
-# mdf <- mdf %>% filter(variable %in% c("mu", "epsilon"))
+# mdf_de <- mdf_de %>% filter(variable %in% c("mu", "epsilon"))
 
-advi_mdf <- mdf %>%
+advi_mdf_de <- mdf_de %>%
   filter(is.na(chains)) %>%
   group_by(data, variable, chains) %>%
   summarize(value = median(value))
 
 
-g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
+g <- ggplot(mdf_de[!(is.na(mdf_de$chains) | mdf_de$chains == 1), ],
   aes(
     x = factor(chains),
     y = value,
@@ -50,41 +50,34 @@ g <- ggplot(mdf[!(is.na(mdf$chains) | mdf$chains == 1), ],
     color = variable
   )
 ) +
+  geom_hline(
+    data = advi_mdf_de,
+    alpha = 0.5,
+    linetype = "dashed",
+    aes(
+      yintercept = value,
+      color = variable
+    )
+  ) +
   geom_quasirandom(
     groupOnX = TRUE,
     dodge.width = 0.5,
-    # position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
     size = 0.5
   ) +
-  # geom_point(
-  #   position = position_jitterdodge(jitter.width = 0.1, jitter.height = 0),
-  #   size = 0.5
-  # ) +
-  # geom_violin() +
-  geom_hline(
-    data = advi_mdf,
-    alpha = 0.5,
-    aes(
-      yintercept = value,
-      color = variable,
-      linetype = "ADVI"
-    )
-  ) +
-  scale_linetype_manual(
-    name = NULL,
-    labels = "Mean\nADVI results",
-    values = 2
-  ) +
-  facet_wrap(~data, nrow = 2, ncol = 2) +
+  facet_wrap(~data, nrow = 2, ncol = 2, scales = "free_y") +
   scale_x_discrete(name = "Partitions") +
   scale_y_continuous(
-    name = "Portion of genes perturbed",
+    name = "Portion of genes differentially expressed",
     labels = scales::percent
   ) +
-  theme(text = element_text(size = 18)) +
+  theme(
+    # text = element_text(size = 18),
+    legend.position = "bottom",
+    panel.grid = element_blank()
+  ) +
   scale_color_brewer(name = "Parameter", palette = "Set1")
 
-ggsave(here("figs/diffexp_plot.pdf"), width = 12, height = 8)
+ggsave(here("figs/diffexp_plot.pdf"), width = 5, height = 5)
 
 ###############################################################################
 ##
@@ -169,7 +162,7 @@ all_overlap_df$chains <- factor(
   levels = levs
 )
 all_overlap_df$data <- factor(all_overlap_df$data,
-  levels = unique(mdf$data)
+  levels = unique(mdf_de$data)
 )
 all_overlap_df$chains[is.na(all_overlap_df$chains)] <- "ADVI"
 
