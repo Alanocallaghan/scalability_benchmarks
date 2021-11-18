@@ -95,6 +95,15 @@ mdf_tp$variable <- factor(
     mdf_tp$variable,
     levels = c("mu", "delta", "epsilon")
 )
+
+
+## Mean-variance curves and DE plots for worst for each data
+maxdfm <- mdf_tp %>%
+  group_by(data) %>%
+  top_n(n = 1, wt = -value) %>%
+  distinct(data, .keep_all = TRUE)
+
+
 mdf_tp_advi <- mdf_tp %>%
     filter(nsubsets == 0) %>%
     group_by(variable) %>%

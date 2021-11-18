@@ -23,11 +23,11 @@ sourceme(here("src/analysis/chain_plots.R"))
 
 sourceme(here("src/analysis/normalisation_comparison.R"))
 
-# sourceme(here("src/analysis/ess.R"))
+sourceme(here("src/analysis/diagnostics.R"))
 sourceme(here("src/analysis/hpd.R"))
 
 
 ## not doing this any more...
 ## sourceme(here("src/analysis/identifiability.R"))
 
-save.image("rdata/main_done.RData")
+save.image("main_done.RData")

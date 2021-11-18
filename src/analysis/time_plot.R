@@ -25,7 +25,7 @@ time_df_dc <- data.frame(
   row.names = NULL
 )
 time_df_dc <- time_df_dc[time_df_dc$data != "ibarra-soria", ]
-
+time_df_dc <- time_df_dc[time_df_dc$chains != 128, ]
 
 advi_time_files <- list.files(
   "outputs/advi",
@@ -102,25 +102,27 @@ g <- ggplot(
   aes(
     x = as.numeric(chains),
     y = time / 60,
-    color = paste(
-      data, "\n", 
-      nGenes, "genes;", nCells, "cells",
-      "\n"
-    )
+    color = data
+    # color = paste(
+    #   data, "\n", 
+    #   nGenes, "genes;", nCells, "cells",
+    #   "\n"
+    # )
   )
 ) +
-  geom_line(aes(group = data, linetype = "Divide and\nconquer")) +
+  geom_line(aes(group = data)) +
   geom_hline(
     aes(
       yintercept = time / 60,
-      color = paste(
-        data, "\n", 
-        nGenes, "genes;",
-        nCells, "cells",
-        "\n"
-      ),
-      lty = "ADVI",
+      color =data
+      # color = paste(
+      #   data, "\n", 
+      #   nGenes, "genes;",
+      #   nCells, "cells",
+      #   "\n"
+      # ),
     ),
+    linetype = "dashed",
     data = advi_time_df
   ) +
   scale_x_continuous(
@@ -128,12 +130,15 @@ g <- ggplot(
     trans = "log2",
     breaks = c(1, 2, 4, 8, 16, 32, 64, 128)
   ) +
-  scale_y_continuous(name = "Time (mins)", trans = "log10") +
+  scale_y_continuous(name = "Time (mins)", trans = "log2") +
   scale_color_brewer(name = "Data", palette = "Set2") +
-  scale_linetype_discrete(
-    name = "Method", limits = c("Divide and\nconquer", "ADVI")
-  ) +
-  theme(panel.grid.minor = element_blank())
+  # scale_linetype_discrete(
+  #   name = "Method", limits = c("Divide and\nconquer", "ADVI")
+  # ) +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "bottom"
+  )
   #  +
   # guides(colour = guide_legend(nrow = 2, byrow = TRUE)) +
   # theme(
@@ -143,90 +148,6 @@ g <- ggplot(
 
 ggsave(
   file = here("figs/time_plot.pdf"),
-  width = 7,
-  height = 6
+  width = 4,
+  height = 4
 )
-
-
-
-# mean_df <- df %>% dplyr::filter(by != "advi") %>%
-#   dplyr::group_by(data, chains) %>% 
-#   dplyr::summarize(
-#     time = mean(time),
-#     nGenes = nGenes[[1]],
-#     nCells = nCells[[1]],
-#   )
-
-
-# df$chains <- factor(df$chains, levels = c(1, 2, 4, 8, 16, 32))
-
-# g <- ggplot(
-#   df,
-#   aes(
-#     x = chains,
-#     y = time / 3600,
-#     color = paste(
-#       data, "\n", 
-#       nGenes, "genes;", nCells, "cells",
-#       "\n"
-#     )
-#   )
-# ) +
-#   geom_line(data = mean_df, aes(group = data, linetype = "Divide and\nconquer")) +
-#   geom_boxplot()
-#   geom_hline(
-#     aes(
-#       yintercept = time / 3600,
-#       color = paste(
-#         data, "\n", 
-#         nGenes, "genes;",
-#         nCells, "cells",
-#         "\n"
-#       ),
-#       lty = "ADVI",
-#     ),
-#     data = advi_time_df
-#   ) +
-#   scale_x_continuous(
-#     name = "Partitions",
-#     trans = "log2",
-#     breaks = c(1, 2, 4, 8, 16, 32)
-#   ) +
-#   scale_y_continuous(name = "Time (hr)") +
-#   scale_color_brewer(name = "Data", palette = "Set2") +
-#   scale_linetype_discrete(name = "Method", limits = c("Divide and\nconquer", "ADVI"))
-
-# g <- ggplot(out_f, 
-#     aes(
-#       x = chains, 
-#       y = time / 3600, 
-#     )
-#   ) +
-#   geom_point() +
-#   # geom_hline(yintercept = 12255 / 3600, lty = "dashed", colour = "grey60") + 
-#   # annotate(x = 1, y = 12255 / 3600 * 1.2, size = fs,
-#   #   label = "Time taken for ADVI", geom = "text", hjust = 0) +
-#   geom_hline(yintercept = tmax / (10 * 3600), lty = "dashed", colour = "grey60") + 
-#   annotate(x = 1, y = tmax / (10 * 3600) * 1.2, size = fs,
-#     label = "10x speedup", geom = "text", hjust = 0) +
-#   geom_hline(yintercept = tmax / (100 * 3600), lty = "dashed", colour = "grey60") + 
-#   annotate(x = 1, y = tmax / (100 * 3600) * 1.2, size = fs,
-#     label = "100x speedup", geom = "text", hjust = 0) +
-#   geom_line() +
-#   geom_text(
-#     data = out_f, 
-#     hjust = 0.4,
-#     size = fs,
-#     mapping = aes(
-#       x = chains,
-#       y = 25,
-#       label = n_str),
-#     show.legend = FALSE
-#   ) +
-#   labs(x = "Number of partitions", y = "Time") +
-#   scale_x_continuous(trans = "log2", breaks = c(1, 2, 4, 8, 16, 32, 64, 128)) +
-#   scale_y_continuous(
-#     trans = "log10", 
-#     breaks = c(0.16666, 0.5, 1, 2, 5, 15), 
-#     labels = c("10 min", "30 min", "1 hr", "2 hr", "5 hr", "15 hr")
-#   )

@@ -39,11 +39,7 @@ elbo_df$Data <- sub(
   elbo_df$data,
   perl = TRUE
 )
-elbo_df$Data <- sub(
-  "Pbmc",
-  "10x PBMC",
-  elbo_df$Data
-)
+
 plots <- lapply(unique(elbo_df$data),
   function(d) {
     df <- elbo_df[elbo_df$data == d, ]
@@ -61,7 +57,7 @@ plots <- lapply(unique(elbo_df$data),
         plot.margin = unit(c(0, 0.05, 0, 0.025), "npc")
       )
       labs(x = "Iteration")
-    ggsave(g, file = sprintf("figs/elbo/%s.pdf", d), width = 4, height = 4)
+    ggsave(g, file = sprintf("figs/elbo/%s.pdf", d), width = 4, height = 3)
     g
   }
 )

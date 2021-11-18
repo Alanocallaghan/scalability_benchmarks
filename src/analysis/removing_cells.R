@@ -61,10 +61,13 @@ g <- ggplot(mdf_rm_sub) +
   # scale_x_reverse("Number of cells") +
   # facet_wrap(~data) +
   scale_y_continuous(label = scales::percent) +
-  labs(x = "Number of cells", y = "Portion of genes perturbed") +
+  labs(
+    x = "Number of cells",
+    y = "Portion of genes differentially expressed"
+  ) +
   theme(
     axis.text.x = element_text(hjust = 1, angle = 45),
     legend.position = "bottom"
   )
 
-ggsave("figs/removing_cells.pdf", width = 6, height = 4)
+ggsave("figs/removing_cells.pdf", width = 5, height = 4)

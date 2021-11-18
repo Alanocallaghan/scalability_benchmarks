@@ -2,6 +2,7 @@ library("SingleCellExperiment")
 library("ggplot2")
 library("cowplot")
 
+source("src/analysis/functions.R")
 theme_set(theme_bw())
 
 datasets <- c(
@@ -47,11 +48,11 @@ g1 <- ggplot(data_df, aes(x = lib_sizes, color = name, fill = name)) +
   labs(x = "Library size", y = "Density") +
   scale +
   geom_density(alpha = 0.2) +
-  theme(legend.position = "bottom") +
+  theme(
+    legend.position = "bottom",
+    panel.grid = element_blank()
+  ) +
   scale_x_log10()
-gg <- ggplotGrob(g1)
-legend <- gg$grobs[[grep("guide-box", gg$layout$name)]]
-
 ggsave("figs/libsize_density.pdf", width = 5, height = 4)
 
 
@@ -59,20 +60,14 @@ g2 <- ggplot(data_df, aes(x = num_feats, color = name, fill = name)) +
   labs(x = "Number of expressed features", y = "Density") +
   scale +
   geom_density(alpha = 0.2) +
-  theme(legend.position = "bottom") +
+  theme(
+    legend.position = "bottom",
+    panel.grid = element_blank()
+  ) +
   scale_x_log10()
 ggsave("figs/complexity_density.pdf", width = 5, height = 4)
 
-ggp <- plot_grid(
-  plot_grid(
-    g1 + theme(legend.position = "none"),
-    g2 + theme(legend.position = "none"),
-    labels = c("A", "B")
-  ),
-  legend,
-  nrow = 2,
-  rel_heights = c(0.9, 0.1)
-)
+ggp <- plot_with_legend_below(g1, g2, rel_heights = c(0.9, 0.1))
 ggsave("figs/cell_plots.pdf", width = 7, height = 4)
 
 
@@ -92,27 +87,23 @@ g1 <- ggplot(data_df, aes(x = mean_expression, color = name, fill = name)) +
   labs(x = "Mean expression", y = "Density") +
   scale +
   geom_density(alpha = 0.2) +
-  theme(legend.position = "bottom") +
+  theme(
+    legend.position = "bottom",
+    panel.grid = element_blank()
+  ) +
   scale_x_log10()
 ggsave("figs/expression_density.pdf", width = 5, height = 4)
 
 g2 <- ggplot(data_df, aes(x = dropout, color = name, fill = name)) +
   labs(x = "Proportion of zeros", y = "Density") +
   scale +
-  theme(legend.position = "bottom") +
+  theme(
+    legend.position = "bottom",
+    panel.grid = element_blank()
+  ) +
   geom_density(alpha = 0.2)
 
 ggsave("figs/dropout_density.pdf", width = 5, height = 4)
 
-ggp <- plot_grid(
-  plot_grid(
-    g1 + theme(legend.position = "none"),
-    g2 + theme(legend.position = "none"),
-    labels = c("A", "B")
-  ),
-  legend,
-  nrow = 2,
-  rel_heights = c(0.9, 0.1)
-)
-
+ggp <- plot_with_legend_below(g1, g2, rel_heights = c(0.9, 0.1))
 ggsave("figs/gene_plots.pdf", width = 7, height = 4)
