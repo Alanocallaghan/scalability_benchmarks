@@ -428,12 +428,13 @@ rule cell:
     input:
         "rdata/{dataset}.rds"
     output:
-        "outputs/cell_splitting/{dataset}.rds"
+        "outputs/cell_splitting/{dataset}_{seed}.rds"
     shell:
         """
         Rscript ./src/chains/cell_splitting.R \
 	        --iterations {iterations} \
             --data {wildcards.dataset} \
+            --seed {wildcards.seed} \
             --output {output}
         """
 
@@ -442,8 +443,9 @@ rule cell_plot:
     resources: mem_mb=10000, runtime=3000
     input:
         expand(
-            "outputs/cell_splitting/{dataset}.rds",
-            dataset = data
+            "outputs/cell_splitting/{dataset}_{seed}.rds",
+            dataset = data,
+            seed = seeds
         )
     output:
         "figs/cell_splitting.pdf"
