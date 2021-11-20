@@ -27,6 +27,7 @@ rule all:
         # "figs/de_batch_zeisel.pdf",
         # "figs/ess_batch.pdf",
         "figs/removing_cells.pdf",
+        "figs/cell_splitting.pdf",
         "figs/downsampling.pdf",
         "figs/elbo/tung.pdf",
         "figs/elbo/buettner.pdf",
@@ -422,25 +423,40 @@ rule batchinfo:
         """
 
 
-# rule cell:
-#     resources: mem_mb=10000, runtime=3000
-#     input:
-#         "rdata/{dataset}.rds"
-#     output:
-#         "outputs/cell_splitting/{dataset}.rds"
-#     shell:
-#         """
-#         Rscript ./src/chains/batchinfo.R \
-# 	        --iterations {iterations} \
-#             --data {wildcards.dataset} \
-#             --output {output}
-#         """
+rule cell:
+    resources: mem_mb=10000, runtime=3000
+    input:
+        "rdata/{dataset}.rds"
+    output:
+        "outputs/cell_splitting/{dataset}.rds"
+    shell:
+        """
+        Rscript ./src/chains/cell_splitting.R \
+	        --iterations {iterations} \
+            --data {wildcards.dataset} \
+            --output {output}
+        """
+
+
+rule cell_plot:
+    resources: mem_mb=10000, runtime=3000
+    input:
+        expand(
+            "outputs/cell_splitting/{dataset}.rds",
+            dataset = data
+        )
+    output:
+        "figs/cell_splitting.pdf"
+    shell:
+        """
+        Rscript ./src/analysis/cell_splitting_plot.R
+        """
 
 
 rule plot_fixnu:
     resources: mem_mb=10000, runtime=3000
     input:
-        "outputs/fix_nu/"
+        "outputs/fix_nu/ibarra-som-fix.rds"
     output:
         "figs/fixnu-chen.pdf",
         "figs/fixnu-diff-chen.pdf",
@@ -460,12 +476,16 @@ rule fixnu:
         "rdata/chen.rds",
         "rdata/ibarra-soria.rds"
     output:
-        directory("outputs/fix_nu/")
+        # "outputs/fix_nu/chen-fix.rds",
+        # "outputs/fix_nu/chen-var.rds",
+        "outputs/fix_nu/ibarra-som-var.rds",
+        "outputs/fix_nu/ibarra-som-fix.rds",
+        "outputs/fix_nu/ibarra-presom-var.rds",
+        "outputs/fix_nu/ibarra-presom-fix.rds"
     shell:
         """
         Rscript ./src/chains/fix_nu.R \
-	        --iterations {iterations} \
-            --output {output}
+	        --iterations {iterations}
         """
 
 
@@ -485,6 +505,7 @@ rule elbo_plots:
     input:
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
+            dataset = data_all,
             seed = seeds,
             allow_missing = True
         )
