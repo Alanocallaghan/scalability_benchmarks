@@ -30,4 +30,6 @@ fit <- BASiCS_MCMC(
   Burn = max(args[["iterations"]] / 2, 4)
 )
 dir.create("outputs/cell_splitting/", showWarnings = FALSE)
-saveRDS(fit, sprintf("outputs/cell_splitting/%s.rds", args[["data"]]))
+saveRDS(fit,
+  sprintf("outputs/cell_splitting/%s_%d.rds", args[["data"]], args[["seed"]])
+)
