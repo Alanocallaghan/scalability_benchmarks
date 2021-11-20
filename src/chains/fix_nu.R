@@ -7,6 +7,7 @@ suppressPackageStartupMessages({
 })
 parser <- ArgumentParser()
 parser$add_argument("-i", "--iterations", type = "double")
+parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
 # sce <- readRDS("rdata/chen.rds")
