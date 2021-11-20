@@ -487,6 +487,7 @@ rule fixnu:
     shell:
         """
         Rscript ./src/chains/fix_nu.R \
+            --output outputs/fix_nu \
 	        --iterations {iterations}
         """
 
