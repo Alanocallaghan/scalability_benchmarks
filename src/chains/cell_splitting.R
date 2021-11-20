@@ -6,6 +6,7 @@ suppressPackageStartupMessages({
   library("argparse")
   library("here")
   library("BASiCS")
+  library("SingleCellExperiment")
 })
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
@@ -14,36 +15,19 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-theme_set(theme_bw())
 
+set.seed(args[["seed"]])
+sce <- readRDS(sprintf("rdata/%s.rds", args[["data"]]))
 fit <- BASiCS_MCMC(
-  readRDS("rdata/zeisel.rds"),
+  sce,
   SubsetBy = "cell",
-  NSubsets = 32,
+  NSubsets = 4,
+  Regression = TRUE,
   PrintProgress = FALSE,
+  WithSpikes = "spike-ins" %in% altExpNames(sce),
   N = args[["iterations"]],
   Thin = max((args[["iterations"]] / 2) / 1000, 2),
   Burn = max(args[["iterations"]] / 2, 4)
 )
-dir.create(args[["output"]])
-saveRDS(fit, "outputs/cell_splitting/", args[["data"]], ".rds")
-
-
-# ref_file <- (df %>% filter(chains == 1, data == "zeisel") %>% pull(file))[[1]]
-
-# ref <- readRDS(ref_file)
-
-
-# d <- BASiCS_TestDE(
-#   fitc,
-#   ref,
-#   GroupLabel1 = "D&C",
-#   GroupLabel2 = "Reference"
-# )
-
-# g <- BASiCS_PlotDE(
-#   d@Results[[1]],
-#   Plots = c("MAPlot")
-# )
-
-# ggsave(g, file = "figs/cell_partitions.pdf", width = 6, height = 4)
+dir.create("outputs/cell_splitting/", showWarnings = FALSE)
+saveRDS(fit, sprintf("outputs/cell_splitting/%s.rds", args[["data"]]))

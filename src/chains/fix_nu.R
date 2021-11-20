@@ -7,39 +7,40 @@ suppressPackageStartupMessages({
 })
 parser <- ArgumentParser()
 parser$add_argument("-i", "--iterations", type = "double")
-parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-sce <- readRDS("rdata/chen.rds")
+# sce <- readRDS("rdata/chen.rds")
 
-fit_fix <- BASiCS_MCMC(
-  sce,
-  PrintProgress = FALSE,
-  FixNu = TRUE,
-  WithSpikes = FALSE,
-  Regression = TRUE,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4)
-)
+# fit_fix <- BASiCS_MCMC(
+#   sce,
+#   PrintProgress = FALSE,
+#   FixNu = TRUE,
+#   WithSpikes = FALSE,
+#   Regression = TRUE,
+#   N = args[["iterations"]],
+#   Thin = max((args[["iterations"]] / 2) / 1000, 2),
+#   Burn = max(args[["iterations"]] / 2, 4)
+# )
 
-fit_var <- BASiCS_MCMC(
-  sce,
-  PrintProgress = FALSE,
-  FixNu = FALSE,
-  WithSpikes = FALSE,
-  Regression = TRUE,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4)
-)
+# fit_var <- BASiCS_MCMC(
+#   sce,
+#   PrintProgress = FALSE,
+#   FixNu = FALSE,
+#   WithSpikes = FALSE,
+#   Regression = TRUE,
+#   N = args[["iterations"]],
+#   Thin = max((args[["iterations"]] / 2) / 1000, 2),
+#   Burn = max(args[["iterations"]] / 2, 4)
+# )
 
 
-dir.create(args[["output"]], showWarnings = FALSE)
-saveRDS(fit_fix, file.path(args[["output"]], "fix.rds"))
-saveRDS(fit_var, file.path(args[["output"]], "var.rds"))
+dir.create("outputs/fix_nu", showWarnings = FALSE)
+# saveRDS(fit_fix, file.path(args[["output"]], "chen-fix.rds"))
+# saveRDS(fit_var, file.path(args[["output"]], "chen-var.rds"))
 
-sce <- readRDS("rdata/ibarra-soria.rds")
+droplet_sce <- readRDS("rdata/ibarra-soria.rds")
+ind_presom <- colData(droplet_sce)[["Cell_type"]] == "PSM"
+ind_som <- colData(droplet_sce)[["Cell_type"]] == "SM"
 
 
 PSM_Data <- droplet_sce[, ind_presom]
