@@ -1,7 +1,9 @@
 chains = [1, 2, 4, 8, 16, 32, 64]
+chains_cell = [2, 4, 8, 16]
 chains_timing = [2, 4, 8, 16, 32, 64, 128]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
+data_cell = ["chen", "zeisel"]
 data_all = ["buettner", "chen", "tung", "zeisel", "ibarra-soria"]
 data_spikes = ["buettner", "tung", "zeisel"]
 data_batch = ["tung", "zeisel"]
@@ -428,23 +430,26 @@ rule cell:
     input:
         "rdata/{dataset}.rds"
     output:
-        "outputs/cell_splitting/{dataset}_{seed}.rds"
+        "outputs/cell_splitting/{dataset}_chains-{chains}_seed-{seed}.rds"
     shell:
         """
         Rscript ./src/chains/cell_splitting.R \
             --iterations {iterations} \
             --data {wildcards.dataset} \
+            --chain {wildcards.chains} \
             --seed {wildcards.seed} \
             --output {output}
         """
 
+	        # --iterations {iterations} \
 
 rule cell_plot:
     resources: mem_mb=10000, runtime=3000
     input:
         expand(
-            "outputs/cell_splitting/{dataset}_{seed}.rds",
-            dataset = data,
+            "outputs/cell_splitting/{dataset}_chains-{chain}_seed-{seed}.rds",
+            dataset = data_cell,
+            chain = chains_cell,
             seed = seeds
         )
     output:
