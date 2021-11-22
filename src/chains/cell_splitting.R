@@ -10,6 +10,7 @@ suppressPackageStartupMessages({
 })
 parser <- ArgumentParser()
 parser$add_argument("-d", "--data")
+parser$add_argument("-c", "--chains", type = "double")
 parser$add_argument("-s", "--seed", type = "double")
 parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
@@ -21,7 +22,7 @@ sce <- readRDS(sprintf("rdata/%s.rds", args[["data"]]))
 fit <- BASiCS_MCMC(
   sce,
   SubsetBy = "cell",
-  NSubsets = 4,
+  NSubsets = args[["chains"]],
   Regression = TRUE,
   PrintProgress = FALSE,
   WithSpikes = "spike-ins" %in% altExpNames(sce),
@@ -31,5 +32,8 @@ fit <- BASiCS_MCMC(
 )
 dir.create("outputs/cell_splitting/", showWarnings = FALSE)
 saveRDS(fit,
-  sprintf("outputs/cell_splitting/%s_%d.rds", args[["data"]], args[["seed"]])
+  sprintf(
+    "outputs/cell_splitting/%s_chain-%d_seed-%d.rds",
+    args[["data"]], args[["chains"]], args[["seed"]]
+  )
 )
