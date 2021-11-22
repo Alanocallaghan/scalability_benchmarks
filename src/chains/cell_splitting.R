@@ -33,7 +33,7 @@ fit <- BASiCS_MCMC(
 dir.create("outputs/cell_splitting/", showWarnings = FALSE)
 saveRDS(fit,
   sprintf(
-    "outputs/cell_splitting/%s_chain-%d_seed-%d.rds",
+    "outputs/cell_splitting/%s_chains-%d_seed-%d.rds",
     args[["data"]], args[["chains"]], args[["seed"]]
   )
 )
