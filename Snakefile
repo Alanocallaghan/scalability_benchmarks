@@ -448,7 +448,7 @@ rule cell_plot:
     input:
         expand(
             "outputs/cell_splitting/{dataset}_chains-{chain}_seed-{seed}.rds",
-            dataset = data,
+            dataset = data_cell,
             chain = chains_cell,
             seed = seeds
         )
