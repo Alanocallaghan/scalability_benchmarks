@@ -30,6 +30,7 @@ cs_de_df <- do_de(cs_df, ref_df = references, match_column = "data", data_dims,
 
 cs_de_df_sub <- cs_de_df[, c("data", "chains", "pDiffExp", "pDiffDisp", "pDiffResDisp")]
 mdf_cs <- melt(cs_de_df_sub, id.vars = c("data", "chains"))
+mdf_cs$chains <- factor(mdf_cs$chains, levels = c(2, 4, 8, 16))
 
 g <- ggplot(mdf_cs) +
     aes(x = chains, colour = variable, y = value) +
