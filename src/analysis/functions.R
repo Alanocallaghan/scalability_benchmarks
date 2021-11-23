@@ -57,7 +57,6 @@ do_de <- function(
     mc.cores = options("mc.cores")
   ) {
 
-  # edr <- parallel::mclapply(
   edr <- parallel::mclapply(
     seq_len(nrow(df)),
     function(i) {
@@ -558,7 +557,7 @@ plot_hpd_diff <- function(summary_ref, summary_dc, param = "mu", ord,
     df_fix <- df_fix[ord, ]
     df_diff <- df_var - df_fix
     df_diff$index <- 1:nrow(df_var)
-    r <- range(c(df_diff$lower, df_diff$upper))
+    r <- range(c(df_diff$lower, df_diff$upper), na.rm = TRUE)
     if (max(abs(r)) > 20) {
       lims <- c(-10, 10)
     } else {

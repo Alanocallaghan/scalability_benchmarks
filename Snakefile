@@ -448,8 +448,14 @@ rule cell_plot:
     input:
         expand(
             "outputs/cell_splitting/{dataset}_chains-{chain}_seed-{seed}.rds",
-            dataset = data_cell,
-            chain = chains_cell,
+            dataset = ["zeisel", "chen"],
+            chain = [2, 4, 8, 16],
+            seed = seeds
+        ),
+        expand(
+            "outputs/cell_splitting/{dataset}_chains-{chain}_seed-{seed}.rds",
+            dataset = ["tung", "buettner"],
+            chain = [2, 4],
             seed = seeds
         )
     output:
