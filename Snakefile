@@ -434,7 +434,7 @@ rule cell:
     shell:
         """
         Rscript ./src/chains/cell_splitting.R \
-            --iterations 20 \
+            --iterations {iterations} \
             --data {wildcards.dataset} \
             --chain {wildcards.chains} \
             --seed {wildcards.seed} \
@@ -499,7 +499,7 @@ rule fixnu:
         """
         Rscript ./src/chains/fix_nu.R \
             --output outputs/fix_nu \
-	        --iterations {iterations}
+            --iterations {iterations}
         """
 
 
