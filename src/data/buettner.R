@@ -29,4 +29,4 @@ erc <- erc[!nospike, ]
 rowData(erc) <- data.frame(id = rownames(erc), rowData(erc)[, "molecules"])
 altExp(b, "spike-ins") <- erc
 
-saveRDS(sce, "rdata/buettner.rds")
+saveRDS(b, "rdata/buettner.rds")

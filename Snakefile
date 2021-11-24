@@ -444,7 +444,7 @@ rule cell:
 	        # --iterations {iterations} \
 
 rule cell_plot:
-    resources: mem_mb=10000, runtime=3000
+    resources: mem_mb=20000, runtime=3000
     input:
         expand(
             "outputs/cell_splitting/{dataset}_chains-{chain}_seed-{seed}.rds",
