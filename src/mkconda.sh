@@ -31,7 +31,8 @@ mamba create -y -n scalability \
     r-devtools \
     r-rstan \
     r-ggpointdensity \
-    r-rcpparmadillo
+    r-rcpparmadillo \
+    bioconductor-scrnaseq
     # bioconductor-basics \
     # bioconductor-scater \
     # bioconductor-scran \
@@ -41,7 +42,7 @@ mamba create -y -n scalability \
 ## also need to devtools::install_github some stuff
 
 conda activate scalability
-Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "scater", "scran", "SingleCellExperiment"), version=3.14)'
+Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "scater", "scran", "SingleCellExperiment", "scRNAseq"), version=3.14)'
 
 Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan")'
 Rscript -e 'devtools::install_github("catavallejos/BASiCS")'
