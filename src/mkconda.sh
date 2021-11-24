@@ -46,4 +46,4 @@ Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "scater", "scran", 
 
 Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan")'
 Rscript -e 'devtools::install_github("catavallejos/BASiCS")'
-
+Rscript -e 'devtools::install_github("jorainer/ensembldb")'
