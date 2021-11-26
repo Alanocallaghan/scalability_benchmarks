@@ -32,7 +32,7 @@ counts[] <- apply(
 counts(data) <- counts
 
 
-data <- divide_and_conquer_benchmark(
+bmark <- divide_and_conquer_benchmark(
   Data = data,
   DataName = args[["data"]],
   SubsetBy = "gene",
@@ -43,20 +43,8 @@ data <- divide_and_conquer_benchmark(
   Thin = max((args[["iterations"]] / 2) / 1000, 2),
   Burn = max(args[["iterations"]] / 2, 4)
 )
-chains <- data[["chain"]]
-config <- data[["config"]]
-if (length(chains) == 1) {
-  collapsed <- chains
-} else {
-  collapsed <- BASiCS:::.combine_subposteriors(
-    chains,
-    SubsetBy = config[["by"]],
-    CombineMethod = "pie",
-    Weighting = "n_weight"
-  )
-}
-cfg <- data[["config"]]
+cfg <- bmark[["config"]]
 cfg$downsample_rate <- as.numeric(args[["fraction"]])
-saveRDS(data[["chain"]], file = file.path(dir, "chains.rds"))
-saveRDS(data[["time"]], file = file.path(dir, "time.rds"))
+saveRDS(bmark[["chain"]], file = file.path(dir, "chains.rds"))
+saveRDS(bmark[["time"]], file = file.path(dir, "time.rds"))
 saveRDS(cfg, file = file.path(dir, "config.rds"))
