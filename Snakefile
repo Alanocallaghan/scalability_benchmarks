@@ -531,3 +531,14 @@ rule elbo_plots:
         """
         Rscript src/analysis/elbo_plots.R
         """
+
+
+rule hmc:
+    input:
+        "rdata/tung.rds"
+    output:
+        "outputs/hmc_vs_amwg.rds"
+    shell:
+        """
+        Rscript src/chains/hmc.R
+        """

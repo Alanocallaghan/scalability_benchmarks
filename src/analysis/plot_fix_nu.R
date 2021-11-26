@@ -34,7 +34,6 @@ ord <- order(summary_fix@parameters$mu[, "median"])
 g1 <- plot_hpds(summary_var, summary_fix, "mu", ord)
 g2 <- plot_hpds(summary_var, summary_fix, "delta", ord)
 g3 <- plot_hpds(summary_var, summary_fix, "epsilon", ord)
-
 combined <- plot_with_legend_below(g1, g2, g3)
 ggsave(sprintf("figs/fixnu-%s.pdf", args[["dataset"]]), width = 8, height = 3)
 
