@@ -126,23 +126,23 @@ sce <- readRDS("rdata/chen.rds")
 sf <- calculateSumFactors(sce)
 bf <- colMedians(fit@parameters$nu)
 
-df <- data.frame(scran = sf, basics = bf, data = "chen")
+norm_comp_df <- data.frame(scran = sf, BASiCS = bf, data = "chen")
 
 sce_both <- readRDS("rdata/ibarra-soria.rds")
 fit <- readRDS("outputs/true-positives/data-ibarra-soria_nsubsets-1_seed-14.rds")
 sf <- calculateSumFactors(sce_both[, sce_both$Cell_type == "SM"])
 bf <- colMedians(fit$mcmc$sm@parameters$nu)
 
-df <- rbind(df, data.frame(scran = sf, basics = bf, data = "ibarra-som"))
+norm_comp_df <- rbind(norm_comp_df, data.frame(scran = sf, BASiCS = bf, data = "ibarra-som"))
 
 sf <- calculateSumFactors(sce_both[, sce_both$Cell_type == "PSM"])
 bf <- colMedians(fit$mcmc$psm@parameters$nu)
-df <- rbind(df, data.frame(scran = sf, basics = bf, data = "ibarra-presom"))
+norm_comp_df <- rbind(norm_comp_df, data.frame(scran = sf, BASiCS = bf, data = "ibarra-presom"))
 
-r <- range(c(norm_df$scran, norm_df$basics))
+r <- range(c(norm_comp_df$scran, norm_comp_df$BASiCS))
 # r <- range(c(sf, bf))
 # chen_sf_scran <- data.frame(scran = sf, BASiCS = bf)
-g <- ggplot(chen_sf_scran) +
+g <- ggplot(norm_comp_df) +
     aes(scran, BASiCS) +
     geom_pointdensity() +
     scale_x_log10(limits = r) +
@@ -152,7 +152,7 @@ g <- ggplot(chen_sf_scran) +
     annotate("text", x = 3.1, y = 1.2,
         hjust = 0,
         label = sprintf(
-            "Peason's rho: %0.03f", cor(chen_sf_scran[[1]], chen_sf_scran[[2]])
+            "Peason's rho: %0.03f", cor(norm_comp_df$scran, norm_comp_df$BASiCS)
         )
     ) +
     theme_bw() +
@@ -162,7 +162,7 @@ g <- ggplot(chen_sf_scran) +
     ) +
     theme(legend.position = "bottom")
 
-ggsave("figs/chen_scran_basics.pdf", width = 4.5, height = 4)
+ggsave("figs/scran_basics.pdf", width = 4.5, height = 4)
 
 
 
