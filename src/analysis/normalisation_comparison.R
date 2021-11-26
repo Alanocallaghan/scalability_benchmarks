@@ -86,7 +86,7 @@ g <- ggplot() +
         name = "Pearson correlation",
         limits = c(0.8, 1)
     ) +
-    theme(text = element_text(size = 18))
+    theme(text = element_text(size = 18), panel.grid = element_blank())
 
 ggsave(here("figs/norm_plot.pdf"), width = 5, height = 5)
 
@@ -110,7 +110,7 @@ g <- ggplot(
     facet_wrap(~data, nrow = 2, ncol = 2) +
     scale_x_discrete(name = "Partitions") +
     scale_y_continuous(name = "Pearson correlation", limits = c(0, 1)) +
-    theme(text = element_text(size = 18))
+    theme(text = element_text(size = 18), panel.grid = element_blank())
 
 ggsave(here("figs/norm_plot_hpd.pdf"), width = 5, height = 5)
 
@@ -120,12 +120,28 @@ library("ggplot2")
 library("viridis")
 library("scran")
 library("ggpointdensity")
+
 fit <- readRDS("outputs/divide_and_conquer/data-chen_nsubsets-1_seed-14_by-gene/chains.rds")
 sce <- readRDS("rdata/chen.rds")
 sf <- calculateSumFactors(sce)
 bf <- colMedians(fit@parameters$nu)
-r <- range(c(sf, bf))
-chen_sf_scran <- data.frame(scran = sf, BASiCS = bf)
+
+df <- data.frame(scran = sf, basics = bf, data = "chen")
+
+sce_both <- readRDS("rdata/ibarra-soria.rds")
+fit <- readRDS("outputs/true-positives/data-ibarra-soria_nsubsets-1_seed-14.rds")
+sf <- calculateSumFactors(sce_both[, sce_both$Cell_type == "SM"])
+bf <- colMedians(fit$mcmc$sm@parameters$nu)
+
+df <- rbind(df, data.frame(scran = sf, basics = bf, data = "ibarra-som"))
+
+sf <- calculateSumFactors(sce_both[, sce_both$Cell_type == "PSM"])
+bf <- colMedians(fit$mcmc$psm@parameters$nu)
+df <- rbind(df, data.frame(scran = sf, basics = bf, data = "ibarra-presom"))
+
+r <- range(c(norm_df$scran, norm_df$basics))
+# r <- range(c(sf, bf))
+# chen_sf_scran <- data.frame(scran = sf, BASiCS = bf)
 g <- ggplot(chen_sf_scran) +
     aes(scran, BASiCS) +
     geom_pointdensity() +
