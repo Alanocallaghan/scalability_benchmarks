@@ -47,6 +47,9 @@ g <- ggplot(mdf_cs) +
         name = "Proportion of genes differentially expressed",
         labels = scales::percent
     ) +
-    theme(legend.position = "bottom")
+    theme(
+        legend.position = "bottom",
+        panel.grid = element_blank()
+    )
 
 ggsave("figs/cell_splitting.pdf", width = 4, height = 4)

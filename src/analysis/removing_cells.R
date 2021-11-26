@@ -48,11 +48,8 @@ mdf_rm$proportion_retained <- factor(
   )
 )
 
-# stop()
-
 # mdf_rm_sub <- mdf_rm[mdf_rm$data == "zeisel", ]
 mdf_rm_sub <- mdf_rm[mdf_rm$data == "chen", ]
-
 
 g <- ggplot(mdf_rm_sub) +
   aes(x = factor(round(cells_retained)), y = value, color = variable) +
@@ -60,13 +57,14 @@ g <- ggplot(mdf_rm_sub) +
   scale_color_brewer(name = "Parameter", palette = "Set1") +
   # scale_x_reverse("Number of cells") +
   # facet_wrap(~data) +
-  scale_y_continuous(label = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
   labs(
     x = "Number of cells",
     y = "Portion of genes differentially expressed"
   ) +
   theme(
     axis.text.x = element_text(hjust = 1, angle = 45),
+    panel.grid = element_blank(),
     legend.position = "bottom"
   )
 

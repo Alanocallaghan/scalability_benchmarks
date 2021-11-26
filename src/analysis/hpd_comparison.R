@@ -19,7 +19,9 @@ if (is.null(args$dataset)) {
 
 data <- args[["dataset"]]
 
-for (data in c("ibarra-soria", "zeisel", "chen", "tung", "buettner")) {
+source("src/analysis/functions.R")
+
+# for (data in c("ibarra-soria", "zeisel", "chen", "tung", "buettner")) {
 
 if (data == "ibarra-soria") {
     args <- list(
@@ -43,7 +45,6 @@ h <- 3
 output <- args[["output"]]
 dir.create(output, showWarnings = FALSE)
 
-source("src/analysis/functions.R")
 
 theme_set(theme_bw())
 

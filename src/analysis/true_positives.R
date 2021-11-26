@@ -97,11 +97,11 @@ mdf_tp$variable <- factor(
 )
 
 
-## Mean-variance curves and DE plots for worst for each data
-maxdfm <- mdf_tp %>%
-  group_by(data) %>%
-  top_n(n = 1, wt = -value) %>%
-  distinct(data, .keep_all = TRUE)
+# ## Mean-variance curves and DE plots for worst for each data
+# maxdfm <- mdf_tp %>%
+#   group_by(data) %>%
+#   top_n(n = 1, wt = -value) %>%
+#   distinct(data, .keep_all = TRUE)
 
 
 mdf_tp_advi <- mdf_tp %>%
@@ -124,8 +124,8 @@ g <- ggplot() +
     labs(x = "Number of partitions", y = "Jaccard Index") +
     ylim(0, 1) +
     scale_color_brewer(palette = "Set1", name = "Parameter") +
+    theme_bw() +
     theme(legend.position = "bottom") +
-    theme(panel.grid.minor = element_blank()) +
-    theme_bw()
+    theme(panel.grid = element_blank())
 
-ggsave(file = "figs/true_positives.pdf", width = 5, height = 4)
+ggsave(file = "figs/true_positives.pdf", width = 5, height = 3.5)

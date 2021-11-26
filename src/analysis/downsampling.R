@@ -56,7 +56,7 @@ g <- ggplot(mdf_ds_sub) +
     label = scales::percent,
     limits = c(0, max(0.25, max(mdf_ds_sub$value)))
   ) +
-  theme(legend.position = "bottom") +
+  theme(legend.position = "bottom", panel.grid = element_blank()) +
   labs(
     x = "Expected median library size",
     y = "Portion of genes differentially expressed"

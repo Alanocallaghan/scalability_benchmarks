@@ -54,7 +54,7 @@ do_de <- function(
     ref_df,
     match_column,
     data_dims,
-    mc.cores = options("mc.cores")
+    mc.cores = 2
   ) {
 
   edr <- parallel::mclapply(
