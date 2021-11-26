@@ -19,7 +19,7 @@ if (is.null(args$dataset)) {
 
 data <- args[["dataset"]]
 
-for (data in c("ibarra-soria", "zeisel", "chen", "tung", "buettner")) {
+# for (data in c("ibarra-soria", "zeisel", "chen", "tung", "buettner")) {
 
 if (data == "ibarra-soria") {
     args <- list(

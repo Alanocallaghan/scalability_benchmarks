@@ -37,6 +37,8 @@ rule all:
         "figs/elbo/chen.pdf",
         "figs/hpd_mu.pdf",
         "figs/fixnu-chen.pdf",
+        "figs/fixnu-ibarra-som.pdf",
+        "figs/fixnu-ibarra-presom.pdf",
         "figs/hpd_epsilon.pdf",
         "tables/data-summary.tex",
         expand(
@@ -109,7 +111,7 @@ rule plots: ## todo
         "figs/norm_plot.pdf",
         "figs/hpd_mu.pdf",
         "figs/hpd_epsilon.pdf",
-        "rdata/main_done.RData"
+        "main_done.RData"
     shell:
         """
         Rscript src/analysis/main.R
@@ -142,6 +144,7 @@ rule batchinfo_plot:
         """
 
 rule true_positive_plot:
+    resources: mem_mb=20000, runtime=3000
     input:
         dc = expand(
             "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
@@ -170,8 +173,7 @@ rule hpd_comparison_plot:
     shell:
         """
         Rscript src/analysis/hpd_comparison.R \
-            -d {wildcards.dataset} \
-            -o {output}
+            -d {wildcards.dataset}
         """
 
 rule removing_cells_plot:
@@ -196,6 +198,7 @@ rule removing_cells_plot:
         """
 
 rule downsampling_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
@@ -467,19 +470,18 @@ rule cell_plot:
 
 
 rule plot_fixnu:
-    resources: mem_mb=10000, runtime=3000
+    resources: mem_mb=10000
     input:
-        "outputs/fix_nu/ibarra-som-fix.rds"
+        fix = "outputs/fix_nu/{dataset}-fix.rds",
+        var = "outputs/fix_nu/{dataset}-var.rds"
     output:
-        "figs/fixnu-chen.pdf",
-        "figs/fixnu-diff-chen.pdf",
-        "figs/fixnu-ibarra-presom.pdf",
-        "figs/fixnu-diff-ibarra-presom.pdf",
-        "figs/fixnu-ibarra-som.pdf",
-        "figs/fixnu-diff-ibarra-som.pdf"
+        # "figs/fixnu-chen.pdf",
+        # "figs/fixnu-diff-chen.pdf",
+        "figs/fixnu-{dataset}.pdf",
+        "figs/fixnu-diff-{dataset}.pdf"
     shell:
         """
-        Rscript ./src/analysis/plot_fix_nu.R -i {input}
+        Rscript ./src/analysis/plot_fix_nu.R -f {input.fix} -v {input.var} -d {wildcards.dataset}
         """
 
 
