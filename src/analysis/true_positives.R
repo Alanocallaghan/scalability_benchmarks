@@ -43,7 +43,7 @@ pos_metadata[, pg] <- lapply(
     function(x) rep(list(), length(x))
 )
 
-for (i in 1:nrow(pos_metadata)) {
+for (i in seq_len(nrow(pos_metadata))) {
     cat(i, "/", nrow(pos_metadata), "\n")
     df <- lapply(
         params,
@@ -65,7 +65,7 @@ ref <- pos_metadata[which(pos_metadata$nsubsets == 1), ]
 pos_metadata_test <- pos_metadata[pos_metadata$nsubsets != 1, ]
 jp <- paste0(params, "Jaccard")
 pos_metadata_test[, jp] <- NA
-for (i in 1:nrow(pos_metadata_test)) {
+for (i in seq_len(nrow(pos_metadata_test))) {
     cat(i, "/", nrow(pos_metadata_test), "\n")
     for (j in seq_along(jp)) {
         pos_metadata_test[i, jp[[j]]] <- jaccard(
