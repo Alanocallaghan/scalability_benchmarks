@@ -45,7 +45,7 @@ gs <- lapply(
                 hjust = 0,
                 vjust = 0,
                 label = sprintf(
-                    "Peason's rho: %0.03f",
+                    "Pearson's rho: %0.03f",
                     cor(norm_comp_sub$scran, norm_comp_sub$BASiCS)
                 )
             ) +
