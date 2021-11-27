@@ -58,4 +58,4 @@ gs <- lapply(
     }
 )
 plot_grid(plotlist = gs, nrow = 1, labels = "AUTO")
-ggsave("figs/scran_basics.pdf", width = 8, height = 4)
+ggsave("figs/scran_basics.pdf", width = 8, height = 3.5)
