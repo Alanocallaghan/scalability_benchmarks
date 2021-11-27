@@ -35,11 +35,13 @@ rule all:
         "figs/elbo/buettner.pdf",
         "figs/elbo/zeisel.pdf",
         "figs/elbo/chen.pdf",
-        "figs/hpd_mu.pdf",
         "figs/fixnu-chen.pdf",
         "figs/fixnu-ibarra-som.pdf",
         "figs/fixnu-ibarra-presom.pdf",
-        "figs/hpd_epsilon.pdf",
+        "figs/hpd_width_mu.pdf",
+        "figs/hpd_width_delta.pdf",
+        "figs/hpd_width_epsilon.pdf",
+        "figs/scran_basics.pdf",
         "tables/data-summary.tex",
         expand(
             "figs/hpd/{dataset}",
@@ -127,6 +129,21 @@ rule plots: ## todo
 #         """
 #         Rscript src/analysis/identifiability.R
 #         """
+
+rule scran_basics:
+    resources: mem_mb=20000
+    input:
+        "outputs/divide_and_conquer/data-chen_nsubsets-1_seed-14_by-gene/",
+        "rdata/chen.rds",
+        "rdata/ibarra-soria.rds",
+        "outputs/true-positives/data-ibarra-soria_nsubsets-1_seed-14.rds"
+    output:
+        "figs/scran_basics.pdf"
+    shell:
+        """
+        Rscript src/analysis/scran_basics.R
+        """
+
 
 rule batchinfo_plot:
     input:
