@@ -87,7 +87,10 @@ plot_all_diags <- function(df, param, measure) {
             aesthetics = c("fill", "color")
         ) +
         scale +
-        theme(panel.grid = element_blank()) +
+        theme(
+            panel.grid = element_blank(),
+            legend.position = "bottom"
+        ) +
         labs(
             x = "Partitions",
             y = "Effective sample size"
@@ -103,9 +106,17 @@ plot_all_diags <- function(df, param, measure) {
     invisible(g)
 }
 
+cat("ESS\n")
+cat("mu\n")
 plot_all_diags(df, "mu", "ess")
+cat("delta\n")
 plot_all_diags(df, "delta", "ess")
+cat("epsilon\n")
 plot_all_diags(df, "epsilon", "ess")
+cat("Geweke\n")
+cat("mu\n")
 plot_all_diags(df, "mu", "geweke.diag")
+cat("delta\n")
 plot_all_diags(df, "delta", "geweke.diag")
+cat("epsilon\n")
 plot_all_diags(df, "epsilon", "geweke.diag")

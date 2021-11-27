@@ -18,12 +18,13 @@ df <- merge(file_df, data_dims)
 references <- df[which(df[["chains"]] == 1), ]
 references[["chain"]] <- lapply(references[["file"]], readRDS)
 
+sourceme(here("src/analysis/diagnostics.R"))
+
 sourceme(here("src/analysis/de_on_table.R"))
 sourceme(here("src/analysis/chain_plots.R"))
 
 sourceme(here("src/analysis/normalisation_comparison.R"))
 
-sourceme(here("src/analysis/diagnostics.R"))
 sourceme(here("src/analysis/hpd.R"))
 
 
