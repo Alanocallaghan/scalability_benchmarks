@@ -43,6 +43,7 @@ rule all:
         "figs/hpd_width_epsilon.pdf",
         "figs/scran_basics.pdf",
         "tables/data-summary.tex",
+        "tables/hmc-comparison.tex",
         expand(
             "figs/hpd/{dataset}",
             dataset = data
@@ -559,3 +560,11 @@ rule hmc:
         """
         Rscript src/chains/hmc.R
         """
+
+rule summarise_hmc:
+    input:
+        "outputs/hmc_vs_amwg.rds"
+    output:
+        "tables/hmc-comparison.tex"
+    shell:
+        "Rscript src/analysis.hmc.R"
