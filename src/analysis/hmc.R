@@ -18,7 +18,7 @@ data <- rbind(
 )
 colnames(data) <- c("mu", "delta", "epsilon")
 table <- data.frame(
-    Method = c("AMWG", "HMC"),
+    Method = c("\\gls{aMwG}", "HMC"),
     data
 )
 mdf <- melt(table, id.var = "Method")
