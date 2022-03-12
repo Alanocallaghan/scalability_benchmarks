@@ -42,7 +42,7 @@ g <- ggplot(mdf_cs) +
         # limits = c("pDiffExp", "pDiffDisp", "pDiffResDisp"),
         labels = c("mu", "delta", "epsilon")
     ) +
-    labs(x = "Dataset") +
+    labs(x = "Number of partitions") +
     scale_y_continuous(
         name = "Proportion of genes differentially expressed",
         labels = scales::percent

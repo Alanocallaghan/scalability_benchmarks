@@ -25,39 +25,39 @@ parsed_elbos <- lapply(advi_elbo, parse_elbo)
 elbo_df <- as.data.frame(advi_df)
 elbo_df$elbos <- parsed_elbos
 elbo_df$elbos <- lapply(seq_len(nrow(elbo_df)), 
-  function(i) {
-    d <- elbo_df$elbos[[i]]
-    d$data <- elbo_df[[i, "data"]]
-    d$seed <- elbo_df[[i, "seed"]]
-    d
-  }
+    function(i) {
+        d <- elbo_df$elbos[[i]]
+        d$data <- elbo_df[[i, "data"]]
+        d$seed <- elbo_df[[i, "seed"]]
+        d
+    }
 )
 
 elbo_df <- do.call(rbind, elbo_df$elbos)
 elbo_df$Data <- sub(
-  "([\\w])([\\w]+)", "\\U\\1\\L\\2",
-  elbo_df$data,
-  perl = TRUE
+    "([\\w])([\\w]+)", "\\U\\1\\L\\2",
+    elbo_df$data,
+    perl = TRUE
 )
 
 plots <- lapply(unique(elbo_df$data),
-  function(d) {
-    df <- elbo_df[elbo_df$data == d, ]
-    D <- df$Data[[1]]
-    g <- ggplot(df) +
-      aes(x = iter, y = ELBO, color = factor(seed)) +
-      geom_line() +
-      theme(legend.position = "none") +
-      # scale_y_log10() +
-      # ggtitle(D) +
-      labs(x = "Iteration") +
-      theme(
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.margin = unit(c(0, 0.05, 0, 0.025), "npc")
-      )
-      labs(x = "Iteration")
-    ggsave(g, file = sprintf("figs/elbo/%s.pdf", d), width = 4, height = 3)
-    g
-  }
+    function(d) {
+        df <- elbo_df[elbo_df$data == d, ]
+        D <- df$Data[[1]]
+        g <- ggplot(df) +
+            aes(x = iter, y = ELBO, color = factor(seed)) +
+            geom_line() +
+            theme(legend.position = "none") +
+            # scale_y_log10() +
+            # ggtitle(D) +
+            labs(x = "Iteration") +
+            theme(
+                panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                plot.margin = unit(c(0, 0.05, 0, 0.025), "npc")
+            )
+            labs(x = "Iteration")
+        ggsave(g, file = sprintf("figs/elbo/%s.pdf", d), width = 4, height = 3)
+        g
+    }
 )

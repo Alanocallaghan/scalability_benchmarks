@@ -16,25 +16,25 @@ data <- readRDS(paste0("rdata/", args[["data"]], ".rds"))
 
 
 bi <- BASiCS_MCMC(
-  data,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4),
-  PrintProgress = FALSE,
-  WithSpikes = FALSE,
-  Regression = TRUE
+    data,
+    N = args[["iterations"]],
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4),
+    PrintProgress = FALSE,
+    WithSpikes = FALSE,
+    Regression = TRUE
 )
 
 data@colData$BatchInfo <- 1
 
 non_bi <- BASiCS_MCMC(
-  data,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4),
-  PrintProgress = FALSE,
-  WithSpikes = FALSE,
-  Regression = TRUE
+    data,
+    N = args[["iterations"]],
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4),
+    PrintProgress = FALSE,
+    WithSpikes = FALSE,
+    Regression = TRUE
 )
 
 dir <- args[["output"]]

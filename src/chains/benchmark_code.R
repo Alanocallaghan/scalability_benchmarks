@@ -10,7 +10,8 @@ divide_and_conquer_benchmark <- function(
         Regression = TRUE,
         WithSpikes = length(SingleCellExperiment::altExpNames(Data)) > 0,
         Seed = 42,
-        ...) {
+        ...
+    ) {
     set.seed(Seed)
     SubsetBy <- match.arg(SubsetBy)
     t <- system.time(

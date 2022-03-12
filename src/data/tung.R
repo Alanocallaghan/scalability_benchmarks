@@ -6,24 +6,24 @@ data.dir <- "downloads"
 tungfile <- file.path(data.dir, "tung_molecules-filter.txt")
 erccfile <- file.path(data.dir, "tung_ercc_conc.txt")
 system(
-  paste(
-    "wget https://raw.githubusercontent.com/jdblischak/singleCellSeq/b6ebd4a36925995e0b9b806a4172e9fb1f99e7b6/data/expected-ercc-molecules.txt",
-    "-O", erccfile
-  )
+    paste(
+        "wget https://raw.githubusercontent.com/jdblischak/singleCellSeq/b6ebd4a36925995e0b9b806a4172e9fb1f99e7b6/data/expected-ercc-molecules.txt",
+        "-O", erccfile
+    )
 )
 
 
 system(
-  paste(
-    "wget", 
-    "https://github.com/Alanocallaghan/singleCellSeq/raw/master/data/molecules-filter.txt",
-    "-O", tungfile
-  )
+    paste(
+        "wget", 
+        "https://github.com/Alanocallaghan/singleCellSeq/raw/master/data/molecules-filter.txt",
+        "-O", tungfile
+    )
 )
 
 reads <- read.delim(
-  tungfile,
-  stringsAsFactors = FALSE
+    tungfile,
+    stringsAsFactors = FALSE
 )
 rownames(reads) <- reads[[1]]
 reads <- reads[, -1]
@@ -47,10 +47,10 @@ reads <- reads[ind_expressed, ]
 
 
 ERCC_num <- read.table(
-  erccfile,
-  header = TRUE,
-  sep = "\t",
-  fill = TRUE
+    erccfile,
+    header = TRUE,
+    sep = "\t",
+    fill = TRUE
 )
 ERCC_num <- ERCC_num[, c("id", "ercc_molecules_well")]
 rownames(ERCC_num) <- ERCC_num[["id"]]
@@ -60,10 +60,10 @@ SpikeInput <- ERCC_num[grep("ERCC", rownames(reads), value = TRUE), ]
 batches <- gsub(".*\\.(r\\d)\\..*", "\\1", colnames(reads))
 
 bd <- newBASiCS_Data(
-  Counts = reads,
-  BatchInfo = batches,
-  Tech = rownames(reads) %in% spikes,
-  SpikeInfo = SpikeInput
+    Counts = reads,
+    BatchInfo = batches,
+    Tech = rownames(reads) %in% spikes,
+    SpikeInfo = SpikeInput
 )
 colnames(bd) <- colnames(reads)
 saveRDS(bd, file = "rdata/tung.rds")

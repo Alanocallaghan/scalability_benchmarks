@@ -12,11 +12,11 @@ Theta1 <- rgamma(2, 1, 1)
 BatchInfo1 <- rbinom(n, 1, 0.5)
 
 sce1 <- BASiCS_Sim(
-  Mu = Mu1,
-  Delta = Delta1,
-  S = S1,
-  Theta = Theta1,
-  BatchInfo = BatchInfo1
+    Mu = Mu1,
+    Delta = Delta1,
+    S = S1,
+    Theta = Theta1,
+    BatchInfo = BatchInfo1
 )
 
 IndDE <- rbinom(q, 1, p)
@@ -28,23 +28,23 @@ Theta2 <- rgamma(2, 1, 1)
 BatchInfo2 <- rbinom(n, 1, 0.5)
 
 sce2 <- BASiCS_Sim(
-  Mu = Mu2,
-  Delta = Delta2,
-  S = S2,
-  Theta = Theta2,
-  BatchInfo = BatchInfo2
+    Mu = Mu2,
+    Delta = Delta2,
+    S = S2,
+    Theta = Theta2,
+    BatchInfo = BatchInfo2
 )
 
 saveRDS(
-  list(
-    sces=list(sce1, sce2),
-    IndDE = IndDE,
-    IndDD = IndDD,
-    Mus = list(Mu1, Mu2),
-    Deltas = list(Delta1, Delta2),
-    S = list(S1, S2),
-    Thetas = list(Theta1, Theta2),
-    BatchInfo = list(BatchInfo1, BatchInfo1)
-  ),
-  "rdata/simulation.rds"
+    list(
+        sces = list(sce1, sce2),
+        IndDE = IndDE,
+        IndDD = IndDD,
+        Mus = list(Mu1, Mu2),
+        Deltas = list(Delta1, Delta2),
+        S = list(S1, S2),
+        Thetas = list(Theta1, Theta2),
+        BatchInfo = list(BatchInfo1, BatchInfo1)
+    ),
+    "rdata/simulation.rds"
 )

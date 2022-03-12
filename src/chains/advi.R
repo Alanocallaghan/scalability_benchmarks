@@ -19,18 +19,18 @@ dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 
 with_spikes <- "spike-ins" %in% altExpNames(data)
 time <- system.time(
-  elbo <- capture.output(
-    chain <- BASiCStan(
-      data,
-      WithSpikes = with_spikes
+    elbo <- capture.output(
+        chain <- BASiCStan(
+        data,
+        WithSpikes = with_spikes
+        )
     )
-  )
 )
 config <- list(
-  chains = NA,
-  by = "advi",
-  data = args[["data"]],
-  seed = args[["seed"]]
+    chains = NA,
+    by = "advi",
+    data = args[["data"]],
+    seed = args[["seed"]]
 )
 
 saveRDS(elbo, file.path(dir, "elbo.rds"))

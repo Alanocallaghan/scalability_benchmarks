@@ -3,34 +3,34 @@ library("BASiCS")
 
 
 BASiCS_Draw <- function(
-  Chain,
-  BatchInfo = gsub(".*_Batch([0-9a-zA-Z])", "\\1", colnames(Chain@parameters[["nu"]])),
-  N = sample(nrow(Chain@parameters[["nu"]]), 1)
-) {
-  
-  BASiCS_Sim(
-    Mu = Chain@parameters[["mu"]][N, ],
-    Delta = Chain@parameters[["delta"]][N, ],
-    Phi = Chain@parameters[["phi"]][N, ],
-    S = Chain@parameters[["s"]][N, ],
-    BatchInfo = BatchInfo,
-    Theta = Chain@parameters[["theta"]][N, ]
-  )
+        Chain,
+        BatchInfo = gsub(".*_Batch([0-9a-zA-Z])", "\\1", colnames(Chain@parameters[["nu"]])),
+        N = sample(nrow(Chain@parameters[["nu"]]), 1)
+    ) {
+    
+    BASiCS_Sim(
+        Mu = Chain@parameters[["mu"]][N, ],
+        Delta = Chain@parameters[["delta"]][N, ],
+        Phi = Chain@parameters[["phi"]][N, ],
+        S = Chain@parameters[["s"]][N, ],
+        BatchInfo = BatchInfo,
+        Theta = Chain@parameters[["theta"]][N, ]
+    )
 }
 
 density_plot <- function(base_param, ppc_param) {
-  df <- do.call(cbind, ppc_param)
-  df <- as.data.frame(df)
-  df <- cbind(df, base = base_param[[config$data]])
-  mdf <- reshape2::melt(as.matrix(df))
-  ggplot(mdf, aes(x = value, group = Var2, color = Var2 == "base")) +
-    scale_color_brewer(
-      palette = "Set1",
-      labels = c("Base", "Posterior sample"),
-      guide = FALSE
-    ) +
-    geom_density() +
-    scale_x_log10()  
+    df <- do.call(cbind, ppc_param)
+    df <- as.data.frame(df)
+    df <- cbind(df, base = base_param[[config$data]])
+    mdf <- reshape2::melt(as.matrix(df))
+    ggplot(mdf, aes(x = value, group = Var2, color = Var2 == "base")) +
+        scale_color_brewer(
+            palette = "Set1",
+            labels = c("Base", "Posterior sample"),
+            guide = FALSE
+        ) +
+        geom_density() +
+        scale_x_log10()  
 }
 
 ## distribution of mean expression
@@ -56,11 +56,11 @@ get_complexity <- function(datas) {
 
 
 datas <- sapply(
-  c("tung", "zeisel", "buettner", "pbmc"),
-  function(dataset) {
-    readRDS(paste0("data/", dataset, ".rds"))
-  },
-  simplify = FALSE
+    c("tung", "zeisel", "buettner", "pbmc"),
+    function(dataset) {
+        readRDS(paste0("data/", dataset, ".rds"))
+    },
+    simplify = FALSE
 )
 
 
@@ -84,44 +84,44 @@ file <- list.files("outputs/divide_and_conquer", full.names = TRUE)[33]
 chains <- readRDS(paste0(file, "/chains.rds"))
 config <- readRDS(paste0(file, "/config.rds"))
 if (is.list(chains)) {
-  chains <- BASiCS:::.combine_subposteriors(
-    chains,
-    SubsetBy = config$by
-  )
+    chains <- BASiCS:::.combine_subposteriors(
+        chains,
+        SubsetBy = config$by
+    )
 }
 
 datas[[config$data]] <- datas[[config$data]][
-  intersect(rownames(datas[[config$data]]), rownames(chains)), ]
+    intersect(rownames(datas[[config$data]]), rownames(chains)), ]
 
 chains@parameters[c("mu", "delta", "epsilon")] <- lapply(
-  chains@parameters[c("mu", "delta", "epsilon")],
-  function(x) {
-    x[, rownames(datas[[config$data]])]
-  }
+    chains@parameters[c("mu", "delta", "epsilon")],
+    function(x) {
+        x[, rownames(datas[[config$data]])]
+    }
 )
 
 
 chains@parameters[c("nu", "s")] <- lapply(
-  chains@parameters[c("nu", "s")],
-  function(x) {
-    colnames(x) <- gsub("_Batch.*$", "", colnames(x))
-    x
-  }
+    chains@parameters[c("nu", "s")],
+    function(x) {
+        colnames(x) <- gsub("_Batch.*$", "", colnames(x))
+        x
+    }
 )
 
 datas[[config$data]] <- datas[[config$data]][, 
-  intersect(colnames(datas[[config$data]]), colnames(chains@parameters$nu))]
+    intersect(colnames(datas[[config$data]]), colnames(chains@parameters$nu))]
 
 chains@parameters[c("nu", "s")] <- lapply(
-  chains@parameters[c("nu", "s")],
-  function(x) {
-    x[, colnames(datas[[config$data]])]
-  }
+    chains@parameters[c("nu", "s")],
+    function(x) {
+        x[, colnames(datas[[config$data]])]
+    }
 )
 
 
 ppc_datas <- lapply(801:850, function(i) {
-  suppressMessages(BASiCS_Draw(chains, N = i))
+    suppressMessages(BASiCS_Draw(chains, N = i))
 })
 
 ppc_means <- get_means(ppc_datas)
@@ -136,9 +136,9 @@ g <- density_plot(base_size, ppc_size)
 g <- density_plot(base_complexity, ppc_complexity)
 
 
-sapply(1:50, 
-  function(i) {
-    ks.test(ppc_means[[i]], base_means[[config$data]])$p.value
-  }
-)
+# sapply(1:50, 
+#     function(i) {
+#         ks.test(ppc_means[[i]], base_means[[config$data]])$p.value
+#     }
+# )
 
