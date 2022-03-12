@@ -1,3 +1,5 @@
+library("here")
+source(here("src/analysis/preamble.R"))
 
 ## compare correlation and hpd width
 calc_norm_factors <- function(chain) {
@@ -8,14 +10,6 @@ calc_norm_factors <- function(chain) {
         params$nu * params$phi
     }
 }
-
-# dr <- df[df$data == "chen" & df$chains == 1, ]
-# dd <- df[df$data == "chen" & df$chains == 4, ]
-# x1 <- readRDS(dr$file[[1]])
-# x2 <- readRDS(dd$file[[1]])
-# cm1 <- colMedians(calc_norm_factors(x1))
-# cm2 <- colMedians(calc_norm_factors(x2))
-# # plot(cm1, cm2)
 
 cors <- lapply(seq_len(nrow(df)),
     function(i) {
@@ -81,7 +75,7 @@ g <- ggplot() +
         linetype = "dashed"
     ) +
     facet_wrap(~data, nrow = 2, ncol = 2) +
-    scale_x_discrete(name = "Partitions") +
+    scale_x_discrete(name = "Number of partitions") +
     scale_y_continuous(
         name = "Pearson correlation",
         limits = c(0.8, 1)
@@ -108,7 +102,7 @@ g <- ggplot(
         linetype = "dashed"
     ) +
     facet_wrap(~data, nrow = 2, ncol = 2) +
-    scale_x_discrete(name = "Partitions") +
+    scale_x_discrete(name = "Number of partitions") +
     scale_y_continuous(name = "Pearson correlation", limits = c(0, 1)) +
     theme(text = element_text(size = 18), panel.grid = element_blank())
 

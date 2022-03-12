@@ -27,28 +27,28 @@ SM_Data <- droplet_sce[, ind_som]
 
 # Presomitic mesoderm cells
 PSM_MCMC <- BASiCS_MCMC(
-  PSM_Data,
-  Regression = TRUE,
-  SubsetBy = "gene",
-  NSubsets = args[["nsubsets"]],
-  WithSpikes = FALSE,
-  PrintProgress = FALSE,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4)
+    PSM_Data,
+    Regression = TRUE,
+    SubsetBy = "gene",
+    NSubsets = args[["nsubsets"]],
+    WithSpikes = FALSE,
+    PrintProgress = FALSE,
+    N = args[["iterations"]],
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4)
 )
 
 # Somitic mesoderm cells
 SM_MCMC <- BASiCS_MCMC(
-  SM_Data,
-  Regression = TRUE,
-  SubsetBy = "gene",
-  NSubsets = args[["nsubsets"]],
-  WithSpikes = FALSE,
-  PrintProgress = FALSE,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4)
+    SM_Data,
+    Regression = TRUE,
+    SubsetBy = "gene",
+    NSubsets = args[["nsubsets"]],
+    WithSpikes = FALSE,
+    PrintProgress = FALSE,
+    N = args[["iterations"]],
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4)
 )
 
 
@@ -56,8 +56,8 @@ SM_MCMC <- BASiCS_MCMC(
 test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC)
 
 out <- list(
-  test = test,
-  mcmc = list(sm = SM_MCMC, psm = PSM_MCMC)
+    test = test,
+    mcmc = list(sm = SM_MCMC, psm = PSM_MCMC)
 )
 dir.create("outputs/true-positives/", showWarnings = FALSE)
 

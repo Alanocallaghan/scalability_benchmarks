@@ -24,15 +24,15 @@ ref_df_rm <- read_triplets(file2triplets(rm_ref_files), combine = TRUE)
 ref_df_rm$chain <- lapply(ref_df_rm$file, readRDS)
 
 rm_df <- do_de(
-  rm_df,
-  ref_df = ref_df_rm,
-  match_column = "proportion_retained",
-  data_dims
+    rm_df,
+    ref_df = ref_df_rm,
+    match_column = "proportion_retained",
+    data_dims
 )
 
 mdf_rm <- reshape2::melt(
-  rm_df,
-  measure.vars = c("pDiffExp", "pDiffDisp", "pDiffResDisp")
+    rm_df,
+    measure.vars = c("pDiffExp", "pDiffDisp", "pDiffResDisp")
 )
 mdf_rm$variable <- gsub("pDiffExp", "mu", mdf_rm$variable)
 mdf_rm$variable <- gsub("pDiffDisp", "delta", mdf_rm$variable)
@@ -41,31 +41,31 @@ mdf_rm$variable <- factor(mdf_rm$variable, levels = c("mu", "delta", "epsilon"))
 mdf_rm$cells_retained <- mdf_rm$proportion_retained * mdf_rm$nCells
 
 mdf_rm$proportion_retained <- factor(
-  paste(mdf_rm$proportion_retained * 100, "%"),
-  levels = paste(
-    sort(unique(rm_df$proportion_retained), decreasing = TRUE) * 100,
-    "%"
-  )
+    paste(mdf_rm$proportion_retained * 100, "%"),
+    levels = paste(
+        sort(unique(rm_df$proportion_retained), decreasing = TRUE) * 100,
+        "%"
+    )
 )
 
 # mdf_rm_sub <- mdf_rm[mdf_rm$data == "zeisel", ]
 mdf_rm_sub <- mdf_rm[mdf_rm$data == "chen", ]
 
 g <- ggplot(mdf_rm_sub) +
-  aes(x = factor(round(cells_retained)), y = value, color = variable) +
-  geom_quasirandom(dodge.width = 0.25, size = 0.7, groupOnX = TRUE) +
-  scale_color_brewer(name = "Parameter", palette = "Set1") +
-  # scale_x_reverse("Number of cells") +
-  # facet_wrap(~data) +
-  scale_y_continuous(labels = scales::percent) +
-  labs(
-    x = "Number of cells",
-    y = "Portion of genes differentially expressed"
-  ) +
-  theme(
-    axis.text.x = element_text(hjust = 1, angle = 45),
-    panel.grid = element_blank(),
-    legend.position = "bottom"
-  )
+    aes(x = factor(round(cells_retained)), y = value, color = variable) +
+    geom_quasirandom(dodge.width = 0.25, size = 0.7, groupOnX = TRUE) +
+    scale_color_brewer(name = "Parameter", palette = "Set1") +
+    # scale_x_reverse("Number of cells") +
+    # facet_wrap(~data) +
+    scale_y_continuous(labels = scales::percent) +
+    labs(
+        x = "Number of cells in dataset",
+        y = "Portion of genes differentially expressed"
+    ) +
+    theme(
+        axis.text.x = element_text(hjust = 1, angle = 45),
+        panel.grid = element_blank(),
+        legend.position = "bottom"
+    )
 
 ggsave("figs/removing_cells.pdf", width = 5, height = 4)

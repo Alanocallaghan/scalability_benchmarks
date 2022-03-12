@@ -23,25 +23,25 @@ set.seed(as.numeric(args[["seed"]]))
 
 counts <- counts(data)
 counts[] <- apply(
-  counts,
-  2,
-  function(col) {
-    rbinom(length(col), col, as.numeric(args[["fraction"]]))
-  }
+    counts,
+    2,
+    function(col) {
+        rbinom(length(col), col, as.numeric(args[["fraction"]]))
+    }
 )
 counts(data) <- counts
 
 
 bmark <- divide_and_conquer_benchmark(
-  Data = data,
-  DataName = args[["data"]],
-  SubsetBy = "gene",
-  NSubsets = 16,
-  Seed = args[["seed"]],
-  Regression = TRUE,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4)
+    Data = data,
+    DataName = args[["data"]],
+    SubsetBy = "gene",
+    NSubsets = 16,
+    Seed = args[["seed"]],
+    Regression = TRUE,
+    N = args[["iterations"]],
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4)
 )
 cfg <- bmark[["config"]]
 cfg$downsample_rate <- as.numeric(args[["fraction"]])

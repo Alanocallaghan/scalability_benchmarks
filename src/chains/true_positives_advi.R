@@ -23,23 +23,23 @@ SM_Data <- droplet_sce[, ind_som]
 
 # Presomitic mesoderm cells
 PSM_MCMC <- BASiCStan(
-  PSM_Data,
-  Regression = TRUE,
-  WithSpikes = FALSE
+    PSM_Data,
+    Regression = TRUE,
+    WithSpikes = FALSE
 )
 
 # Somitic mesoderm cells
 SM_MCMC <- BASiCStan(
-  SM_Data,
-  Regression = TRUE,
-  WithSpikes = FALSE
+    SM_Data,
+    Regression = TRUE,
+    WithSpikes = FALSE
 )
 
 test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC)
 
 out <- list(
-  test = test,
-  mcmc = list(sm = SM_MCMC, psm = PSM_MCMC)
+    test = test,
+    mcmc = list(sm = SM_MCMC, psm = PSM_MCMC)
 )
 
 dir.create("outputs/true-positives/", showWarnings = FALSE)

@@ -1,5 +1,7 @@
 library("here")
 library("BASiCS")
+source(here("src/analysis/preamble.R"))
+
 
 ess <- function (x) {
     vars <- matrixStats::colVars(x)
@@ -15,28 +17,28 @@ ess <- function (x) {
     setNames(ifelse(spec == 0, 0, nrow(x) * vars/spec), colnames(x))
 }
 
-plot_all_diags <- function(df, param, measure) {
+for (measure in c("ess", "geweke.diag")) {
+
+    dir.create(
+        sprintf("figs/%s", gsub("\\.", "_", measure)),
+        showWarnings = FALSE
+    )
+
     measure_name <- BASiCS:::.MeasureName(measure)
     diag_all_list <- parallel::mclapply(
         seq_len(nrow(df)),
         function(i) {
             cat(i, "/", nrow(df), "\n")
             chain <- readRDS(df[[i, "file"]])
-            if (length(chain) > 1) {
-                suppressMessages(
-                    chain <- BASiCS:::.combine_subposteriors(
-                        chain,
-                        SubsetBy = "gene"
-                    )
-                )
-            }
             data.frame(
                 data = df[[i, "data"]],
                 chains = df[[i, "chains"]],
                 seed = df[[i, "seed"]],
                 by = df[[i, "by"]],
-                feature = colnames(chain@parameters[[param]]),
-                diag = BASiCS:::.GetMeasure(chain, param, measure)
+                feature = colnames(chain@parameters[["mu"]]),
+                mu = BASiCS:::.GetMeasure(chain, "mu", measure),
+                delta = BASiCS:::.GetMeasure(chain, "delta", measure),
+                epsilon = BASiCS:::.GetMeasure(chain, "epsilon", measure)
             )
         }, mc.cores = 4
     )
@@ -75,48 +77,35 @@ plot_all_diags <- function(df, param, measure) {
         )
     }
 
-    g <- ggplot(diag_all) +
-        aes(x = chains, y = diag, color = by, fill = by) +
-        # geom_jitter(height = 0, width = 0.2) +
-        geom_violin(alpha = 0.2) +
-        geom_boxplot(alpha = 0.2, width = 0.1, outlier.colour = NA) +
-        facet_wrap(~data, scales = "free_y") +
-        scale_fill_brewer(
-            name = "Inference method",
-            palette = "Dark2",
-            aesthetics = c("fill", "color")
-        ) +
-        scale +
-        theme(
-            panel.grid = element_blank(),
-            legend.position = "bottom"
-        ) +
-        labs(
-            x = "Partitions",
-            y = "Effective sample size"
+    gs <- lapply(c("mu", "delta", "epsilon"),
+        function(param) {
+            ggplot(diag_all) +
+                aes_string(x = "chains", y = param, color = "by", fill = "by") +
+                # geom_jitter(height = 0, width = 0.2) +
+                geom_violin(alpha = 0.2) +
+                geom_boxplot(alpha = 0.2, width = 0.1, outlier.colour = NA) +
+                facet_wrap(~data, scales = "free_y") +
+                scale_fill_brewer(
+                    name = "Inference method",
+                    palette = "Dark2",
+                    aesthetics = c("fill", "color")
+                ) +
+                scale +
+                theme(
+                    panel.grid = element_blank(),
+                    legend.position = "bottom"
+                ) +
+                labs(
+                    x = "Number of partitions",
+                    y = "Effective sample size"
+                )
+        }
+    )
+    names(gs) <- c("mu", "delta", "epsilon")
+    for (param in names(gs)) {
+        ggsave(gs[[param]],
+            file = sprintf("figs/%s/%s_all.pdf", gsub("\\.", "_", measure), param),
+            width = 5, height = 4
         )
-    dir.create(
-        sprintf("figs/%s", gsub("\\.", "_", measure)),
-        showWarnings = FALSE
-    )
-    ggsave(g,
-        file = sprintf("figs/%s/%s_all.pdf", gsub("\\.", "_", measure), param),
-        width = 5, height = 4
-    )
-    invisible(g)
+    }
 }
-
-cat("ESS\n")
-cat("mu\n")
-plot_all_diags(df, "mu", "ess")
-cat("delta\n")
-plot_all_diags(df, "delta", "ess")
-cat("epsilon\n")
-plot_all_diags(df, "epsilon", "ess")
-cat("Geweke\n")
-cat("mu\n")
-plot_all_diags(df, "mu", "geweke.diag")
-cat("delta\n")
-plot_all_diags(df, "delta", "geweke.diag")
-cat("epsilon\n")
-plot_all_diags(df, "epsilon", "geweke.diag")

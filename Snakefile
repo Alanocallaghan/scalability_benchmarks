@@ -1,6 +1,6 @@
 chains = [1, 2, 4, 8, 16, 32, 64]
 chains_cell = [2, 4, 8, 16]
-chains_timing = [2, 4, 8, 16, 32, 64, 128]
+chains_timing = [1, 2, 4, 8, 16, 32, 64, 128]
 by = ["gene"]
 data = ["buettner", "chen", "tung", "zeisel"]
 data_cell = ["chen", "zeisel"]
@@ -42,16 +42,22 @@ rule all:
         "figs/hpd_width_delta.pdf",
         "figs/hpd_width_epsilon.pdf",
         "figs/scran_basics.pdf",
+        "figs/point_estimates_mu.pdf",
+        "figs/point_estimates_delta.pdf",
+        "figs/point_estimates_epsilon.pdf",
         "tables/data-summary.tex",
         "tables/hmc-comparison.tex",
+        "figs/ess/mu_all.pdf",
+        "figs/ess/delta_all.pdf",
+        "figs/ess/epsilon_all.pdf",
+        "figs/geweke_diag/mu_all.pdf",
+        "figs/geweke_diag/delta_all.pdf",
+        "figs/geweke_diag/epsilon_all.pdf",
         expand(
             "figs/hpd/{dataset}",
             dataset = data
         )
         # ,
-        # "figs/ess_mu.pdf",
-        # "figs/ess_epsilon.pdf",
-        
         # "figs/de_id_tung.pdf",
         # "figs/de_id_zeisel.pdf",
         # "figs/ess_id.pdf",
@@ -111,9 +117,6 @@ rule plots: ## todo
     output:
         "figs/diffexp_plot.pdf",
         "figs/overlap_diff_genes.pdf",
-        "figs/norm_plot.pdf",
-        "figs/hpd_mu.pdf",
-        "figs/hpd_epsilon.pdf",
         "main_done.RData"
     shell:
         """
@@ -193,6 +196,8 @@ rule hpd_comparison_plot:
         Rscript src/analysis/hpd_comparison.R \
             -d {wildcards.dataset}
         """
+
+
 
 rule removing_cells_plot:
     resources: mem_mb=20000
@@ -522,6 +527,102 @@ rule fixnu:
             --iterations {iterations}
         """
 
+rule point_estimates_plot:
+    input:
+        expand(
+            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            dataset = data,
+            nsubsets = chains,
+            by = by,
+            seed = seeds
+        ),
+        expand(
+            "outputs/advi/data-{dataset}_seed-{seed}/",
+            dataset = data,
+            seed  = seeds
+        )
+    output:
+        "figs/point_estimates_mu.pdf",
+        "figs/point_estimates_delta.pdf",
+        "figs/point_estimates_epsilon.pdf"
+    shell:
+        """
+        Rscript src/analysis/point_estimates.R
+        """
+
+rule hpd_width_plot:
+    input:
+        expand(
+            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            dataset = data,
+            nsubsets = chains,
+            by = by,
+            seed = seeds
+        ),
+        expand(
+            "outputs/advi/data-{dataset}_seed-{seed}/",
+            dataset = data,
+            seed  = seeds
+        )
+    output:
+        "figs/hpd_width_mu.pdf",
+        "figs/hpd_width_delta.pdf",
+        "figs/hpd_width_epsilon.pdf"
+    shell:
+        """
+        Rscript src/analysis/hpd.R
+        """
+
+
+
+rule hpd_width_plot:
+    input:
+        expand(
+            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            dataset = data,
+            nsubsets = chains,
+            by = by,
+            seed = seeds
+        ),
+        expand(
+            "outputs/advi/data-{dataset}_seed-{seed}/",
+            dataset = data,
+            seed  = seeds
+        )
+    output:
+        "figs/ess/mu_all.pdf",
+        "figs/ess/delta_all.pdf",
+        "figs/ess/epsilon_all.pdf",
+        "figs/geweke_diag/mu_all.pdf",
+        "figs/geweke_diag/delta_all.pdf",
+        "figs/geweke_diag/epsilon_all.pdf"
+    shell:
+        """
+        Rscript src/analysis/diagnostics.R
+        """
+
+
+rule norm_plot:
+    input:
+        expand(
+            "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
+            dataset = data,
+            nsubsets = chains,
+            by = by,
+            seed = seeds
+        ),
+        expand(
+            "outputs/advi/data-{dataset}_seed-{seed}/",
+            dataset = data,
+            seed  = seeds
+        )
+    output:
+        "figs/norm_plot.pdf",
+        "figs/norm_plot_hpd.pdf"
+    shell:
+        """
+        Rscript src/analysis/normalisation_comparison.R
+        """
 
 rule data:
     resources:

@@ -16,49 +16,49 @@ data <- args[["data"]]
 # cat("Doing", data, "\n")
 sce <- readRDS(paste0("rdata/", data, ".rds"))
 if (data == "ibarra-soria") {
-  sce <- sce[, sce$Cell_type == "PSM"]
+    sce <- sce[, sce$Cell_type == "PSM"]
 }
 spikes <- "spike-ins" %in% altExpNames(sce)
 time_mcmc <- function(n, times = 1) {
-  if (n == 1) {
-    replicate(times, {
-      system.time(
-        suppressMessages(
-          BASiCS_MCMC(
-            sce,
-            N = args[["iterations"]],
-            Thin = max((args[["iterations"]] / 2) / 1000, 2),
-            Burn = max(args[["iterations"]] / 2, 4),
-            WithSpikes = spikes,
-            Regression = TRUE,
-            PrintProgress = FALSE
-          )
-        )
-      )[["elapsed"]]
-    })
-  } else {
-    replicate(times, {
-      subsets <- BASiCS:::.generateSubsets(
-        sce,
-        NSubsets = n,
-        SubsetBy = "gene",
-        WithSpikes = spikes
-      )
-      system.time(
-        suppressMessages(
-          BASiCS_MCMC(
-            subsets[[1]],
-            N = args[["iterations"]],
-            Thin = max((args[["iterations"]] / 2) / 1000, 2),
-            Burn = max(args[["iterations"]] / 2, 4),
-            WithSpikes = spikes,
-            Regression = TRUE,
-            PrintProgress = FALSE
-          )
-        )
-      )[["elapsed"]]
-    })
-  }
+    if (n == 1) {
+        replicate(times, {
+            system.time(
+                suppressMessages(
+                    BASiCS_MCMC(
+                        sce,
+                        N = args[["iterations"]],
+                        Thin = max((args[["iterations"]] / 2) / 1000, 2),
+                        Burn = max(args[["iterations"]] / 2, 4),
+                        WithSpikes = spikes,
+                        Regression = TRUE,
+                        PrintProgress = FALSE
+                    )
+                )
+            )[["elapsed"]]
+        })
+    } else {
+        replicate(times, {
+            subsets <- BASiCS:::.generateSubsets(
+                sce,
+                NSubsets = n,
+                SubsetBy = "gene",
+                WithSpikes = spikes
+            )
+            system.time(
+                suppressMessages(
+                    BASiCS_MCMC(
+                        subsets[[1]],
+                        N = args[["iterations"]],
+                        Thin = max((args[["iterations"]] / 2) / 1000, 2),
+                        Burn = max(args[["iterations"]] / 2, 4),
+                        WithSpikes = spikes,
+                        Regression = TRUE,
+                        PrintProgress = FALSE
+                    )
+                )
+            )[["elapsed"]]
+        })
+    }
 }
 n <- args[["nsubsets"]]
 time <- time_mcmc(n, times = 2)

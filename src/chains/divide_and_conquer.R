@@ -22,15 +22,15 @@ dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
 
 data <- divide_and_conquer_benchmark(
-  Data = data,
-  DataName = args[["data"]],
-  SubsetBy = args[["subsetby"]],
-  NSubsets = args[["nsubsets"]],
-  Seed = args[["seed"]],
-  Regression = TRUE,
-  N = args[["iterations"]],
-  Thin = max((args[["iterations"]] / 2) / 1000, 2),
-  Burn = max(args[["iterations"]] / 2, 4)
+    Data = data,
+    DataName = args[["data"]],
+    SubsetBy = args[["subsetby"]],
+    NSubsets = args[["nsubsets"]],
+    Seed = args[["seed"]],
+    Regression = TRUE,
+    N = args[["iterations"]],
+    Thin = max((args[["iterations"]] / 2) / 1000, 2),
+    Burn = max(args[["iterations"]] / 2, 4)
 )
 chains <- data[["chain"]]
 config <- data[["config"]]

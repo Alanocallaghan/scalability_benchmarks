@@ -23,30 +23,30 @@ dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 frac <- args[["fraction"]]
 data <- data[, sample(ncol(counts(data)), floor(ncol(counts(data)) * frac))]
 if (length(altExpNames(data))) {
-  spikes <- altExp(data, "spike-ins")
-  ind_keep_spike <- rowSums(assay(spikes)) != 0
-  metadata(data)$SpikeInput <- metadata(data)$SpikeInput[ind_keep_spike, ]
-  altExp(data, "spike-ins") <- spikes[ind_keep_spike, ]
+    spikes <- altExp(data, "spike-ins")
+    ind_keep_spike <- rowSums(assay(spikes)) != 0
+    metadata(data)$SpikeInput <- metadata(data)$SpikeInput[ind_keep_spike, ]
+    altExp(data, "spike-ins") <- spikes[ind_keep_spike, ]
 }
 
 
 time <- system.time({
-  chain <- BASiCS_MCMC(
-    data,
-    Regression = TRUE,
-    WithSpikes = as.logical(length(altExpNames(data))),
-    PrintProgress = FALSE,
-    N = args[["iterations"]],
-    Thin = max((args[["iterations"]] / 2) / 1000, 2),
-    Burn = max(args[["iterations"]] / 2, 4)
-  )
+    chain <- BASiCS_MCMC(
+        data,
+        Regression = TRUE,
+        WithSpikes = as.logical(length(altExpNames(data))),
+        PrintProgress = FALSE,
+        N = args[["iterations"]],
+        Thin = max((args[["iterations"]] / 2) / 1000, 2),
+        Burn = max(args[["iterations"]] / 2, 4)
+    )
 })
 config <- list(
-  data = args[["data"]],
-  chains = 1,
-  by = "gene",
-  seed = 42,
-  proportion_retained = args[["fraction"]]
+    data = args[["data"]],
+    chains = 1,
+    by = "gene",
+    seed = 42,
+    proportion_retained = args[["fraction"]]
 )
 saveRDS(chain, file = file.path(dir, "chains.rds"))
 saveRDS(time, file = file.path(dir, "time.rds"))
