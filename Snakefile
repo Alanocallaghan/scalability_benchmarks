@@ -575,7 +575,7 @@ rule hpd_width_plot:
 
 
 
-rule hpd_width_plot:
+rule diag_plot:
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
