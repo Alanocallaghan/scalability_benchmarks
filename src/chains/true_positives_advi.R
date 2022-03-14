@@ -22,18 +22,30 @@ PSM_Data <- droplet_sce[, ind_presom]
 SM_Data <- droplet_sce[, ind_som]
 
 # Presomitic mesoderm cells
-PSM_MCMC <- BASiCStan(
-    PSM_Data,
-    Regression = TRUE,
-    WithSpikes = FALSE
-)
-
-# Somitic mesoderm cells
-SM_MCMC <- BASiCStan(
-    SM_Data,
-    Regression = TRUE,
-    WithSpikes = FALSE
-)
+while (TRUE) {
+    ## sometimes get dropped evaluations from ADVI
+    PSM_MCMC <- try(
+        BASiCStan(
+            PSM_Data,
+            Regression = TRUE,
+            WithSpikes = FALSE
+        )
+    )
+    if (!inherits(PSM_MCMC, "try-error")) {
+        break
+    }
+}
+while (TRUE) {
+    # Somitic mesoderm cells
+    SM_MCMC <- BASiCStan(
+        SM_Data,
+        Regression = TRUE,
+        WithSpikes = FALSE
+    )
+    if (!inherits(SM_MCMC, "try-error")) {
+        break
+    }
+}
 
 test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC)
 

@@ -18,14 +18,19 @@ dir <- args[["output"]]
 dir.create(dir, showWarnings = FALSE, recursive = TRUE)
 
 with_spikes <- "spike-ins" %in% altExpNames(data)
-time <- system.time(
-    elbo <- capture.output(
-        chain <- BASiCStan(
-        data,
-        WithSpikes = with_spikes
+while (TRUE) {
+    time <- system.time(
+        elbo <- capture.output(
+            chain <- BASiCStan(
+                data,
+                WithSpikes = with_spikes
+            )
         )
     )
-)
+    if (!inherits(chain, "try-error")) {
+        break
+    }
+}
 config <- list(
     chains = NA,
     by = "advi",
