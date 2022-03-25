@@ -30,8 +30,7 @@ df$UMI <- c("No", "Yes", "Yes", "Yes", "Yes")
 out <- xtable(
     df,
     align = "rr|rrrrr",
-    caption = "A summary of the datasets used in the present study, following the
-    filtering steps described in \\cref{sec:DataProcessing}.",
+    caption = "A summary of the datasets used in the testing of scalable inference methods.",
     label = "tab:CellsGenes"
 )
 print(out,
