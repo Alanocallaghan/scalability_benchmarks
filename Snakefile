@@ -108,11 +108,6 @@ rule plots: ## todo
             "outputs/true-positives/data-ibarra-soria_nsubsets-{nsubsets}_seed-{seed}.rds",
             nsubsets = chains,
             seed = seeds
-        ),
-        expand(
-            "outputs/time/{dataset}_{n}.rds",
-            dataset = data_all,
-            n = chains_timing
         )
     output:
         "figs/diffexp_plot.pdf",
