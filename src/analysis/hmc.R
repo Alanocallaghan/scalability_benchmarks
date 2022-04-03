@@ -4,26 +4,22 @@ library("xtable")
 
 out <- readRDS("outputs/hmc_vs_amwg.rds")
 
-
-hmc_ess <- lapply(c("mu", "delta", "epsilon"),
+hmc_ess <- sapply(c("mu", "delta", "epsilon"),
     function(p) mean(BASiCS_EffectiveSize(out$chains$hmc, p) / out$time$hmc[["elapsed"]])
 )
-amwg_ess <- lapply(c("mu", "delta", "epsilon"),
+amwg_ess <- sapply(c("mu", "delta", "epsilon"),
     function(p) mean(BASiCS_EffectiveSize(out$chains$amwg, p) / out$time$amwg[["elapsed"]])
 )
 
-data <- rbind(
-    do.call(cbind, hmc_ess),
-    do.call(cbind, amwg_ess)
+data <- cbind(
+    HMC = hmc_ess,
+    aMwG = amwg_ess
 )
-colnames(data) <- c("mu", "delta", "epsilon")
-table <- data.frame(
-    Method = c("\\gls{aMwG}", "HMC"),
-    data
-)
-mdf <- melt(table, id.var = "Method")
-colnames(mdf) <- c("Method", "Parameter", "ESS/s")
-fdf <- format(mdf, digits = 1)
+data <- melt(data)
+colnames(data) <- c("Parameter", "Method", "ESS/s")
+data <- data[, c("Method", "Parameter", "ESS/s")]
+table <- data[c(1, 4, 2, 5, 3, 6), ]
+fdf <- format(table, digits = 1)
 
 tab <- xtable(
     fdf,

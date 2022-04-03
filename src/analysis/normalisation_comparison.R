@@ -80,7 +80,7 @@ g <- ggplot() +
         name = "Pearson correlation",
         limits = c(0.8, 1)
     ) +
-    theme(text = element_text(size = 18), panel.grid = element_blank())
+    theme(panel.grid = element_blank())
 
 ggsave(here("figs/norm_plot.pdf"), width = 5, height = 5)
 
@@ -104,6 +104,6 @@ g <- ggplot(
     facet_wrap(~data, nrow = 2, ncol = 2) +
     scale_x_discrete(name = "Number of partitions") +
     scale_y_continuous(name = "Pearson correlation", limits = c(0, 1)) +
-    theme(text = element_text(size = 18), panel.grid = element_blank())
+    theme(panel.grid = element_blank())
 
 ggsave(here("figs/norm_plot_hpd.pdf"), width = 5, height = 5)
