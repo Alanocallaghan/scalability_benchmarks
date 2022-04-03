@@ -48,7 +48,6 @@ mdf_rm$proportion_retained <- factor(
     )
 )
 
-# mdf_rm_sub <- mdf_rm[mdf_rm$data == "zeisel", ]
 mdf_rm_sub <- mdf_rm[mdf_rm$data == "chen", ]
 
 g <- ggplot(mdf_rm_sub) +

@@ -80,23 +80,23 @@ rule plots: ## todo
         ),
         expand(
             "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = "zeisel",
+            dataset = "chen",
             seed = seeds,
             fraction = fractions
         ),
         expand(
             "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = "zeisel",
+            dataset = "chen",
             fraction = fractions
         ),
         expand(
             "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = "zeisel",
+            dataset = "chen",
             fraction = fractions
         ),
         expand(
             "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = "zeisel",
+            dataset = "chen",
             seed = seeds,
             fraction = fractions
         ),
@@ -144,20 +144,20 @@ rule scran_basics:
         """
 
 
-rule batchinfo_plot:
-    input:
-        expand(
-            "outputs/batchinfo/data-{dataset}/",
-            dataset = data_batch
-        )
-    output:
-        "figs/de_batch_tung.pdf",
-        "figs/de_batch_zeisel.pdf",
-        "figs/ess_batch.pdf"
-    shell:
-        """
-        Rscript src/analysis/batchinfo.R
-        """
+# rule batchinfo_plot:
+#     input:
+#         expand(
+#             "outputs/batchinfo/data-{dataset}/",
+#             dataset = data_batch
+#         )
+#     output:
+#         "figs/de_batch_tung.pdf",
+#         "figs/de_batch_zeisel.pdf",
+#         "figs/ess_batch.pdf"
+#     shell:
+#         """
+#         Rscript src/analysis/batchinfo.R
+#         """
 
 rule true_positive_plot:
     resources: mem_mb=20000, runtime=3000
@@ -199,12 +199,12 @@ rule removing_cells_plot:
     input:
         expand(
             "outputs/removing/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = data,
+            dataset = "chen",
             fraction = fractions
         ),
         expand(
             "outputs/removing/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = data,
+            dataset = "chen",
             seed = seeds,
             fraction = fractions
         )
@@ -220,13 +220,13 @@ rule downsampling_plot:
     input:
         expand(
             "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
-            dataset = data,
+            dataset = "chen",
             seed = seeds,
             fraction = fractions
         ),
         expand(
             "outputs/downsampling/reference/data-{dataset}_fraction-{fraction}/",
-            dataset = data,
+            dataset = "chen",
             fraction = fractions
         )
     output: 
