@@ -28,6 +28,7 @@ cs_df <- merge(cs_df, data_dims)
 cs_de_df <- do_de(cs_df, ref_df = references, match_column = "data", data_dims,
   mc.cores = 2)
 
+cs_de_df$data <- gsub("([\\w])([\\w]+)", "\\U\\1\\L\\2", cs_de_df$data, perl = TRUE)
 cs_de_df_sub <- cs_de_df[, c("data", "chains", "pDiffExp", "pDiffDisp", "pDiffResDisp")]
 mdf_cs <- melt(cs_de_df_sub, id.vars = c("data", "chains"))
 mdf_cs$chains <- factor(mdf_cs$chains, levels = c(2, 4, 8, 16))
@@ -52,4 +53,4 @@ g <- ggplot(mdf_cs) +
         panel.grid = element_blank()
     )
 
-ggsave("figs/cell_splitting.pdf", width = 4, height = 4)
+ggsave("figs/cell_splitting.pdf", width = 5, height = 5)
