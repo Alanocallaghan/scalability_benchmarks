@@ -32,6 +32,7 @@ mamba create -y -n scalability \
     r-rstan \
     r-ggpointdensity \
     r-rcpparmadillo \
+    r-ggrastr \
     bioconductor-scrnaseq
     # bioconductor-basics \
     # bioconductor-scater \
