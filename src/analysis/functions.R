@@ -397,14 +397,14 @@ do_hpd_plots <- function(i, maxdf, references) {
     l3 <- "log2(95% HPD interval width ratio)"
     l <- list(
         plot_hpd_interval_width(
-        rc,
-        "Reference",
-        cc,
-        l2,
-        "mu",
-        type = "ma",
-        log = FALSE,
-        bins = 50
+            rc,
+            "Reference",
+            cc,
+            l2,
+            "mu",
+            type = "ma",
+            log = FALSE,
+            bins = 50
         ) +
         labs(
             title = NULL,
@@ -413,14 +413,14 @@ do_hpd_plots <- function(i, maxdf, references) {
         ) +
         geom_hline(aes(yintercept = 0)),
         plot_hpd_interval_width(
-        rc,
-        "Reference",
-        cc,
-        l2,
-        "epsilon",
-        type = "ma",
-        log = FALSE,
-        bins = 50
+            rc,
+            "Reference",
+            cc,
+            l2,
+            "epsilon",
+            type = "ma",
+            log = FALSE,
+            bins = 50
         ) +
         labs(
             title = NULL,
@@ -508,7 +508,7 @@ plot_hpds <- function(
         scale <- scale_y_continuous(name = param)
     }
 
-    ggplot() +
+    g <- ggplot() +
         geom_point(
             data = df1,
             alpha = 0.6,
@@ -545,6 +545,7 @@ plot_hpds <- function(
             values = setNames(c("firebrick", "dodgerblue"), labels),
             aesthetics = c("fill", "colour")
         )
+    rasterise(g, dpi = 300)
 }
 
 
@@ -565,7 +566,7 @@ plot_hpd_diff <- function(
     } else {
         lims <- r
     }
-    ggplot() +
+    g <- ggplot() +
         geom_ribbon(
             data = df_diff,
             colour = "darkgoldenrod",
@@ -597,6 +598,7 @@ plot_hpd_diff <- function(
         #     values = c("firebrick", "dodgerblue"),
         #     aesthetics = c("fill", "colour")
         # )
+    rasterise(g, dpi = 300)
 }
 
 plot_with_legend_below <- function(

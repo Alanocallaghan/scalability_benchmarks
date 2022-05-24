@@ -34,7 +34,10 @@ gs <- lapply(
         norm_comp_sub <- norm_comp_df[norm_comp_df$data == d, ]
         ggplot(norm_comp_sub) +
             aes(scran, BASiCS) +
-            geom_pointdensity() +
+            stat_pointdensity(
+                geom = ggrastr:::GeomPointRast,
+                raster.dpi = 300, dev = "cairo", scale = 1
+            ) +
             scale_x_log10(limits = r) +
             scale_y_log10(limits = r) +
             scale_colour_viridis(name = "Number of neighbours") +

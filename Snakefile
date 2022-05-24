@@ -493,8 +493,6 @@ rule plot_fixnu:
         fix = "outputs/fix_nu/{dataset}-fix.rds",
         var = "outputs/fix_nu/{dataset}-var.rds"
     output:
-        # "figs/fixnu-chen.pdf",
-        # "figs/fixnu-diff-chen.pdf",
         "figs/fixnu-{dataset}.pdf",
         "figs/fixnu-diff-{dataset}.pdf"
     shell:
@@ -509,8 +507,8 @@ rule fixnu:
         "rdata/chen.rds",
         "rdata/ibarra-soria.rds"
     output:
-        # "outputs/fix_nu/chen-fix.rds",
-        # "outputs/fix_nu/chen-var.rds",
+        "outputs/fix_nu/chen-fix.rds",
+        "outputs/fix_nu/chen-var.rds",
         "outputs/fix_nu/ibarra-som-var.rds",
         "outputs/fix_nu/ibarra-som-fix.rds",
         "outputs/fix_nu/ibarra-presom-var.rds",

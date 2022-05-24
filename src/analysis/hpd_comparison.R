@@ -7,6 +7,7 @@ suppressPackageStartupMessages({
     library("BASiCS")
     library("viridis")
     library("ggpointdensity")
+    library("ggrastr")
     library("cowplot")
 })
 parser <- ArgumentParser()
