@@ -521,19 +521,19 @@ plot_hpds <- function(
             size = 0.5,
             aes(x = index, y = median, colour = labels[[2]])
         ) +
-        geom_ribbon(
-            data = df1,
-            alpha = 0.4,
-            aes(x = index, ymin = lower, ymax = upper, fill = labels[[1]])
-        ) +
-        geom_ribbon(
-            data = df2,
-            alpha = 0.4,
-            aes(x = index, ymin = lower, ymax = upper, fill = labels[[2]])
-        ) +
+        # geom_ribbon(
+        #     data = df1,
+        #     alpha = 0.4,
+        #     aes(x = index, ymin = lower, ymax = upper, fill = labels[[1]])
+        # ) +
+        # geom_ribbon(
+        #     data = df2,
+        #     alpha = 0.4,
+        #     aes(x = index, ymin = lower, ymax = upper, fill = labels[[2]])
+        # ) +
         scale +
         xlab("Gene") +
-        guides(colour = "none") +
+        # guides(colour = "none") +
         theme(legend.position = "bottom") +
         theme(
             axis.ticks.x = element_blank(),
@@ -545,7 +545,7 @@ plot_hpds <- function(
             values = setNames(c("firebrick", "dodgerblue"), labels),
             aesthetics = c("fill", "colour")
         )
-    rasterise(g, dpi = 300)
+    rasterise(g, dpi = 300, layers = c("Point", "Ribbon"))
 }
 
 
@@ -598,7 +598,7 @@ plot_hpd_diff <- function(
         #     values = c("firebrick", "dodgerblue"),
         #     aesthetics = c("fill", "colour")
         # )
-    rasterise(g, dpi = 300)
+    rasterise(g, dpi = 300, layers = c("Point", "Ribbon"))
 }
 
 plot_with_legend_below <- function(
