@@ -25,9 +25,6 @@ rule all:
         "figs/dropout_density.pdf",
         "figs/true_positives.pdf",
         "figs/time_plot.pdf",
-        # "figs/de_batch_tung.pdf",
-        # "figs/de_batch_zeisel.pdf",
-        # "figs/ess_batch.pdf",
         "figs/removing_cells.pdf",
         "figs/cell_splitting.pdf",
         "figs/downsampling.pdf",
@@ -57,10 +54,6 @@ rule all:
             "figs/hpd/{dataset}",
             dataset = data
         )
-        # ,
-        # "figs/de_id_tung.pdf",
-        # "figs/de_id_zeisel.pdf",
-        # "figs/ess_id.pdf",
 
 
 rule plots: ## todo
@@ -143,21 +136,6 @@ rule scran_basics:
         Rscript src/analysis/scran_basics.R
         """
 
-
-rule batchinfo_plot:
-    input:
-        expand(
-            "outputs/batchinfo/data-{dataset}/",
-            dataset = data_batch
-        )
-    output:
-        "figs/de_batch_tung.pdf",
-        "figs/de_batch_zeisel.pdf",
-        "figs/ess_batch.pdf"
-    shell:
-        """
-        Rscript src/analysis/batchinfo.R
-        """
 
 rule true_positive_plot:
     resources: mem_mb=20000, runtime=3000
