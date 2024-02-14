@@ -29,4 +29,9 @@ Data <- Data[ind_expressed_ercc, ]
 
 Data$BatchInfo <- Data$group
 altExp(Data, "repeat") <- NULL
+ercc <- altExp(Data, "ERCC")
+rowData(ercc) <-  DataFrame(Name=rownames(rowData(ercc)), Molecules = rowData(ercc)$molecules)
+altExp(Data, "spike-ins") <- ercc 
+altExp(Data, "ERCC") <- NULL
+
 saveRDS(Data, file = "rdata/zeisel.rds")
