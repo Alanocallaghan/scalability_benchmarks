@@ -28,4 +28,5 @@ ind_expressed_ercc <- c(
 Data <- Data[ind_expressed_ercc, ]
 
 Data$BatchInfo <- Data$group
+altExp(Data, "repeat")
 saveRDS(Data, file = "rdata/zeisel.rds")

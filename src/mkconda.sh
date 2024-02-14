@@ -24,8 +24,10 @@ fi
 set +eu
 
 conda create -y -n scalability \
-    r-base=4.3.1 \
+    r-base=4.3.2 \
     r-argparse \
+    r-curl \
+    r-httr \
     r-coda \
     r-dplyr \
     r-ggbeeswarm \
@@ -39,12 +41,13 @@ conda create -y -n scalability \
     r-ggpointdensity \
     r-rcpparmadillo \
     r-ggrastr \
-    # bioconductor-scrnaseq
-    # bioconductor-basics \
-    # bioconductor-scater \
-    # bioconductor-scran \
-    # bioconductor-singlecellexperiment \
+    bioconductor-scrnaseq \
+    bioconductor-basics \
+    bioconductor-basicstan \
+    bioconductor-biocparallel \
+    bioconductor-scater \
+    bioconductor-scran \
+    bioconductor-singlecellexperiment
 
 conda init
 conda activate scalability
-Rscript -e 'BiocManager::install(c("BASiCS", "BASiCStan", "BiocParallel", "scater", "scran", "SingleCellExperiment", "scRNAseq"), version=3.18)'
