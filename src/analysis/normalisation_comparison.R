@@ -1,5 +1,6 @@
 library("here")
 source(here("src/analysis/preamble.R"))
+source(here("src/analysis/read_chains.R"))
 
 ## compare correlation and hpd width
 calc_norm_factors <- function(chain) {

@@ -12,8 +12,6 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-# print(dput(args))
-# stop()
 set.seed(args[["seed"]])
 
 droplet_sce <- readRDS("rdata/ibarra-soria.rds")
@@ -53,7 +51,7 @@ SM_MCMC <- BASiCS_MCMC(
 
 
 
-test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC)
+test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC, Plot = FALSE, PlotOffset=FALSE)
 
 out <- list(
     test = test,

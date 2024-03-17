@@ -195,6 +195,7 @@ rule removing_cells_plot:
 
 rule downsampling_plot:
     resources: mem_mb=20000
+    threads: 8
     input:
         expand(
             "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
@@ -216,6 +217,7 @@ rule downsampling_plot:
 
 
 rule time_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
@@ -499,6 +501,7 @@ rule fixnu:
         """
 
 rule point_estimates_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -509,7 +512,7 @@ rule point_estimates_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -522,6 +525,8 @@ rule point_estimates_plot:
         """
 
 rule hpd_width_plot:
+    resources: mem_mb=20000
+    threads: 8
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -532,7 +537,7 @@ rule hpd_width_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -547,6 +552,7 @@ rule hpd_width_plot:
 
 
 rule diag_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -557,7 +563,7 @@ rule diag_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -574,6 +580,7 @@ rule diag_plot:
 
 
 rule norm_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -584,7 +591,7 @@ rule norm_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -608,6 +615,7 @@ rule data:
         """
 
 rule elbo_plots:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
@@ -624,6 +632,8 @@ rule elbo_plots:
 
 
 rule hmc:
+    resources: mem_mb=20000, runtime=3000
+    threads: 4
     input:
         "rdata/tung.rds"
     output:

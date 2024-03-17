@@ -1,7 +1,7 @@
 library("here")
 library("BASiCS")
 source(here("src/analysis/preamble.R"))
-
+source(here("src/analysis/read_chains.R"))
 
 ess <- function (x) {
     vars <- matrixStats::colVars(x)
