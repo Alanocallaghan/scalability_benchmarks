@@ -21,10 +21,10 @@ with_spikes <- "spike-ins" %in% altExpNames(data)
 while (TRUE) {
     time <- system.time(
         elbo <- capture.output(
-            chain <- BASiCStan(
+            chain <- try(BASiCStan(
                 data,
                 WithSpikes = with_spikes
-            )
+            ))
         )
     )
     if (!inherits(chain, "try-error")) {

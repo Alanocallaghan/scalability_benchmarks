@@ -382,7 +382,8 @@ rule removing_divide:
 
 
 rule true_positives:
-    resources: mem_mb=10000, runtime=5000
+    resources: mem_mb=30000, runtime=5000
+    threads: 8
     input:
         "rdata/ibarra-soria.rds"
     output:
@@ -502,6 +503,7 @@ rule fixnu:
 
 rule point_estimates_plot:
     resources: mem_mb=20000
+    threads: 8
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -552,7 +554,8 @@ rule hpd_width_plot:
 
 
 rule diag_plot:
-    resources: mem_mb=20000
+    resources: mem_mb=30000
+    threads: 4
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",

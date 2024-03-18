@@ -1,5 +1,6 @@
 library("here")
 source(here("src/analysis/preamble.R"))
+source(here("src/analysis/hpd.R"))
 
 get_hpd_width <- function(chain, param) {
     hpd <- HPDinterval(as.mcmc(chain@parameters[[param]]))

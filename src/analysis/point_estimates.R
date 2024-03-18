@@ -1,6 +1,7 @@
 library("here")
 
 source(here("src/analysis/preamble.R"))
+source(here("src/analysis/read_chains.R"))
 
 pes_all <- parallel::mclapply(
     seq_len(nrow(df)),

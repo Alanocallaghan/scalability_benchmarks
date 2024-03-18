@@ -23,6 +23,8 @@ ind_som <- colData(droplet_sce)[["Cell_type"]] == "SM"
 PSM_Data <- droplet_sce[, ind_presom]
 SM_Data <- droplet_sce[, ind_som]
 
+BP <- BiocParallel::SnowParam(workers=8)
+
 # Presomitic mesoderm cells
 PSM_MCMC <- BASiCS_MCMC(
     PSM_Data,
@@ -33,7 +35,8 @@ PSM_MCMC <- BASiCS_MCMC(
     PrintProgress = FALSE,
     N = args[["iterations"]],
     Thin = max((args[["iterations"]] / 2) / 1000, 2),
-    Burn = max(args[["iterations"]] / 2, 4)
+    Burn = max(args[["iterations"]] / 2, 4),
+    BPPARAM = BP
 )
 
 # Somitic mesoderm cells
@@ -47,6 +50,7 @@ SM_MCMC <- BASiCS_MCMC(
     N = args[["iterations"]],
     Thin = max((args[["iterations"]] / 2) / 1000, 2),
     Burn = max(args[["iterations"]] / 2, 4)
+    BPPARAM = BP
 )
 
 
