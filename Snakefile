@@ -485,19 +485,15 @@ rule plot_fixnu:
 rule fixnu:
     resources: mem_mb=20000, runtime=10000
     input:
-        "rdata/chen.rds",
-        "rdata/ibarra-soria.rds"
+        "rdata/{dataset}.rds",
     output:
-        "outputs/fix_nu/chen-fix.rds",
-        "outputs/fix_nu/chen-var.rds",
-        "outputs/fix_nu/ibarra-som-var.rds",
-        "outputs/fix_nu/ibarra-som-fix.rds",
-        "outputs/fix_nu/ibarra-presom-var.rds",
-        "outputs/fix_nu/ibarra-presom-fix.rds"
+        "outputs/fix_nu/{dataset}-fix.rds",
+        "outputs/fix_nu/{dataset}-var.rds"
     shell:
         """
         Rscript ./src/chains/fix_nu.R \
             --output outputs/fix_nu \
+            --dataset {wildcards.dataset} \
             --iterations {iterations}
         """
 
