@@ -1,6 +1,7 @@
 library("here")
 
 source(here("src/analysis/preamble.R"))
+source(here("src/analysis/read_chains.R"))
 
 sourceme(here("src/analysis/de_on_table.R"))
 sourceme(here("src/analysis/chain_plots.R"))

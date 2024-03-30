@@ -18,7 +18,7 @@ shell.prefix("source src/modules.sh; ")
 rule all:
     input:
         "figs/diffexp_plot.pdf",
-        "figs/overlap_diff_genes.pdf",
+#        "figs/overlap_diff_genes.pdf",
         "figs/libsize_density.pdf",
         "figs/complexity_density.pdf",
         "figs/expression_density.pdf",
@@ -104,7 +104,7 @@ rule plots: ## todo
         )
     output:
         "figs/diffexp_plot.pdf",
-        "figs/overlap_diff_genes.pdf",
+#        "figs/overlap_diff_genes.pdf",
         "main_done.RData"
     shell:
         """
@@ -483,7 +483,7 @@ rule plot_fixnu:
 
 
 rule fixnu:
-    resources: mem_mb=10000, runtime=3000
+    resources: mem_mb=20000, runtime=10000
     input:
         "rdata/chen.rds",
         "rdata/ibarra-soria.rds"
@@ -647,9 +647,10 @@ rule hmc:
         """
 
 rule summarise_hmc:
+    resources: mem_mb=20000
     input:
         "outputs/hmc_vs_amwg.rds"
     output:
         "tables/hmc-comparison.tex"
     shell:
-        "Rscript src/analysis.hmc.R"
+        "Rscript src/analysis/hmc.R"
