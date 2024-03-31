@@ -70,7 +70,7 @@ if (dataset == "chen") {
         Thin = max((args[["iterations"]] / 2) / 1000, 2),
         Burn = max(args[["iterations"]] / 2, 4)
     )
-    fit_fix <- BASiCS_MCMC(
+    fit_fix[["SM"]] <- BASiCS_MCMC(
         SM_Data,
         PrintProgress = FALSE,
         FixNu = TRUE,
@@ -81,7 +81,7 @@ if (dataset == "chen") {
         Burn = max(args[["iterations"]] / 2, 4)
     )
 
-    fit_var <- BASiCS_MCMC(
+    fit_var[["SM"]] <- BASiCS_MCMC(
         SM_Data,
         PrintProgress = FALSE,
         FixNu = FALSE,
