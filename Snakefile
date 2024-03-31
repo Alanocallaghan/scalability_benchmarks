@@ -19,6 +19,7 @@ rule all:
     input:
         "figs/diffexp_plot.pdf",
 #        "figs/overlap_diff_genes.pdf",
+        "figs/norm_plot.pdf",
         "figs/libsize_density.pdf",
         "figs/complexity_density.pdf",
         "figs/expression_density.pdf",
