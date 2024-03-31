@@ -34,7 +34,7 @@ if (args[["dataset"]] == "ibarra-soria") {
         g2 <- plot_hpds(summary_var, summary_fix, "delta", ord)
         g3 <- plot_hpds(summary_var, summary_fix, "epsilon", ord)
         combined <- plot_with_legend_below(g1, g2, g3)
-        ggsave(sprintf("figs/fixnu-%s-%s.pdf", args[["dataset"]], celltype), plot =  width = 8, height = 3)
+        ggsave(sprintf("figs/fixnu-%s-%s.pdf", args[["dataset"]], celltype), width = 8, height = 3)
 
         d1 <- plot_hpd_diff(summary_var, summary_fix, "mu", ord)
         d2 <- plot_hpd_diff(summary_var, summary_fix, "delta", ord)
