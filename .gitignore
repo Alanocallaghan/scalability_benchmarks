@@ -17,3 +17,4 @@ rdata/
 PAT.R
 tables
 old-outputs
+.cluster_status/

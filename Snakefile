@@ -18,7 +18,8 @@ shell.prefix("source src/modules.sh; ")
 rule all:
     input:
         "figs/diffexp_plot.pdf",
-        "figs/overlap_diff_genes.pdf",
+#        "figs/overlap_diff_genes.pdf",
+        "figs/norm_plot.pdf",
         "figs/libsize_density.pdf",
         "figs/complexity_density.pdf",
         "figs/expression_density.pdf",
@@ -27,9 +28,6 @@ rule all:
         "figs/time_plot.pdf",
         "figs/divide_and_conquer_schematic.pdf",
         "figs/merged_plots.pdf",
-        # "figs/de_batch_tung.pdf",
-        # "figs/de_batch_zeisel.pdf",
-        # "figs/ess_batch.pdf",
         "figs/removing_cells.pdf",
         "figs/cell_splitting.pdf",
         "figs/downsampling.pdf",
@@ -38,8 +36,7 @@ rule all:
         "figs/elbo/zeisel.pdf",
         "figs/elbo/chen.pdf",
         "figs/fixnu-chen.pdf",
-        "figs/fixnu-ibarra-som.pdf",
-        "figs/fixnu-ibarra-presom.pdf",
+        "figs/fixnu-ibarra-soria.pdf",
         "figs/hpd_width_mu.pdf",
         "figs/hpd_width_delta.pdf",
         "figs/hpd_width_epsilon.pdf",
@@ -59,10 +56,6 @@ rule all:
             "figs/hpd/{dataset}",
             dataset = data
         )
-        # ,
-        # "figs/de_id_tung.pdf",
-        # "figs/de_id_zeisel.pdf",
-        # "figs/ess_id.pdf",
 
 
 rule extra_plots:
@@ -126,7 +119,7 @@ rule plots: ## todo
         )
     output:
         "figs/diffexp_plot.pdf",
-        "figs/overlap_diff_genes.pdf",
+#        "figs/overlap_diff_genes.pdf",
         "main_done.RData"
     shell:
         """
@@ -159,21 +152,6 @@ rule scran_basics:
         Rscript src/analysis/scran_basics.R
         """
 
-
-rule batchinfo_plot:
-    input:
-        expand(
-            "outputs/batchinfo/data-{dataset}/",
-            dataset = data_batch
-        )
-    output:
-        "figs/de_batch_tung.pdf",
-        "figs/de_batch_zeisel.pdf",
-        "figs/ess_batch.pdf"
-    shell:
-        """
-        Rscript src/analysis/batchinfo.R
-        """
 
 rule true_positive_plot:
     resources: mem_mb=20000, runtime=3000
@@ -233,6 +211,7 @@ rule removing_cells_plot:
 
 rule downsampling_plot:
     resources: mem_mb=20000
+    threads: 8
     input:
         expand(
             "outputs/downsampling/divide/data-{dataset}_fraction-{fraction}_seed-{seed}/",
@@ -254,6 +233,7 @@ rule downsampling_plot:
 
 
 rule time_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
@@ -418,7 +398,8 @@ rule removing_divide:
 
 
 rule true_positives:
-    resources: mem_mb=10000, runtime=5000
+    resources: mem_mb=50000, runtime=5000
+    threads: 4
     input:
         "rdata/ibarra-soria.rds"
     output:
@@ -518,25 +499,23 @@ rule plot_fixnu:
 
 
 rule fixnu:
-    resources: mem_mb=10000, runtime=3000
+    resources: mem_mb=20000, runtime=10000
     input:
-        "rdata/chen.rds",
-        "rdata/ibarra-soria.rds"
+        "rdata/{dataset}.rds",
     output:
-        "outputs/fix_nu/chen-fix.rds",
-        "outputs/fix_nu/chen-var.rds",
-        "outputs/fix_nu/ibarra-som-var.rds",
-        "outputs/fix_nu/ibarra-som-fix.rds",
-        "outputs/fix_nu/ibarra-presom-var.rds",
-        "outputs/fix_nu/ibarra-presom-fix.rds"
+        "outputs/fix_nu/{dataset}-fix.rds",
+        "outputs/fix_nu/{dataset}-var.rds"
     shell:
         """
         Rscript ./src/chains/fix_nu.R \
             --output outputs/fix_nu \
+            --dataset {wildcards.dataset} \
             --iterations {iterations}
         """
 
 rule point_estimates_plot:
+    resources: mem_mb=30000
+    threads: 8
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -547,7 +526,7 @@ rule point_estimates_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -560,6 +539,8 @@ rule point_estimates_plot:
         """
 
 rule hpd_width_plot:
+    resources: mem_mb=30000
+    threads: 8
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -570,7 +551,7 @@ rule hpd_width_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -585,6 +566,8 @@ rule hpd_width_plot:
 
 
 rule diag_plot:
+    resources: mem_mb=30000
+    threads: 4
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -595,7 +578,7 @@ rule diag_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -612,6 +595,7 @@ rule diag_plot:
 
 
 rule norm_plot:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/divide_and_conquer/data-{dataset}_nsubsets-{nsubsets}_seed-{seed}_by-{by}/",
@@ -622,7 +606,7 @@ rule norm_plot:
         ),
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
-            dataset = data,
+            dataset = data_all,
             seed  = seeds
         )
     output:
@@ -646,6 +630,7 @@ rule data:
         """
 
 rule elbo_plots:
+    resources: mem_mb=20000
     input:
         expand(
             "outputs/advi/data-{dataset}_seed-{seed}/",
@@ -662,6 +647,8 @@ rule elbo_plots:
 
 
 rule hmc:
+    resources: mem_mb=20000, runtime=3000
+    threads: 4
     input:
         "rdata/tung.rds"
     output:
@@ -672,9 +659,10 @@ rule hmc:
         """
 
 rule summarise_hmc:
+    resources: mem_mb=20000
     input:
         "outputs/hmc_vs_amwg.rds"
     output:
         "tables/hmc-comparison.tex"
     shell:
-        "Rscript src/analysis.hmc.R"
+        "Rscript src/analysis/hmc.R"

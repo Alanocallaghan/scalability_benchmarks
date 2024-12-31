@@ -1,28 +1,22 @@
 library("scran")
 library("scater")
+options(timeout = 10000)
 
 if (!file.exists("downloads/rawCounts.tsv")) {
-    website <- "https://www.ebi.ac.uk/"
-    folder <- "arrayexpress/files/E-MTAB-6153/"
-    file <- "E-MTAB-6153.processed.2.zip"
+    file <- "https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-6153/rawCounts.tsv"
     download.file(
-        paste0(website, folder, file),
-        destfile = "downloads/rawCounts.zip"
+        file,
+        destfile = "downloads/rawCounts.tsv"
     )
-    unzip(zipfile = "downloads/rawCounts.zip", exdir = "downloads")
-    file.remove("downloads/rawCounts.zip")
 }
 rawCounts <- read.delim("downloads/rawCounts.tsv", header = TRUE)
 
 if (!file.exists("downloads/cellAnnotation.tsv")) {
-    website <- "https://www.ebi.ac.uk/"
-    folder <- "arrayexpress/files/E-MTAB-6153/"
-    file <- "E-MTAB-6153.processed.3.zip"
+    file <- "https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-6153/cellAnnotation.tsv"
     download.file(
-        paste0(website, folder, file),
-        destfile = "downloads/cluster_labels.zip"
+        file,
+        destfile = "downloads/cellAnnotation.tsv"
     )
-    unzip(zipfile = "downloads/cluster_labels.zip", exdir = "downloads")
 }
 
 cluster_labels <- read.table("downloads/cellAnnotation.tsv",
@@ -52,7 +46,7 @@ colData(droplet_sce) <- DataFrame(
     cluster_labels,
     subCellType = sub("_.*", "", cluster_labels$cell)
 )
-ind_expressed <- Matrix::rowMeans(counts(droplet_sce)) > 0.1
+ind_expressed <- which(Matrix::rowMeans(counts(droplet_sce)) > 0.1)
 droplet_sce <- droplet_sce[ind_expressed, ]
 
 droplet_sce <- computeSumFactors(droplet_sce,
@@ -61,12 +55,13 @@ droplet_sce <- computeSumFactors(droplet_sce,
 droplet_sce <- logNormCounts(droplet_sce)
 droplet_sce <- runPCA(droplet_sce)
 
+
 # Cell types identified by clustering
 # plotReducedDim(droplet_sce, dimred = "PCA", colour_by = "subCellType") +
 #   scale_fill_manual(name = "cellType", values = c("coral4", "steelblue", "limegreen"))
 
-ind_retain <- reducedDims(droplet_sce)$PCA[, 2] > -5 &
-    colData(droplet_sce)$subCellType != "presomiticMesoderm.b"
+## exclude outliers (TODO: justify)
+ind_retain <- colData(droplet_sce)$subCellType != "presomiticMesoderm.b"
 droplet_sce <- droplet_sce[, ind_retain]
 
 counts(droplet_sce) <- as.matrix(counts(droplet_sce))

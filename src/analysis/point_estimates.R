@@ -1,6 +1,7 @@
 library("here")
 
 source(here("src/analysis/preamble.R"))
+source(here("src/analysis/read_chains.R"))
 
 pes_all <- parallel::mclapply(
     seq_len(nrow(df)),
@@ -18,7 +19,7 @@ pes_all <- parallel::mclapply(
             epsilon = colMedians(chain@parameters$epsilon)
         )
     },
-    mc.cores = 4
+    mc.cores = 8
 )
 
 pe_all <- bind_rows(pes_all)

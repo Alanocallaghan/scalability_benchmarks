@@ -20,6 +20,8 @@ fi
 mamba create -y -n scalability2 \
     r-base=4.1.1 \
     r-argparse \
+    r-curl \
+    r-httr \
     r-coda \
     r-dplyr \
     r-ggbeeswarm \

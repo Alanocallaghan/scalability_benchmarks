@@ -12,8 +12,6 @@ parser$add_argument("-i", "--iterations", type = "double")
 parser$add_argument("-o", "--output")
 args <- parser$parse_args()
 
-# print(dput(args))
-# stop()
 set.seed(args[["seed"]])
 
 droplet_sce <- readRDS("rdata/ibarra-soria.rds")
@@ -25,6 +23,7 @@ ind_som <- colData(droplet_sce)[["Cell_type"]] == "SM"
 PSM_Data <- droplet_sce[, ind_presom]
 SM_Data <- droplet_sce[, ind_som]
 
+
 # Presomitic mesoderm cells
 PSM_MCMC <- BASiCS_MCMC(
     PSM_Data,
@@ -35,7 +34,8 @@ PSM_MCMC <- BASiCS_MCMC(
     PrintProgress = FALSE,
     N = args[["iterations"]],
     Thin = max((args[["iterations"]] / 2) / 1000, 2),
-    Burn = max(args[["iterations"]] / 2, 4)
+    Burn = max(args[["iterations"]] / 2, 4),
+    Threads = 4
 )
 
 # Somitic mesoderm cells
@@ -48,12 +48,13 @@ SM_MCMC <- BASiCS_MCMC(
     PrintProgress = FALSE,
     N = args[["iterations"]],
     Thin = max((args[["iterations"]] / 2) / 1000, 2),
-    Burn = max(args[["iterations"]] / 2, 4)
+    Burn = max(args[["iterations"]] / 2, 4),
+    Threads = 4
 )
 
 
 
-test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC)
+test <- BASiCS_TestDE(PSM_MCMC, SM_MCMC, Plot = FALSE, PlotOffset=FALSE)
 
 out <- list(
     test = test,

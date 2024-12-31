@@ -1,5 +1,6 @@
 library("here")
 source(here("src/analysis/preamble.R"))
+source(here("src/analysis/read_chains.R"))
 
 get_hpd_width <- function(chain, param) {
     hpd <- HPDinterval(as.mcmc(chain@parameters[[param]]))
@@ -21,7 +22,7 @@ hpds_all <- parallel::mclapply(
             delta = get_hpd_width(chain, "delta"),
             epsilon = get_hpd_width(chain, "epsilon")
         )
-    }, mc.cores = 4
+    }, mc.cores = 8
 )
 
 hpdf_all <- bind_rows(hpds_all)

@@ -5,5 +5,3 @@ if ("BiocParallel" %in% rownames(utils::installed.packages())) {
 options(menu.graphics=FALSE)
 options(mc.cores=1)
 options(Ncpus=4)
-## Github personal access token
-# source("PAT.R")
