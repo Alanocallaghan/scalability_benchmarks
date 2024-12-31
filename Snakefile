@@ -27,7 +27,7 @@ rule all:
         "figs/true_positives.pdf",
         "figs/time_plot.pdf",
         "figs/divide_and_conquer_schematic.pdf",
-        "figs/merged_plots.pdf",
+        "figs/accuracy_plots.pdf",
         "figs/removing_cells.pdf",
         "figs/cell_splitting.pdf",
         "figs/downsampling.pdf",
@@ -63,7 +63,7 @@ rule extra_plots:
     input: main_done.RData
     output:
         "figs/divide_and_conquer_schematic.pdf"
-        "figs/merged_plots.pdf",
+        "figs/accuracy_plots.pdf",
     shell:
         """
         Rscript src/analysis/divide_and_conquer_schematic.R
