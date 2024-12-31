@@ -17,7 +17,7 @@ if [ -f "/etc/profile.d/modules.sh" ]; then
     module load roslin/gcc/7.3.0
 fi
 
-mamba create -y -n scalability \
+mamba create -y -n scalability2 \
     r-base=4.1.1 \
     r-argparse \
     r-coda \
@@ -33,6 +33,7 @@ mamba create -y -n scalability \
     r-ggpointdensity \
     r-rcpparmadillo \
     r-ggrastr \
+    r-patchwork \
     bioconductor-scrnaseq
     # bioconductor-basics \
     # bioconductor-scater \
@@ -42,9 +43,9 @@ mamba create -y -n scalability \
 
 ## also need to devtools::install_github some stuff
 
-conda activate scalability
+conda activate scalability2
 Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "scater", "scran", "SingleCellExperiment", "scRNAseq"), version=3.14)'
 
-Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan")'
-Rscript -e 'devtools::install_github("catavallejos/BASiCS")'
+Rscript -e 'devtools::install_github("catavallejos/BASiCS", ref="11a03083be88d9900a168cd4ef7f41367f6fa4ed")'
+Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan", ref="9e632610cf463c51d3856d763a89f555dc3c114c")'
 Rscript -e 'devtools::install_github("jorainer/ensembldb")'
