@@ -68,4 +68,4 @@ wrap_elements(plot=gs[[1]] + guides(colour = "none")) + gs[[2]] + gs[[3]] + gs[[
 
 
 
-ggsave("figs/merged_plots.pdf", width=9, height=9)
+ggsave("figs/accuracy_plots.pdf", width=9, height=9)
